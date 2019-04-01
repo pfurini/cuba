@@ -137,7 +137,9 @@ public class DataManagerBean implements DataManager {
     public EntitySet commit(CommitContext context) {
         if (CommitContext.ValidationType.DEFAULT == context.getValidationType() && serverConfig.getDataManagerBeanValidation()
                 || CommitContext.ValidationType.ALWAYS_VALIDATE == context.getValidationType()) {
-            context.getCommitInstances().forEach(entity -> validateEntity(entity, context.getValidationGroups()));
+            for (Entity entity : context.getCommitInstances()) {
+                validateEntity(entity, context.getValidationGroups());
+            }
         }
 
         Map<String, CommitContext> storeToContextMap = new TreeMap<>();

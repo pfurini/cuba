@@ -202,6 +202,9 @@ public class CommitContext implements Serializable {
 
     /**
      * Sets {@link ValidationType} for commit context.
+     * Validation type is responsible for whether entity bean validation will be applied on {@link DataManager} level.
+     *
+     * @see BeanValidation
      *
      * @param validationType validation type
      */
@@ -233,14 +236,18 @@ public class CommitContext implements Serializable {
     }
 
     /**
-     * @return groups targeted for validation. {@see javax.validation.Validator#validate(Object, Class[])}
+     * @return groups targeted for validation.
+     *
+     * @see javax.validation.Validator#validate(Object, Class[])
      */
     public List<Class> getValidationGroups() {
         return validationGroups;
     }
 
     /**
-     * Sets groups targeted for validation. {@see javax.validation.Validator#validate(Object, Class[])}
+     * Sets groups targeted for validation.
+     *
+     * @see javax.validation.Validator#validate(Object, Class[])
      *
      * @param validationGroups {@code Set} of groups
      */
