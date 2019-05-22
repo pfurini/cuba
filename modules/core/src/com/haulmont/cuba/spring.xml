@@ -94,6 +94,10 @@
         <property name="persistence" ref="cuba_Persistence"/>
     </bean>
 
+    <bean id="serviceValidator" class="com.haulmont.cuba.core.sys.ServiceValidator">
+        <property name="beanValidation" ref="cuba_BeanValidation"/>
+    </bean>
+
     <aop:aspectj-autoproxy/>
     <aop:config proxy-target-class="false">
         <aop:aspect id="trustedServiceAspect" ref="trustedServiceInterceptor" order="1">
@@ -108,6 +112,10 @@
 
         <aop:aspect id="serviceAspect" ref="serviceInterceptor" order="1">
             <aop:around method="aroundInvoke" pointcut="@within(org.springframework.stereotype.Service)"/>
+        </aop:aspect>
+
+        <aop:aspect id="serviceValidationAspect" ref="serviceValidator" order="2">
+            <aop:around method="validate" pointcut="@within(org.springframework.stereotype.Service) and @annotation(org.springframework.validation.annotation.Validated)"/>
         </aop:aspect>
 
         <aop:aspect id="mbeanAspect" ref="mbeanInterceptor" order="1">

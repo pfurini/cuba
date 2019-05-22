@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright (c) 2008-2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,22 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
+
 package com.haulmont.cuba.core.sys;
 
-import com.haulmont.cuba.core.Persistence;
-import com.haulmont.cuba.core.app.MiddlewareStatisticsAccumulator;
-import com.haulmont.cuba.core.app.ServerConfig;
-import com.haulmont.cuba.core.global.*;
+import com.haulmont.cuba.core.global.BeanValidation;
 import com.haulmont.cuba.core.global.validation.MethodParametersValidationException;
 import com.haulmont.cuba.core.global.validation.MethodResultValidationException;
 import com.haulmont.cuba.core.global.validation.ServiceMethodConstraintViolation;
 import com.haulmont.cuba.core.global.validation.groups.ServiceParametersChecks;
 import com.haulmont.cuba.core.global.validation.groups.ServiceResultChecks;
-import com.haulmont.cuba.security.app.UserSessionsAPI;
-import com.haulmont.cuba.security.global.NoUserSessionException;
-import com.haulmont.cuba.security.global.UserSession;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
@@ -44,93 +38,23 @@ import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Intercepts invocations of the middleware services.
- * <br> Checks {@link UserSession} validity and wraps exceptions into {@link RemoteException}.
- */
-public class ServiceInterceptor {
-    private static final Logger log = LoggerFactory.getLogger(ServiceInterceptor.class);
-
-    private UserSessionsAPI userSessions;
-
-    private Persistence persistence;
+public class ServiceValidator {
+    private static final Logger log = LoggerFactory.getLogger(ServiceValidator.class);
 
     private BeanValidation beanValidation;
-
-    private MiddlewareStatisticsAccumulator statisticsAccumulator;
-
-    boolean logInternalServiceInvocation;
-
-    public void setUserSessions(UserSessionsAPI userSessions) {
-        this.userSessions = userSessions;
-    }
-
-    public void setPersistence(Persistence persistence) {
-        this.persistence = persistence;
-    }
 
     public void setBeanValidation(BeanValidation beanValidation) {
         this.beanValidation = beanValidation;
     }
 
-    public void setStatisticsAccumulator(MiddlewareStatisticsAccumulator statisticsAccumulator) {
-        this.statisticsAccumulator = statisticsAccumulator;
-    }
+    private Object validate(ProceedingJoinPoint ctx) throws Throwable {
+        ValidateServiceMethodContext validatedContext = getValidateServiceMethodContext(ctx);
+        validateMethodParameters(ctx, validatedContext);
 
-    public void setConfiguration(Configuration configuration) {
-        logInternalServiceInvocation = configuration.getConfig(ServerConfig.class).getLogInternalServiceInvocation();
-    }
+        Object res = ctx.proceed();
 
-    private Object aroundInvoke(ProceedingJoinPoint ctx) throws Throwable {
-        SecurityContext securityContext = AppContext.getSecurityContextNN();
-        boolean internalInvocation = securityContext.incServiceInvocation() > 0;
-        try {
-            if (internalInvocation) {
-                if (logInternalServiceInvocation) {
-                    log.warn("Invoking '{}' from another service", ctx.getSignature());
-                }
-
-                //ValidateServiceMethodContext validatedContext = getValidateServiceMethodContext(ctx);
-                //validateMethodParameters(ctx, validatedContext);
-
-                Object res = ctx.proceed();
-
-                //validateMethodResult(ctx, validatedContext, res);
-
-                return res;
-            } else {
-                boolean checkTransactionOnExit = Stores.getAdditional().isEmpty() && !persistence.isInTransaction();
-                statisticsAccumulator.incMiddlewareRequestsCount();
-                try {
-                    // Using UserSessionsAPI directly to make sure the session's "last used" timestamp is propagated to the cluster
-                    UserSession userSession = userSessions.getAndRefresh(securityContext.getSessionId(), true);
-                    if (userSession == null) {
-                        throw new NoUserSessionException(securityContext.getSessionId());
-                    }
-
-                    //ValidateServiceMethodContext validatedContext = getValidateServiceMethodContext(ctx);
-                    //validateMethodParameters(ctx, validatedContext);
-
-                    log.trace("Invoking: {}, session={}", ctx.getSignature(), userSession);
-
-                    Object res = ctx.proceed();
-
-                    //validateMethodResult(ctx, validatedContext, res);
-
-                    return res;
-                } catch (Throwable e) {
-                    logException(e, ctx);
-                    // Propagate the special exception to avoid serialization errors on remote clients
-                    throw new RemoteException(e);
-                } finally {
-                    if (checkTransactionOnExit && persistence.isInTransaction()) {
-                        log.warn("Open transaction left in {}", ctx.getSignature().toShortString());
-                    }
-                }
-            }
-        } finally {
-            securityContext.decServiceInvocation();
-        }
+        validateMethodResult(ctx, validatedContext, res);
+        return res;
     }
 
     @Nullable
@@ -207,26 +131,6 @@ public class ServiceInterceptor {
                         .collect(Collectors.toSet());
 
                 throw new MethodResultValidationException("Service method result validation failed", paramsViolations);
-            }
-        }
-    }
-
-    protected void logException(Throwable e, ProceedingJoinPoint ctx) {
-        if (e instanceof NoUserSessionException) {
-            // If you don't want NoUserSessionException in log, set level higher than INFO for ServiceInterceptor logger
-            log.info("Exception in {}: {}", ctx.getSignature().toShortString(), e.toString());
-        } else if (e instanceof MethodParametersValidationException) {
-            log.info("MethodParametersValidationException in {}: {}, violations:\n{}", ctx.getSignature().toShortString(), e.toString(),
-                    ((MethodParametersValidationException) e).getConstraintViolations());
-        } else if (e instanceof MethodResultValidationException) {
-            log.error("MethodResultValidationException in {}: {}, violations:\n{}", ctx.getSignature().toShortString(), e.toString(),
-                     ((MethodResultValidationException) e).getConstraintViolations());
-        } else {
-            Logging annotation = e.getClass().getAnnotation(Logging.class);
-            if (annotation == null || annotation.value() == Logging.Type.FULL) {
-                log.error("Exception: ", e);
-            } else if (annotation.value() == Logging.Type.BRIEF) {
-                log.error("Exception in {}: {}", ctx.getSignature().toShortString(), e.toString());
             }
         }
     }
