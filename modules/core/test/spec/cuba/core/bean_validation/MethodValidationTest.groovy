@@ -17,7 +17,11 @@ class MethodValidationTest extends Specification {
     @Shared @ClassRule
     public TestContainer cont = TestContainer.Common.INSTANCE
 
-    private MethodValidationTestService service  = AppBeans.get(MethodValidationTestService)
+    private MethodValidationTestService service
+
+    void setup() {
+        service = AppBeans.get(MethodValidationTestService)
+    }
 
     def "invalid parameter test"(){
         when:

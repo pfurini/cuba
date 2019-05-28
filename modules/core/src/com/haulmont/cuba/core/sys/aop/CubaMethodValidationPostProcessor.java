@@ -13,21 +13,11 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-
-import java.lang.annotation.Annotation;
 
 public class CubaMethodValidationPostProcessor extends AbstractBeanFactoryAwareAdvisingPostProcessor
         implements InitializingBean {
-    protected Class<? extends Annotation> validatedAnnotationType = Validated.class;
-
     protected BeanValidation beanValidation;
-
-    public void setValidatedAnnotationType(Class<? extends Annotation> validatedAnnotationType) {
-        Assert.notNull(validatedAnnotationType, "'validatedAnnotationType' must not be null");
-        this.validatedAnnotationType = validatedAnnotationType;
-    }
 
     public void setBeanValidation(BeanValidation beanValidation) {
         this.beanValidation = beanValidation;
@@ -35,7 +25,7 @@ public class CubaMethodValidationPostProcessor extends AbstractBeanFactoryAwareA
 
     @Override
     public void afterPropertiesSet() {
-        Pointcut pointcut = new AnnotationMatchingPointcut(Service.class, this.validatedAnnotationType, true);
+        Pointcut pointcut = new AnnotationMatchingPointcut(Service.class, Validated.class, true);
         DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(pointcut, createMethodValidationAdvice(this.beanValidation));
         advisor.setOrder(2);
         this.advisor = advisor;
