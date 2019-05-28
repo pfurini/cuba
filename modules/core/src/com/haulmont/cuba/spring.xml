@@ -75,7 +75,6 @@
     <bean id="serviceInterceptor" class="com.haulmont.cuba.core.sys.ServiceInterceptor">
         <property name="userSessions" ref="cuba_UserSessions"/>
         <property name="persistence" ref="cuba_Persistence"/>
-        <property name="beanValidation" ref="cuba_BeanValidation"/>
         <property name="statisticsAccumulator" ref="cuba_MiddlewareStatisticsAccumulator"/>
         <property name="configuration" ref="cuba_Configuration"/>
     </bean>
@@ -94,7 +93,7 @@
         <property name="persistence" ref="cuba_Persistence"/>
     </bean>
 
-    <bean id="serviceValidator" class="com.haulmont.cuba.core.sys.ServiceValidator">
+    <bean id="methodValidationPostProcessor" class="com.haulmont.cuba.core.sys.aop.CubaMethodValidationPostProcessor">
         <property name="beanValidation" ref="cuba_BeanValidation"/>
     </bean>
 
@@ -112,10 +111,6 @@
 
         <aop:aspect id="serviceAspect" ref="serviceInterceptor" order="1">
             <aop:around method="aroundInvoke" pointcut="@within(org.springframework.stereotype.Service)"/>
-        </aop:aspect>
-
-        <aop:aspect id="serviceValidationAspect" ref="serviceValidator" order="2">
-            <aop:around method="validate" pointcut="@within(org.springframework.stereotype.Service) and @annotation(org.springframework.validation.annotation.Validated)"/>
         </aop:aspect>
 
         <aop:aspect id="mbeanAspect" ref="mbeanInterceptor" order="1">
