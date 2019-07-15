@@ -213,11 +213,11 @@ public class EntityInspectorEditor extends AbstractWindow {
 
     protected void initShortcuts() {
         Action commitAction = new BaseAction("commitAndClose")
-                    .withCaption(messages.getMainMessage("actions.OkClose"))
-                    .withShortcut(configuration.getConfig(ClientConfig.class).getCommitShortcut())
-                    .withHandler(e ->
-                            commitAndClose()
-                    );
+                .withCaption(messages.getMainMessage("actions.OkClose"))
+                .withShortcut(configuration.getConfig(ClientConfig.class).getCommitShortcut())
+                .withHandler(e ->
+                        commitAndClose()
+                );
         addAction(commitAction);
     }
 
@@ -384,7 +384,7 @@ public class EntityInspectorEditor extends AbstractWindow {
                             Entity propertyValue = item.getValue(metaProperty.getName());
                             addEmbeddedFieldGroup(metaProperty, "", propertyValue,
                                     (!metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.EmbeddedId.class)
-                                    || entityStates.isNew(item)));
+                                            || entityStates.isNew(item)));
                         } else {
                             addField(metaClass, metaProperty, item, fieldGroup, isRequired, true, isReadonly, customFields);
                         }
@@ -598,7 +598,7 @@ public class EntityInspectorEditor extends AbstractWindow {
         field.setCaption(getPropertyCaption(metaClass, metaProperty));
         field.setCustom(custom);
         field.setRequired(required);
-        field.setEditable(!readOnly);
+        field.setEditable(!isOneToOneMappedBySide(metaProperty) && !readOnly);
         field.setWidth("400px");
 
         if (requireTextArea(metaProperty, item)) {
@@ -618,6 +618,18 @@ public class EntityInspectorEditor extends AbstractWindow {
         fieldGroup.addField(field);
         if (custom)
             customFields.add(field);
+    }
+
+    /**
+     * Checks if field is annotated with OneToOne annotation with mappedBy parameter.
+     * Returns false if OneToOne annotation is not present or it has not mappedBy parameter.
+     * Returns true if OneToOne annotation present and it's mappedBy parameter is not empty.
+     *
+     * @param metaProperty meta property of the item's property being checked
+     */
+    protected boolean isOneToOneMappedBySide(MetaProperty metaProperty) {
+        OneToOne oneToOneAnnotation = metaProperty.getAnnotatedElement().getDeclaredAnnotation(OneToOne.class);
+        return oneToOneAnnotation != null && !oneToOneAnnotation.mappedBy().isEmpty();
     }
 
     /**
