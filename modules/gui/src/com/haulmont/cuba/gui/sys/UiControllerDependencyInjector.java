@@ -356,7 +356,9 @@ public class UiControllerDependencyInjector implements ControllerDependencyInjec
 
             if (eventTarget == null) {
                 if (annotation.required()) {
-                    throw new DevelopmentException(String.format("Unable to find @Subscribe target %s in %s", target, frame.getId()));
+                    throw new DevelopmentException(
+                            String.format("Unable to find @Subscribe method with id '%s' and target '%s' in screen '%s'",
+                                    annotation.id(), annotation.target(), frame.getId()));
                 }
 
                 log.trace("Skip @Subscribe method {} of {} : it is not required and target not found",
