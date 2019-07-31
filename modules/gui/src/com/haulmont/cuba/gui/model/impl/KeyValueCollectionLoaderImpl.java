@@ -18,6 +18,7 @@ package com.haulmont.cuba.gui.model.impl;
 
 import com.haulmont.bali.events.EventHub;
 import com.haulmont.bali.events.Subscription;
+import com.haulmont.chile.core.datatypes.Enumeration;
 import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.cuba.core.entity.KeyValueEntity;
 import com.haulmont.cuba.core.global.DataManager;
@@ -29,6 +30,7 @@ import com.haulmont.cuba.gui.model.*;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Nullable;
+import java.text.ParseException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -95,6 +97,22 @@ public class KeyValueCollectionLoaderImpl implements KeyValueCollectionLoader {
             list = getDataManager().loadValues(loadContext);
         } else {
             list = delegate.apply(loadContext);
+        }
+
+        for (MetaProperty property : container.getEntityMetaClass().getProperties()) {
+            if (property.getRange().isEnum()) {
+                for (KeyValueEntity entity : list) {
+                    Enumeration enumeration = property.getRange().asEnumeration();
+                    Object enumValue = entity.getValue(property.getName());
+                    if (enumValue != null) {
+                        try {
+                            entity.setValue(property.getName(), enumeration.parse(enumValue.toString()));
+                        } catch (ParseException e) {
+                            throw new RuntimeException("Can't parse enum value stored in the database", e);
+                        }
+                    }
+                }
+            }
         }
 
         if (dataContext != null) {

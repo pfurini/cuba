@@ -22,7 +22,6 @@ import com.haulmont.chile.core.annotations.NamePattern;
 import com.haulmont.chile.core.datatypes.Datatype;
 import com.haulmont.chile.core.datatypes.DatatypeRegistry;
 import com.haulmont.chile.core.datatypes.TimeZoneAwareDatatype;
-import com.haulmont.chile.core.datatypes.impl.EnumClass;
 import com.haulmont.chile.core.model.*;
 import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesTools;
 import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
@@ -45,7 +44,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -143,13 +141,6 @@ public class MetadataTools {
             }
             return datatype.format(value, userSessionSource.getLocale());
         } else if (range.isEnum()) {
-            if (!EnumClass.class.isAssignableFrom(value.getClass())) {
-                try {
-                    return messages.getMessage((Enum) range.asEnumeration().parse(value.toString()));
-                } catch (ParseException e) {
-                    throw new RuntimeException("Can't parse enum value stored in the database", e);
-                }
-            }
             return messages.getMessage((Enum) value);
         } else if (value instanceof Instance) {
             return getInstanceName((Instance) value);
