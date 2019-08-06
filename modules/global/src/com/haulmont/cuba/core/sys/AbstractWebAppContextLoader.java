@@ -60,6 +60,8 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
 
     public static final String APP_PROPS_CONFIG_PARAM = "appPropertiesConfig";
 
+    public static final String UBERJAR_PROPS_CONFIG_PARAM = "uberjarPropertiesConfig";
+
     public static final String APP_PROPS_PARAM = "appProperties";
 
     private final Logger log = LoggerFactory.getLogger(AbstractWebAppContextLoader.class);
@@ -189,6 +191,21 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
             }
         }
 
+        String uberjarPropsConfigName = getUberjarPropertiesConfig(sc);
+        if (uberjarPropsConfigName != null) {
+            tokenizer = new StringTokenizer(uberjarPropsConfigName);
+            for (String str : tokenizer.getTokenArray()) {
+                try (InputStream stream = new FileInputStream(str)) {
+                    BOMInputStream bomInputStream = new BOMInputStream(stream);
+                    try (Reader reader = new InputStreamReader(bomInputStream, StandardCharsets.UTF_8)) {
+                        properties.load(reader);
+                    }
+                } catch (IOException e) {
+                    log.trace("Uberjar resource {} not found, ignore it", str);
+                }
+            }
+        }
+
         for (Object key : properties.keySet()) {
             AppContext.setProperty((String) key, properties.getProperty((String) key).trim());
         }
@@ -204,6 +221,10 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
 
     protected String getAppPropertiesConfig(ServletContext sc) {
         return sc.getInitParameter(APP_PROPS_CONFIG_PARAM);
+    }
+
+    protected String getUberjarPropertiesConfig(ServletContext sc) {
+        return sc.getInitParameter(UBERJAR_PROPS_CONFIG_PARAM);
     }
 
     @Override
