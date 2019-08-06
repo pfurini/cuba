@@ -196,6 +196,7 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
             tokenizer = new StringTokenizer(uberjarPropsConfigName);
             for (String str : tokenizer.getTokenArray()) {
                 try (InputStream stream = new FileInputStream(str)) {
+                    log.info("Loading uberjar properties from {}", str);
                     BOMInputStream bomInputStream = new BOMInputStream(stream);
                     try (Reader reader = new InputStreamReader(bomInputStream, StandardCharsets.UTF_8)) {
                         properties.load(reader);
