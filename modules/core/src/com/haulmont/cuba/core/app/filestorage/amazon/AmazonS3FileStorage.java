@@ -129,7 +129,7 @@ public class AmazonS3FileStorage implements FileStorageAPI {
 
     @Override
     public InputStream openStream(FileDescriptor fileDescr) throws FileStorageException {
-        InputStream is = null;
+        InputStream is;
         try {
             s3 = getS3Client();
             is = s3.getObject(GetObjectRequest.builder().bucket(getBucket()).key(resolveFileName(fileDescr)).build(),
@@ -145,13 +145,10 @@ public class AmazonS3FileStorage implements FileStorageAPI {
 
     @Override
     public byte[] loadFile(FileDescriptor fileDescr) throws FileStorageException {
-        InputStream inputStream = openStream(fileDescr);
-        try {
+        try (InputStream inputStream = openStream(fileDescr)) {
             return IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
             throw new FileStorageException(FileStorageException.Type.IO_EXCEPTION, fileDescr.getId().toString(), e);
-        } finally {
-            IOUtils.closeQuietly(inputStream);
         }
     }
 
@@ -182,8 +179,9 @@ public class AmazonS3FileStorage implements FileStorageAPI {
         int month = cal.get(Calendar.MONTH) + 1;
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        return String.format("%d/%s/%s",
-                year, StringUtils.leftPad(String.valueOf(month), 2, '0'), StringUtils.leftPad(String.valueOf(day), 2, '0'));
+        return String.format("%d/%s/%s", year,
+                StringUtils.leftPad(String.valueOf(month), 2, '0'),
+                StringUtils.leftPad(String.valueOf(day), 2, '0'));
     }
 
     protected String getFileName(FileDescriptor fileDescriptor) {
