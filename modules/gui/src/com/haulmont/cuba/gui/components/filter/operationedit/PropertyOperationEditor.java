@@ -27,6 +27,9 @@ import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.PopupButton;
 import com.haulmont.cuba.gui.components.filter.condition.AbstractCondition;
 import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
+import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.List;
 
 
 /**
@@ -36,9 +39,12 @@ public class PropertyOperationEditor extends AbstractOperationEditor {
 
     protected ComponentsFactory componentsFactory;
     protected PopupButton popupButton;
+    protected List<Op> hideOperations;
 
-    public PropertyOperationEditor(AbstractCondition condition) {
-        super(condition);
+    public PropertyOperationEditor(AbstractCondition condition, List<Op> hideOperations) {
+        this.hideOperations = hideOperations;
+        this.condition = condition;
+        this.component = createComponent();
     }
 
     @Override
@@ -57,8 +63,10 @@ public class PropertyOperationEditor extends AbstractOperationEditor {
         }
         MetaClass propertyMetaClass = metadataTools.getPropertyEnclosingMetaClass(propertyPath);
         for (Op op : opManager.availableOps(propertyMetaClass, propertyPath.getMetaProperty())) {
-            OperatorChangeAction operatorChangeAction = new OperatorChangeAction(op);
-            popupButton.addAction(operatorChangeAction);
+            if(ObjectUtils.isEmpty(hideOperations) || Boolean.FALSE.equals(hideOperations.contains(op))){
+                OperatorChangeAction operatorChangeAction = new OperatorChangeAction(op);
+                popupButton.addAction(operatorChangeAction);
+            }
         }
 
         popupButton.setCaption(condition.getOperator().getLocCaption());

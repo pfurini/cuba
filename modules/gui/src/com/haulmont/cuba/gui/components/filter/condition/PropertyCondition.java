@@ -35,6 +35,7 @@ import com.haulmont.cuba.gui.components.filter.operationedit.PropertyOperationEd
 import org.apache.commons.lang3.BooleanUtils;
 import org.dom4j.Element;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +47,8 @@ public class PropertyCondition extends AbstractCondition {
     private static Pattern PATTERN = Pattern.compile("\\s*(\\S+)\\s+((?:not\\s+)*\\S+)\\s+(\\S+)\\s*(?:ESCAPE '\\S+')?\\s*");
     private static Pattern PATTERN_NOT_IN = Pattern.compile("\\s*[(]\\s*[(]\\s*(\\S+)\\s+((:not\\s+)*\\S+)\\s+(\\S+)[\\S\\s]*");
     private static Pattern PATTERN_NULL = Pattern.compile("\\s*(\\S+)\\s+(is\\s+(?:not\\s+)?null)\\s*");
+
+    protected List<Op> hideOperations;
 
     public PropertyCondition(PropertyCondition condition) {
         super(condition);
@@ -227,12 +230,16 @@ public class PropertyCondition extends AbstractCondition {
 
     @Override
     public AbstractOperationEditor createOperationEditor() {
-        operationEditor = new PropertyOperationEditor(this);
+        operationEditor = new PropertyOperationEditor(this, hideOperations);
         return operationEditor;
     }
 
     @Override
     public AbstractCondition createCopy() {
         return new PropertyCondition(this);
+    }
+
+    public void setHideOperations(List<Op> hideOperations){
+        this.hideOperations = hideOperations;
     }
 }

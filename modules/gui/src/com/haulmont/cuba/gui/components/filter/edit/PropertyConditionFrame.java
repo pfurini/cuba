@@ -17,6 +17,8 @@
 
 package com.haulmont.cuba.gui.components.filter.edit;
 
+import com.haulmont.cuba.core.global.filter.Op;
+import com.haulmont.cuba.gui.WindowParam;
 import com.haulmont.cuba.gui.components.BoxLayout;
 import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.HasValue;
@@ -26,6 +28,7 @@ import com.haulmont.cuba.gui.components.filter.condition.AbstractCondition;
 import com.haulmont.cuba.gui.components.filter.condition.PropertyCondition;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 
 public class PropertyConditionFrame extends ConditionFrame<PropertyCondition> {
@@ -41,6 +44,9 @@ public class PropertyConditionFrame extends ConditionFrame<PropertyCondition> {
 
     protected Component operationComponent;
 
+    @WindowParam(name = "hideOperations")
+    protected List<Op> hideOperations;
+
     @Override
     public void init(Map<String, Object> params) {
         super.init(params);
@@ -49,6 +55,7 @@ public class PropertyConditionFrame extends ConditionFrame<PropertyCondition> {
     @Override
     public void setCondition(PropertyCondition condition) {
         super.setCondition(condition);
+        condition.setHideOperations(hideOperations);
         if (operationComponent != null)
             operationLayout.remove(operationComponent);
         operationComponent = condition.createOperationEditor().getComponent();

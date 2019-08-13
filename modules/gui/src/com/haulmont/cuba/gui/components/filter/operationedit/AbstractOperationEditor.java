@@ -25,6 +25,8 @@ public abstract class AbstractOperationEditor {
     protected Component component;
     protected AbstractCondition condition;
 
+    protected AbstractOperationEditor() {}
+
     public AbstractOperationEditor(AbstractCondition condition) {
         this.condition = condition;
         this.component = createComponent();

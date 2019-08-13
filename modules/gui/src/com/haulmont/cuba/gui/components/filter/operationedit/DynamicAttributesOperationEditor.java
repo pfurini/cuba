@@ -30,7 +30,7 @@ import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
 public class DynamicAttributesOperationEditor extends PropertyOperationEditor {
 
     public DynamicAttributesOperationEditor(AbstractCondition condition) {
-        super(condition);
+        super(condition, null);
     }
 
     @Override
