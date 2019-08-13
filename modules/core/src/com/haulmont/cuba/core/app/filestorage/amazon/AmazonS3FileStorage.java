@@ -31,6 +31,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,9 +44,10 @@ public class AmazonS3FileStorage implements FileStorageAPI {
     @Inject
     protected AmazonS3Config amazonS3Config;
 
-    protected S3Client s3;
+    protected S3Client s3Client;
 
-    protected S3Client getS3Client() {
+    @PostConstruct
+    protected void initS3Client() {
         AwsCredentialsProvider awsCredentialsProvider;
         if (getAccessKey() != null && getSecretAccessKey() != null) {
             AwsCredentials awsCredentials = AwsBasicCredentials.create(getAccessKey(), getSecretAccessKey());
@@ -53,7 +55,7 @@ public class AmazonS3FileStorage implements FileStorageAPI {
         } else {
             awsCredentialsProvider = DefaultCredentialsProvider.create();
         }
-        return S3Client.builder()
+        s3Client = S3Client.builder()
                 .credentialsProvider(awsCredentialsProvider)
                 .region(Region.of(getRegionName()))
                 .build();
@@ -76,31 +78,29 @@ public class AmazonS3FileStorage implements FileStorageAPI {
     public void saveFile(FileDescriptor fileDescr, byte[] data) throws FileStorageException {
         checkNotNullArgument(data, "File content is null");
         try {
-            s3 = getS3Client();
             int chunkSize = amazonS3Config.getChunkSize() * 1024;
 
             CreateMultipartUploadRequest createMultipartUploadRequest = CreateMultipartUploadRequest.builder()
                     .bucket(getBucket()).key(resolveFileName(fileDescr))
                     .build();
-            CreateMultipartUploadResponse response = s3.createMultipartUpload(createMultipartUploadRequest);
+            CreateMultipartUploadResponse response = s3Client.createMultipartUpload(createMultipartUploadRequest);
 
             List<CompletedPart> completedParts = new ArrayList<>();
-            int filePosition = 0;
-            for (int i = 1; filePosition < data.length; i++) {
+            for (int i = 0; i * chunkSize < data.length; i++) {
+                int partNumber = i + 1;
                 UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
                         .bucket(getBucket())
                         .key(resolveFileName(fileDescr))
                         .uploadId(response.uploadId())
-                        .partNumber(i)
+                        .partNumber(partNumber)
                         .build();
-                int endChunkPosition = Math.min(filePosition + chunkSize, data.length);
-                byte[] chunkBytes = getChunkBytes(data, filePosition, endChunkPosition);
-                String eTag = s3.uploadPart(uploadPartRequest, RequestBody.fromBytes(chunkBytes)).eTag();
-                CompletedPart part = CompletedPart.builder().partNumber(i).eTag(eTag).build();
+                int endChunkPosition = Math.min(partNumber * chunkSize, data.length);
+                byte[] chunkBytes = getChunkBytes(data, i * chunkSize, endChunkPosition);
+                String eTag = s3Client.uploadPart(uploadPartRequest, RequestBody.fromBytes(chunkBytes)).eTag();
+                CompletedPart part = CompletedPart.builder().partNumber(partNumber).eTag(eTag).build();
                 completedParts.add(part);
-
-                filePosition += chunkSize;
             }
+
             CompletedMultipartUpload completedMultipartUpload = CompletedMultipartUpload.builder().parts(completedParts).build();
             CompleteMultipartUploadRequest completeMultipartUploadRequest =
                     CompleteMultipartUploadRequest.builder()
@@ -108,36 +108,41 @@ public class AmazonS3FileStorage implements FileStorageAPI {
                             .key(resolveFileName(fileDescr))
                             .uploadId(response.uploadId())
                             .multipartUpload(completedMultipartUpload).build();
-            s3.completeMultipartUpload(completeMultipartUploadRequest);
+            s3Client.completeMultipartUpload(completeMultipartUploadRequest);
         } catch (SdkClientException e) {
-            e.printStackTrace();
+            String message = String.format("Could not save file %s.", getFileName(fileDescr));
+            throw new FileStorageException(FileStorageException.Type.IO_EXCEPTION, message);
         }
     }
 
     protected byte[] getChunkBytes(byte[] data, int start, int end) {
         byte[] chunkBytes = new byte[end - start];
-        System.arraycopy(data, start, chunkBytes, 0, end-start);
+        System.arraycopy(data, start, chunkBytes, 0, end - start);
         return chunkBytes;
     }
 
     @Override
     public void removeFile(FileDescriptor fileDescr) throws FileStorageException {
-        s3 = getS3Client();
-        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(getBucket()).key(resolveFileName(fileDescr)).build();
-        s3.deleteObject(deleteObjectRequest);
+        try {
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(getBucket()).key(resolveFileName(fileDescr)).build();
+            s3Client.deleteObject(deleteObjectRequest);
+        } catch (SdkClientException e) {
+            String message = String.format("Could not delete file %s.", getFileName(fileDescr));
+            throw new FileStorageException(FileStorageException.Type.IO_EXCEPTION, message);
+        }
     }
 
     @Override
     public InputStream openStream(FileDescriptor fileDescr) throws FileStorageException {
         InputStream is;
         try {
-            s3 = getS3Client();
-            is = s3.getObject(GetObjectRequest.builder().bucket(getBucket()).key(resolveFileName(fileDescr)).build(),
-                    ResponseTransformer.toInputStream());
-        } catch (
-                SdkClientException e) {
-            String message = String.format("Could not load file %s.",
-                    getFileName(fileDescr));
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(getBucket())
+                    .key(resolveFileName(fileDescr))
+                    .build();
+            is = s3Client.getObject(getObjectRequest, ResponseTransformer.toInputStream());
+        } catch (SdkClientException e) {
+            String message = String.format("Could not load file %s.", getFileName(fileDescr));
             throw new FileStorageException(FileStorageException.Type.IO_EXCEPTION, message);
         }
         return is;
@@ -158,7 +163,7 @@ public class AmazonS3FileStorage implements FileStorageAPI {
                 .bucket(getBucket())
                 .maxKeys(1)
                 .build();
-        ListObjectsV2Response listObjResponse = s3.listObjectsV2(listObjectsReqManual);
+        ListObjectsV2Response listObjResponse = s3Client.listObjectsV2(listObjectsReqManual);
         return listObjResponse.contents().stream()
                 .map(S3Object::key)
                 .collect(Collectors.toList())
