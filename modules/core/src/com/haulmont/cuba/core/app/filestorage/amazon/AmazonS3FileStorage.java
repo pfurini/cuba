@@ -97,7 +97,10 @@ public class AmazonS3FileStorage implements FileStorageAPI {
                 int endChunkPosition = Math.min(partNumber * chunkSize, data.length);
                 byte[] chunkBytes = getChunkBytes(data, i * chunkSize, endChunkPosition);
                 String eTag = s3Client.uploadPart(uploadPartRequest, RequestBody.fromBytes(chunkBytes)).eTag();
-                CompletedPart part = CompletedPart.builder().partNumber(partNumber).eTag(eTag).build();
+                CompletedPart part = CompletedPart.builder()
+                        .partNumber(partNumber)
+                        .eTag(eTag)
+                        .build();
                 completedParts.add(part);
             }
 
@@ -124,7 +127,10 @@ public class AmazonS3FileStorage implements FileStorageAPI {
     @Override
     public void removeFile(FileDescriptor fileDescr) throws FileStorageException {
         try {
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(getBucket()).key(resolveFileName(fileDescr)).build();
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(getBucket())
+                    .key(resolveFileName(fileDescr))
+                    .build();
             s3Client.deleteObject(deleteObjectRequest);
         } catch (SdkClientException e) {
             String message = String.format("Could not delete file %s.", getFileName(fileDescr));
