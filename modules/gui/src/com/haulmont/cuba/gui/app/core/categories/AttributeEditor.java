@@ -424,12 +424,12 @@ public class AttributeEditor extends AbstractEditor<CategoryAttribute> {
         }
 
         Collection<String> fields = FIELDS_VISIBLE_FOR_TYPES.get(attribute.getDataType());
-        if (fields != null) {
+        if (fields != null && fields.size() > 0) {
             for (String componentId : fields) {
                 attributeFieldGroup.getFieldNN(componentId).setVisible(true);
             }
+            getDialogOptions().setWidth("1220px");
         }
-
         if (attribute.getDataType() == ENTITY) {
             if (!Strings.isNullOrEmpty(attribute.getEntityClass())) {
                 Class entityClass = attribute.getJavaClassForEntity();
