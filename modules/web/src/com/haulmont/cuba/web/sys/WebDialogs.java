@@ -395,6 +395,22 @@ public class WebDialogs implements Dialogs {
             }
             return null;
         }
+
+        @Override
+        public boolean isModal() {
+            return window.isModal();
+        }
+
+        @Override
+        public OptionDialogBuilder withModal(boolean modal) {
+            window.setModal(modal);
+            return this;
+        }
+
+        @Override
+        public OptionDialogBuilder modal() {
+            return withModal(true);
+        }
     }
 
     public class MessageDialogBuilderImpl implements MessageDialogBuilder {
@@ -649,6 +665,7 @@ public class WebDialogs implements Dialogs {
         protected String message;
         protected String caption;
         protected Throwable throwable;
+        protected ContentMode contentMode;
 
         @Override
         public ExceptionDialogBuilder withThrowable(Throwable throwable) {
@@ -681,6 +698,18 @@ public class WebDialogs implements Dialogs {
         @Override
         public String getMessage() {
             return message;
+        }
+
+        @Override
+        public ExceptionDialogBuilder withContentMode(ContentMode contentMode) {
+            // just stub
+            this.contentMode = contentMode;
+            return this;
+        }
+
+        @Override
+        public ContentMode getContentMode() {
+            return contentMode;
         }
 
         @Override
@@ -802,6 +831,11 @@ public class WebDialogs implements Dialogs {
         }
 
         @Override
+        public SizeUnit getWidthSizeUnit() {
+            return inputDialog.getDialogWindow().getWidthSizeUnit();
+        }
+
+        @Override
         public InputDialogBuilder withHeight(String height) {
             inputDialog.getDialogWindow().setDialogHeight(height);
             return this;
@@ -809,6 +843,11 @@ public class WebDialogs implements Dialogs {
 
         public float getHeight() {
             return inputDialog.getDialogWindow().getDialogHeight();
+        }
+
+        @Override
+        public SizeUnit getHeightSizeUnit() {
+            return inputDialog.getDialogWindow().getHeightSizeUnit();
         }
 
         @Nullable
@@ -826,6 +865,51 @@ public class WebDialogs implements Dialogs {
         @Override
         public InputDialog build() {
             return inputDialog;
+        }
+
+        @Override
+        public InputDialogBuilder withStyleName(String styleName) {
+            inputDialog.getWindow().setStyleName(styleName);
+            return this;
+        }
+
+        @Override
+        public String getStyleName() {
+            return inputDialog.getWindow().getStyleName();
+        }
+
+        @Override
+        public boolean isModal() {
+            return inputDialog.getDialogWindow().isModal();
+        }
+
+        @Override
+        public InputDialogBuilder withModal(boolean modal) {
+            inputDialog.getDialogWindow().setModal(modal);
+            return this;
+        }
+
+        @Override
+        public InputDialogBuilder modal() {
+            return withModal(true);
+        }
+
+        @Override
+        public InputDialogBuilder withMaximized(boolean maximized) {
+            inputDialog.getDialogWindow().setWindowMode(maximized
+                    ? DialogWindow.WindowMode.MAXIMIZED
+                    : DialogWindow.WindowMode.NORMAL);
+            return this;
+        }
+
+        @Override
+        public InputDialogBuilder maximized() {
+            return withMaximized(true);
+        }
+
+        @Override
+        public boolean isMaximized() {
+            return inputDialog.getDialogWindow().getWindowMode() == DialogWindow.WindowMode.MAXIMIZED;
         }
     }
 }

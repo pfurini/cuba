@@ -3177,7 +3177,7 @@
         <xs:complexContent>
             <xs:extension base="baseComponent">
                 <xs:all>
-                    <xs:element name="properties" type="fragmentProperties" minOccurs="0"/>
+                    <xs:element name="properties" type="screenProperties" minOccurs="0"/>
                 </xs:all>
 
                 <xs:attribute name="screen" type="xs:string"/>
@@ -3185,13 +3185,13 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="fragmentProperties">
+    <xs:complexType name="screenProperties">
         <xs:sequence>
-            <xs:element name="property" type="fragmentProperty" minOccurs="0"/>
+            <xs:element name="property" type="screenProperty" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="fragmentProperty">
+    <xs:complexType name="screenProperty">
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="value" type="xs:string"/>
         <xs:attribute name="ref" type="xs:string"/>
@@ -3367,12 +3367,90 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <!-- Notification Facet -->
+    <xs:complexType name="notificationType">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+
+        <xs:attribute name="caption" type="xs:string"/>
+        <xs:attribute name="message" type="xs:string"/>
+        <xs:attribute name="type" type="notificationTypeEnum"/>
+        <xs:attribute name="delay" type="xs:int"/>
+
+        <xs:attribute name="contentMode" type="contentMode"/>
+        <xs:attribute name="styleName" type="xs:string"/>
+        <xs:attribute name="position" type="align"/>
+    </xs:complexType>
+
+    <xs:simpleType name="notificationTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TRAY"/>
+            <xs:enumeration value="HUMANIZED"/>
+            <xs:enumeration value="WARNING"/>
+            <xs:enumeration value="ERROR"/>
+            <xs:enumeration value="SYSTEM"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Dialog Facet -->
+    <xs:complexType name="dialogType">
+        <xs:sequence>
+            <xs:element name="actions" type="dialogActionsType"/>
+        </xs:sequence>
+
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="caption" type="xs:string"/>
+        <xs:attribute name="message" type="xs:string"/>
+        <xs:attribute name="type" type="dialogMessageType"/>
+
+        <xs:attribute name="contentMode" type="contentMode"/>
+        <xs:attribute name="maximized" type="xs:boolean"/>
+        <xs:attribute name="modal" type="xs:boolean"/>
+        <xs:attribute name="styleName" type="xs:string"/>
+
+        <xs:attributeGroup ref="hasSize"/>
+    </xs:complexType>
+
+    <xs:simpleType name="dialogMessageType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CONFIRMATION"/>
+            <xs:enumeration value="WARNING"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="dialogActionsType">
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="action" type="dialogActionType"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="dialogActionType">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="caption" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="icon" type="xs:string"/>
+        <xs:attribute name="primary" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="screenType">
+        <xs:all>
+            <xs:element name="properties" type="screenProperties" minOccurs="0"/>
+        </xs:all>
+
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="screen" type="xs:string" use="required"/>
+    </xs:complexType>
+
     <xs:complexType name="facets">
         <xs:sequence>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="timer" type="timerType" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="clipboardTrigger" type="clipboardTriggerType" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="dataLoadCoordinator" type="dataLoadCoordinatorType" minOccurs="0"/>
+                <xs:element name="notification" type="notificationType" minOccurs="0"/>
+                <xs:element name="dialog" type="dialogType" minOccurs="0"/>
+                <xs:element name="screen" type="screenType" minOccurs="0"/>
 
                 <!-- allow custom facets from any namespace -->
                 <xs:any/>
