@@ -52,7 +52,7 @@ public class ResendMessage extends Screen {
 
     @Subscribe
     protected void onBeforeShow(BeforeShowEvent event) {
-        if(message!=null) {
+        if (message != null) {
             emailTextField.setValue(message.getAddress());
         }
     }
@@ -64,13 +64,17 @@ public class ResendMessage extends Screen {
     @Subscribe("resendEmailBtn")
     protected void onResendEmailBtnClick(Button.ClickEvent event) {
         if (message != null) {
-            EmailInfo emailInfo = new EmailInfo(emailTextField.getValue(), message.getCaption(), emailBody(message));
-            emailInfo.setFrom(message.getFrom());
-            emailInfo.setBodyContentType(message.getBodyContentType());
-            emailInfo.setAttachments(getAttachmentsArray(message.getAttachments()));
-            emailInfo.setBcc(message.getBcc());
-            emailInfo.setCc(message.getCc());
-            emailInfo.setHeaders(parseHeadersString(message.getHeaders()));
+            EmailInfo emailInfo = EmailInfoBuilder.create()
+                    .setAddresses(emailTextField.getValue())
+                    .setCaption(message.getCaption())
+                    .setBody(emailBody(message))
+                    .setFrom(message.getFrom())
+                    .setBodyContentType(message.getBodyContentType())
+                    .setAttachments(getAttachmentsArray(message.getAttachments()))
+                    .setBcc(message.getBcc())
+                    .setCc(message.getCc())
+                    .setHeaders(parseHeadersString(message.getHeaders()))
+                    .build();
             try {
                 emailService.sendEmail(emailInfo);
             } catch (EmailException e) {
@@ -86,7 +90,7 @@ public class ResendMessage extends Screen {
 
     protected String emailBody(SendingMessage message) {
         if (message.getContentTextFile() != null) {
-            try (InputStream inputStream = fileLoader.openStream(message.getContentTextFile());){
+            try (InputStream inputStream = fileLoader.openStream(message.getContentTextFile());) {
                 return IOUtils.toString(inputStream, Charset.defaultCharset());
             } catch (FileStorageException | IOException e) {
                 throw new RuntimeException("Can't read message body from the file", e);
