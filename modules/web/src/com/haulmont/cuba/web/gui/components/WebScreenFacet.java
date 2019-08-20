@@ -30,7 +30,8 @@ import com.haulmont.cuba.web.gui.WebAbstractFacet;
 
 import java.util.Collection;
 
-public class WebScreenFacet extends WebAbstractFacet implements ScreenFacet, BeanLocatorAware {
+public class WebScreenFacet<T extends Screen> extends WebAbstractFacet
+        implements ScreenFacet<T>, BeanLocatorAware {
 
     protected BeanLocator beanLocator;
 
@@ -69,7 +70,7 @@ public class WebScreenFacet extends WebAbstractFacet implements ScreenFacet, Bea
     }
 
     @Override
-    public void show() {
+    public T show() {
         Frame owner = getOwner();
         if (owner == null) {
             throw new IllegalStateException("Screen facet is not attached to Frame");
@@ -85,6 +86,9 @@ public class WebScreenFacet extends WebAbstractFacet implements ScreenFacet, Bea
         injector.inject();
 
         screen.show();
+
+        //noinspection unchecked
+        return (T) screen;
     }
 
     @Override

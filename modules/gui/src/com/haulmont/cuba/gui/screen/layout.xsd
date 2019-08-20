@@ -3372,7 +3372,7 @@
         <xs:attribute name="id" type="xs:string" use="required"/>
 
         <xs:attribute name="caption" type="xs:string"/>
-        <xs:attribute name="message" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
         <xs:attribute name="type" type="notificationTypeEnum"/>
         <xs:attribute name="delay" type="xs:int"/>
 
@@ -3391,12 +3391,9 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- Dialog Facet -->
-    <xs:complexType name="dialogType">
-        <xs:sequence>
-            <xs:element name="actions" type="dialogActionsType"/>
-        </xs:sequence>
+    <!-- Dialog Facets Base -->
 
+    <xs:complexType name="dialogType">
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="caption" type="xs:string"/>
         <xs:attribute name="message" type="xs:string"/>
@@ -3408,6 +3405,26 @@
         <xs:attribute name="styleName" type="xs:string"/>
 
         <xs:attributeGroup ref="hasSize"/>
+    </xs:complexType>
+
+    <!-- MessageDialog Facet -->
+    <xs:complexType name="messageDialogType">
+        <xs:complexContent>
+            <xs:extension base="dialogType">
+                <xs:attribute name="closeOnClickOutside" type="xs:boolean"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- OptionDialog Facet -->
+    <xs:complexType name="optionDialogType">
+        <xs:complexContent>
+            <xs:extension base="dialogType">
+                <xs:sequence>
+                    <xs:element name="actions" type="dialogActionsType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:simpleType name="dialogMessageType">
@@ -3440,7 +3457,18 @@
 
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="screen" type="xs:string" use="required"/>
+        <xs:attribute name="openMode" type="screenOpenModeType"/>
     </xs:complexType>
+
+    <xs:simpleType name="screenOpenModeType">
+        <xs:restriction>
+            <xs:enumeration value="NEW_TAB"/>
+            <xs:enumeration value="THIS_TAB"/>
+            <xs:enumeration value="DIALOG"/>
+            <xs:enumeration value="NEW_WINDOW"/>
+            <xs:enumeration value="ROOT"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="facets">
         <xs:sequence>
@@ -3449,7 +3477,8 @@
                 <xs:element name="clipboardTrigger" type="clipboardTriggerType" minOccurs="0" maxOccurs="unbounded"/>
                 <xs:element name="dataLoadCoordinator" type="dataLoadCoordinatorType" minOccurs="0"/>
                 <xs:element name="notification" type="notificationType" minOccurs="0"/>
-                <xs:element name="dialog" type="dialogType" minOccurs="0"/>
+                <xs:element name="messageDialog" type="messageDialogType" minOccurs="0"/>
+                <xs:element name="optionDialog" type="optionDialogType" minOccurs="0"/>
                 <xs:element name="screen" type="screenType" minOccurs="0"/>
 
                 <!-- allow custom facets from any namespace -->

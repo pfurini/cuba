@@ -20,6 +20,7 @@ import com.haulmont.cuba.gui.Screens;
 import com.haulmont.cuba.gui.meta.StudioFacet;
 import com.haulmont.cuba.gui.meta.StudioProperties;
 import com.haulmont.cuba.gui.meta.StudioProperty;
+import com.haulmont.cuba.gui.screen.Screen;
 import com.haulmont.cuba.gui.sys.UiControllerProperty;
 
 import java.util.Collection;
@@ -37,7 +38,7 @@ import java.util.Collection;
                 @StudioProperty(name = "id", required = true)
         }
 )
-public interface ScreenFacet extends Facet {
+public interface ScreenFacet<T extends Screen> extends Facet {
 
     /**
      * Sets the id of screen to be opened.
@@ -73,7 +74,7 @@ public interface ScreenFacet extends Facet {
     Collection<UiControllerProperty> getProperties();
 
     /**
-     * Shows screen.
+     * Shows and returns screen.
      */
-    void show();
+    T show();
 }

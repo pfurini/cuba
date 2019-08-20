@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 public class WebNotification extends WebAbstractFacet implements Notification {
 
     protected String caption;
-    protected String message;
+    protected String description;
     protected int delayMs = 3000;
     protected String styleName;
     protected NotificationType type = NotificationType.HUMANIZED;
@@ -47,17 +47,17 @@ public class WebNotification extends WebAbstractFacet implements Notification {
 
     @Override
     public String getCaption() {
-        return message;
+        return caption;
     }
 
     @Override
-    public void setMessage(String message) {
-        this.message = message;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
-    public String getMessage() {
-        return message;
+    public String getDescription() {
+        return description;
     }
 
     @Override
@@ -135,7 +135,7 @@ public class WebNotification extends WebAbstractFacet implements Notification {
         Notifications notifications = UiControllerUtils.getScreenContext(owner.getFrameOwner())
                 .getNotifications();
 
-        String description = this.message;
+        String description = this.description;
         if (messageProvider != null) {
             description = messageProvider.get();
         }

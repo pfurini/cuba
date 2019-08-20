@@ -24,6 +24,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
+@Inherited
 public @interface StudioProperty {
     /**
      * @return name of the property

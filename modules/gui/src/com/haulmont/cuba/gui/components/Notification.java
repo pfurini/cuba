@@ -56,17 +56,17 @@ public interface Notification extends Facet {
     String getCaption();
 
     /**
-     * Sets notification message.
+     * Sets notification description.
      *
-     * @param message message
+     * @param description description
      */
     @StudioProperty(type = PropertyType.LOCALIZED_STRING)
-    void setMessage(String message);
+    void setDescription(String description);
 
     /**
-     * @return notification message
+     * @return notification description
      */
-    String getMessage();
+    String getDescription();
 
     /**
      * Sets the delay before the notification disappears.

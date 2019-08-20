@@ -57,7 +57,7 @@ public class NotificationFacetProvider implements FacetProvider<Notification> {
                             ComponentLoader.ComponentContext context) {
         loadId(facet, element);
         loadCaption(facet, element, context);
-        loadMessage(facet, element, context);
+        loadDescription(facet, element, context);
         loadType(facet, element);
         loadDelay(facet, element);
         loadContentMode(facet, element);
@@ -80,11 +80,11 @@ public class NotificationFacetProvider implements FacetProvider<Notification> {
         }
     }
 
-    protected void loadMessage(Notification facet, Element element,
-                               ComponentLoader.ComponentContext context) {
-        String message = element.attributeValue("message");
-        if (isNotEmpty(message)) {
-            facet.setMessage(loadResourceString(context.getFrame().getClass(), message));
+    protected void loadDescription(Notification facet, Element element,
+                                   ComponentLoader.ComponentContext context) {
+        String description = element.attributeValue("description");
+        if (isNotEmpty(description)) {
+            facet.setDescription(loadResourceString(context.getFrame().getClass(), description));
         }
     }
 

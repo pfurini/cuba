@@ -19,6 +19,7 @@ package com.haulmont.cuba.web.gui.facets;
 import com.haulmont.cuba.core.global.BeanLocator;
 import com.haulmont.cuba.gui.GuiDevelopmentException;
 import com.haulmont.cuba.gui.components.ScreenFacet;
+import com.haulmont.cuba.gui.screen.OpenMode;
 import com.haulmont.cuba.gui.sys.UiControllerProperty;
 import com.haulmont.cuba.gui.xml.FacetProvider;
 import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
@@ -61,6 +62,7 @@ public class ScreenFacetProvider implements FacetProvider<ScreenFacet> {
                             ComponentLoader.ComponentContext context) {
         loadId(facet, element);
         loadScreen(facet, element);
+        loadOpenMode(facet, element);
         loadProperties(facet, element, context);
     }
 
@@ -75,6 +77,13 @@ public class ScreenFacetProvider implements FacetProvider<ScreenFacet> {
         String screen = element.attributeValue("screen");
         if (isNotEmpty(screen)) {
             facet.setScreen(screen);
+        }
+    }
+
+    protected void loadOpenMode(ScreenFacet facet, Element element) {
+        String openMode = element.attributeValue("openMode");
+        if (isNotEmpty(openMode)) {
+            facet.setLaunchMode(OpenMode.valueOf(openMode));
         }
     }
 
