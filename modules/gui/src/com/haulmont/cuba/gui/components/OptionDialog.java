@@ -95,8 +95,6 @@ public interface OptionDialog extends DialogFacet, HasSubParts {
          *
          * Intended to set handlers via {@code @Install} annotation.
          * @param actionHandler action handler
-         *
-         * @noinspection unused
          */
         public void setActionHandler(Consumer<DialogActionPerformedEvent> actionHandler) {
             this.actionHandler = actionHandler;

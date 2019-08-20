@@ -33,8 +33,6 @@ import java.util.function.Function;
 
 /**
  * Utility dialogs API.
- *
- * @noinspection unused
  */
 public interface Dialogs {
     /**
