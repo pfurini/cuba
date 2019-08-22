@@ -16,24 +16,26 @@
 
 package com.haulmont.cuba.core.sys.connectionpool;
 
+import org.springframework.stereotype.Component;
+
 import javax.management.*;
 import java.lang.management.ManagementFactory;
+import java.util.regex.Pattern;
 
-public class HikariConnectionPoolInfo implements ConnectionPoolInfo {
-    protected ObjectName registeredPoolName;
-
-    protected HikariConnectionPoolInfo(ObjectName registeredPoolName) {
-        this.registeredPoolName = registeredPoolName;
-    }
-
+public class HikariConnectionPoolInfo extends ConnectionPoolInfoImpl {
     @Override
     public String getPoolName() {
         return "Hikari Connection Pool";
     }
 
     @Override
+    public Pattern getRegexPattern() {
+        return Pattern.compile("^com\\.zaxxer\\.hikari:type=Pool \\(.*\\)$");
+    }
+
+    @Override
     public int getActiveConnectionsCount() throws AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException {
-        return (Integer) ManagementFactory.getPlatformMBeanServer().getAttribute(registeredPoolName, "ActiveConnections");
+        return  (Integer) ManagementFactory.getPlatformMBeanServer().getAttribute(registeredPoolName, "ActiveConnections");
     }
 
     @Override

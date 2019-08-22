@@ -16,96 +16,69 @@
 
 package com.haulmont.cuba.core.sys.connectionpool;
 
-import com.google.common.base.Preconditions;
 import com.haulmont.cuba.core.global.GlobalConfig;
 import com.haulmont.cuba.core.jmx.ExtendedStatisticCounter;
-import com.haulmont.cuba.core.sys.AppContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
-import java.util.Set;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
 
+@Component
 public class ConnectionPoolSpecificFactory {
     private static Log log = LogFactory.getLog(ExtendedStatisticCounter.class);
 
-    @Inject
-    protected static GlobalConfig globalConfig;
+    private static Map<String, Class<? extends ConnectionPoolInfo>> registeredPools = new HashMap<>();
+    private static Map<String, ConnectionPoolInfo> registeredPoolsCache = new HashMap<>();
 
-    public static ConnectionPoolInfo getConnectionPoolInfo() {
-        ObjectName registeredPoolName;
-        ConnectionPoolInfo connectionPoolInfo;
-
-        String poolName = globalConfig.getConnectionPoolName();
-        switch (poolName) {
-            case "COMMONS":
-                registeredPoolName = getPoolObjectName(getCommonsRegexPattern());
-                connectionPoolInfo = new CommonsConnectionPoolInfo(registeredPoolName);
-                break;
-            case "TOMCAT":
-                registeredPoolName = getPoolObjectName(getTomcatRegexPattern());
-                connectionPoolInfo = new TomcatConnectionPoolInfo(registeredPoolName);
-                break;
-            case "HIKARI":
-                registeredPoolName = getPoolObjectName(getHikariRegexPatter());
-                connectionPoolInfo = new HikariConnectionPoolInfo(registeredPoolName);
-                break;
-            default:
-                log.warn(String.format("Connection Pool %s is unsupported!", poolName));
-                return new EmptyConnectionPoolInfo();
-        }
-
-        if (registeredPoolName == null){
-            log.warn(String.format("No one connection pool was found for %s type!", poolName));
-            return new EmptyConnectionPoolInfo();
-        }
-        return connectionPoolInfo;
+    static {
+        registerConnectionPool("COMMONS", CommonsConnectionPoolInfo.class);
+        registerConnectionPool("TOMCAT", TomcatConnectionPoolInfo.class);
+        registerConnectionPool("HIKARI", HikariConnectionPoolInfo.class);
     }
 
-    protected static ObjectName getPoolObjectName(Pattern regexPattern) {
-        Set<ObjectName> names = ManagementFactory.getPlatformMBeanServer().queryNames(null, null);
-        for (ObjectName name : names) {
-            if (regexPattern.matcher(name.toString()).matches()) {
-                return name;
+    public static void registerConnectionPool(String name, Class<? extends ConnectionPoolInfo> poolClass) {
+        registeredPools.put(name, poolClass);
+    }
+
+    public static Class unRegisterConnectionPool(String name) {
+        return registeredPools.remove(name);
+    }
+
+    public static boolean unRegisterConnectionPool(String name, Class<? extends ConnectionPoolInfo> poolClass) {
+        return registeredPools.remove(name, poolClass);
+    }
+
+    public static ConnectionPoolInfo getConnectionPoolInfo(String poolName) {
+        if (registeredPoolsCache.containsKey(poolName)){
+            return registeredPoolsCache.get(poolName);
+        }
+
+        ConnectionPoolInfo connectionPoolInfo = null;
+        if (registeredPools.containsKey(poolName)) {
+            try {
+                connectionPoolInfo = registeredPools.get(poolName).newInstance();
+                if (connectionPoolInfo.getRegisteredMBeanName() != null) {
+                    registeredPoolsCache.put(poolName, connectionPoolInfo);
+                }
+            } catch (Exception e) {
+                log.warn(String.format("Can't instantiate new instance of %s", poolName), e);
+                return new ConnectionPoolInfo(){};
             }
         }
-        return null;
-    }
 
-    protected static Pattern getCommonsRegexPattern() {
-        String usualDsRegexp = String.format(
-                "Catalina:type=DataSource,host=[\\w\\d]+,context=/%s,class=javax.sql.DataSource,name=\"%s\"",
-                globalConfig.getWebContextName(),
-                getMainDatasourceName()
-        );
-        return Pattern.compile(usualDsRegexp);
-    }
-
-    protected static Pattern getTomcatRegexPattern() {
-        String tomcatDsRegexp = String.format(
-                "^tomcat\\.jdbc:name=\"%s\",context=/%s,engine=Catalina,type=ConnectionPool,host=[\\w\\d]+,class=[\\w\\d\\.]+$",
-                globalConfig.getWebContextName(),
-                getMainDatasourceName()
-        );
-        return Pattern.compile(tomcatDsRegexp);
-    }
-
-    protected static Pattern getHikariRegexPatter() {
-        return Pattern.compile("^tcom\\.zaxxer\\.hikari:type=Pool \\(.*\\)$");
-    }
-
-    protected static String getMainDatasourceName() {
-        String jndiName = AppContext.getProperty("cuba.dataSourceJndiName");
-        Preconditions.checkNotNull(jndiName);
-
-        // mentioned as constant in tomcat docs
-        String tomcatPrefix = "java:comp/env/";
-        if (jndiName.startsWith(tomcatPrefix)) {
-            jndiName = jndiName.substring(tomcatPrefix.length());
+        if(connectionPoolInfo == null) {
+            log.warn(String.format("Connection pool is unsupported %s", poolName));
+            return new ConnectionPoolInfo(){};
         }
-        return jndiName;
+
+        if (connectionPoolInfo.getRegisteredMBeanName() == null){
+            log.warn(String.format("No one connection pool was found for %s type!", poolName));
+            return new ConnectionPoolInfo(){};
+        }
+        return connectionPoolInfo;
     }
 }

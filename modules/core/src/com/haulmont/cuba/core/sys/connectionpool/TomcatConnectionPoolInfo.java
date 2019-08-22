@@ -16,19 +16,28 @@
 
 package com.haulmont.cuba.core.sys.connectionpool;
 
+import com.haulmont.cuba.core.global.GlobalConfig;
+import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
+import java.util.regex.Pattern;
 
-public class TomcatConnectionPoolInfo implements ConnectionPoolInfo {
-    protected ObjectName registeredPoolName;
-
-    protected TomcatConnectionPoolInfo(ObjectName registeredPoolName) {
-        this.registeredPoolName = registeredPoolName;
-    }
-
+public class TomcatConnectionPoolInfo extends ConnectionPoolInfoImpl {
     @Override
     public String getPoolName() {
         return "Tomcat Connection Pool";
+    }
+
+    @Override
+    public Pattern getRegexPattern() {
+        String tomcatDsRegexp = String.format(
+                "^tomcat\\.jdbc:name=\"%s\",context=/%s,engine=Catalina,type=ConnectionPool,host=[\\w\\d]+,class=[\\w\\d\\.]+$",
+                globalConfig.getWebContextName(),
+                ConnectionPoolUtils.getMainDatasourceName()
+        );
+        return Pattern.compile(tomcatDsRegexp);
     }
 
     @Override

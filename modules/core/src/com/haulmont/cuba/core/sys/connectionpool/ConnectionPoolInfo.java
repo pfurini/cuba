@@ -16,30 +16,50 @@
 
 package com.haulmont.cuba.core.sys.connectionpool;
 
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.ReflectionException;
+import javax.management.*;
+import java.util.regex.Pattern;
 
 public interface ConnectionPoolInfo {
 
     /**
      * @return connection pool name
      */
-    String getPoolName();
+    default String getPoolName() {
+        return "Empty Connection Pool";
+    }
+
+    /**
+     * @return registered bean name for connection pool
+     */
+    default ObjectName getRegisteredMBeanName() {
+        return null;
+    }
+
+    /**
+     * @return return regex pattern to find connection pool ObjectName
+     */
+    default Pattern getRegexPattern() {
+        return null;
+    }
 
     /**
      * @return current count of active connections
      */
-    int getActiveConnectionsCount() throws AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException;
+    default int getActiveConnectionsCount() throws AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException {
+        return 0;
+    }
 
     /**
      * @return current count of idle connections
      */
-    int getIdleConnectionsCount() throws AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException;
+    default int getIdleConnectionsCount() throws AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException {
+        return 0;
+    }
 
     /**
      * @return count of total available connections (active and idle)
      */
-    int getTotalConnectionsCount() throws AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException;
+    default int getTotalConnectionsCount() throws AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException {
+        return 0;
+    }
 }

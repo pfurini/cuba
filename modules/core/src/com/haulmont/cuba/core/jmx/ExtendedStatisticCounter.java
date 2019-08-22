@@ -16,6 +16,7 @@
 
 package com.haulmont.cuba.core.jmx;
 
+import com.haulmont.cuba.core.global.GlobalConfig;
 import com.haulmont.cuba.core.sys.connectionpool.ConnectionPoolInfo;
 import com.haulmont.cuba.core.sys.connectionpool.ConnectionPoolSpecificFactory;
 import org.apache.commons.logging.Log;
@@ -23,19 +24,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 @Component("cuba_ExtendedStatisticCounterMBean")
 public class ExtendedStatisticCounter extends StatisticsCounter {
     private Log log = LogFactory.getLog(ExtendedStatisticCounter.class);
     private volatile ConnectionPoolInfo connectionPoolInfo;
 
-    @PostConstruct
-    public void init() {
-        connectionPoolInfo = ConnectionPoolSpecificFactory.getConnectionPoolInfo();
-    }
+    @Inject
+    protected GlobalConfig globalConfig;
 
     @Override
     public int getDbConnectionPoolNumActive() {
+        connectionPoolInfo = ConnectionPoolSpecificFactory.getConnectionPoolInfo(globalConfig.getConnectionPoolName());
         try {
             return connectionPoolInfo.getActiveConnectionsCount();
         } catch (Exception e) {
@@ -46,6 +47,7 @@ public class ExtendedStatisticCounter extends StatisticsCounter {
 
     @Override
     public int getDbConnectionPoolNumIdle() {
+        connectionPoolInfo = ConnectionPoolSpecificFactory.getConnectionPoolInfo(globalConfig.getConnectionPoolName());
         try {
             return connectionPoolInfo.getIdleConnectionsCount();
         } catch (Exception e) {
@@ -56,6 +58,7 @@ public class ExtendedStatisticCounter extends StatisticsCounter {
 
     @Override
     public int getDbConnectionPoolMaxTotal() {
+        connectionPoolInfo = ConnectionPoolSpecificFactory.getConnectionPoolInfo(globalConfig.getConnectionPoolName());
         try {
             return connectionPoolInfo.getTotalConnectionsCount();
         } catch (Exception e) {
