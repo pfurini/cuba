@@ -223,6 +223,7 @@ public class AttributeEditor extends AbstractEditor<CategoryAttribute> {
             if ("main".equals(tabName) && getItem().getDataType() != null) {
                 getDialogOptions().setWidth(themeConstants.get("cuba.gui.AttributeEditor.twoColumnsWidth"));
             }
+            getDialogOptions().center();
         });
 
         initLocalizedFrame();
@@ -322,6 +323,8 @@ public class AttributeEditor extends AbstractEditor<CategoryAttribute> {
                     || "entityClass".equals(property)) {
                 changeAttributesUI();
                 changeAttributeValues();
+            }
+            if (e.getPrevValue()==null && "dataType".equals(property)) {
                 getDialogOptions().center();
             }
             if ("name".equals(property)) {
