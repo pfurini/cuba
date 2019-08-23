@@ -48,17 +48,20 @@ public class AmazonS3FileStorage implements FileStorageAPI {
 
     @PostConstruct
     protected void initS3Client() {
-        AwsCredentialsProvider awsCredentialsProvider;
-        if (getAccessKey() != null && getSecretAccessKey() != null) {
-            AwsCredentials awsCredentials = AwsBasicCredentials.create(getAccessKey(), getSecretAccessKey());
-            awsCredentialsProvider = StaticCredentialsProvider.create(awsCredentials);
-        } else {
-            awsCredentialsProvider = DefaultCredentialsProvider.create();
-        }
+        AwsCredentialsProvider awsCredentialsProvider = getAwsCredentialsProvider();
         s3Client = S3Client.builder()
                 .credentialsProvider(awsCredentialsProvider)
                 .region(Region.of(getRegionName()))
                 .build();
+    }
+
+    protected AwsCredentialsProvider getAwsCredentialsProvider() {
+        if (getAccessKey() != null && getSecretAccessKey() != null) {
+            AwsCredentials awsCredentials = AwsBasicCredentials.create(getAccessKey(), getSecretAccessKey());
+            return StaticCredentialsProvider.create(awsCredentials);
+        } else {
+            return DefaultCredentialsProvider.create();
+        }
     }
 
     @Override
