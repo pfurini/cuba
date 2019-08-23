@@ -16,11 +16,6 @@
 
 package com.haulmont.cuba.core.sys.connectionpool;
 
-import com.haulmont.cuba.core.global.GlobalConfig;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.util.regex.Pattern;

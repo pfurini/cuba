@@ -19,7 +19,6 @@ package com.haulmont.cuba.core.sys.connectionpool;
 import com.haulmont.cuba.core.global.GlobalConfig;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.management.ObjectName;
 
@@ -30,12 +29,10 @@ public abstract class ConnectionPoolInfoImpl implements ConnectionPoolInfo {
     protected GlobalConfig globalConfig;
     protected ObjectName registeredPoolName;
 
-    @PostConstruct
-    protected void init() {
+    protected ConnectionPoolInfoImpl() {
         this.registeredPoolName = ConnectionPoolUtils.getPoolObjectName(getRegexPattern());
     }
 
-    @Override
     public ObjectName getRegisteredMBeanName() {
         return registeredPoolName;
     }

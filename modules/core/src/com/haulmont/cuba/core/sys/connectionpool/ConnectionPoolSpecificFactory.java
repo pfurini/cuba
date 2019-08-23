@@ -29,6 +29,8 @@ public class ConnectionPoolSpecificFactory {
 
     private static Map<String, Class<? extends ConnectionPoolInfo>> registeredPools = new HashMap<>();
     private static Map<String, ConnectionPoolInfo> registeredPoolsCache = new HashMap<>();
+    protected static final ConnectionPoolInfo emptyPoolInfo = new ConnectionPoolInfo(){};;
+    protected static volatile boolean dbConnPoolNotFound;
 
     static {
         registerConnectionPool("COMMONS", CommonsConnectionPoolInfo.class);
@@ -49,13 +51,18 @@ public class ConnectionPoolSpecificFactory {
     }
 
     public static ConnectionPoolInfo getConnectionPoolInfo(String poolName) {
+        if (dbConnPoolNotFound) {
+            return emptyPoolInfo;
+        }
+
         if (registeredPoolsCache.containsKey(poolName)){
             return registeredPoolsCache.get(poolName);
         }
 
         if (!registeredPools.containsKey(poolName) || registeredPools.get(poolName) == null) {
             log.warn(String.format("Connection pool %s is unsupported.", poolName));
-            return new ConnectionPoolInfo(){};
+            dbConnPoolNotFound = true;
+            return emptyPoolInfo;
         }
 
         ConnectionPoolInfo connectionPoolInfo;
@@ -63,12 +70,14 @@ public class ConnectionPoolSpecificFactory {
             connectionPoolInfo = registeredPools.get(poolName).newInstance();
         } catch (Exception e) {
             log.warn(String.format("Can't instantiate new instance of %s", poolName), e);
-            return new ConnectionPoolInfo(){};
+            dbConnPoolNotFound = true;
+            return emptyPoolInfo;
         }
 
         if (connectionPoolInfo.getRegisteredMBeanName() == null){
             log.warn(String.format("No one connection pool was found for %s type!", poolName));
-            return new ConnectionPoolInfo(){};
+            dbConnPoolNotFound = true;
+            return emptyPoolInfo;
         }
         registeredPoolsCache.put(poolName, connectionPoolInfo);
         return connectionPoolInfo;
