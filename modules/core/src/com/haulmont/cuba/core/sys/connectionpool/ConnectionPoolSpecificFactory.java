@@ -16,20 +16,16 @@
 
 package com.haulmont.cuba.core.sys.connectionpool;
 
-import com.haulmont.cuba.core.global.GlobalConfig;
-import com.haulmont.cuba.core.jmx.ExtendedStatisticCounter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class ConnectionPoolSpecificFactory {
-    private static Log log = LogFactory.getLog(ExtendedStatisticCounter.class);
+    private static Log log = LogFactory.getLog(ConnectionPoolSpecificFactory.class);
 
     private static Map<String, Class<? extends ConnectionPoolInfo>> registeredPools = new HashMap<>();
     private static Map<String, ConnectionPoolInfo> registeredPoolsCache = new HashMap<>();
@@ -57,21 +53,16 @@ public class ConnectionPoolSpecificFactory {
             return registeredPoolsCache.get(poolName);
         }
 
-        ConnectionPoolInfo connectionPoolInfo = null;
-        if (registeredPools.containsKey(poolName)) {
-            try {
-                connectionPoolInfo = registeredPools.get(poolName).newInstance();
-                if (connectionPoolInfo.getRegisteredMBeanName() != null) {
-                    registeredPoolsCache.put(poolName, connectionPoolInfo);
-                }
-            } catch (Exception e) {
-                log.warn(String.format("Can't instantiate new instance of %s", poolName), e);
-                return new ConnectionPoolInfo(){};
-            }
+        if (!registeredPools.containsKey(poolName) || registeredPools.get(poolName) == null) {
+            log.warn(String.format("Connection pool %s is unsupported.", poolName));
+            return new ConnectionPoolInfo(){};
         }
 
-        if(connectionPoolInfo == null) {
-            log.warn(String.format("Connection pool is unsupported %s", poolName));
+        ConnectionPoolInfo connectionPoolInfo;
+        try {
+            connectionPoolInfo = registeredPools.get(poolName).newInstance();
+        } catch (Exception e) {
+            log.warn(String.format("Can't instantiate new instance of %s", poolName), e);
             return new ConnectionPoolInfo(){};
         }
 
@@ -79,6 +70,7 @@ public class ConnectionPoolSpecificFactory {
             log.warn(String.format("No one connection pool was found for %s type!", poolName));
             return new ConnectionPoolInfo(){};
         }
+        registeredPoolsCache.put(poolName, connectionPoolInfo);
         return connectionPoolInfo;
     }
 }

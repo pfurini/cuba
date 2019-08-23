@@ -40,14 +40,12 @@ public class ConnectionPoolUtils {
     }
 
     protected static String getMainDatasourceName() {
+        String name = "CubaDS";
         String jndiName = AppContext.getProperty("cuba.dataSourceJndiName");
-        Preconditions.checkNotNull(jndiName);
-
-        // mentioned as constant in tomcat docs
-        String tomcatPrefix = "java:comp/env/";
-        if (jndiName.startsWith(tomcatPrefix)) {
-            jndiName = jndiName.substring(tomcatPrefix.length());
+        if (jndiName != null) {
+            String[] parts = jndiName.split("/");
+            name = parts[parts.length - 1];
         }
-        return jndiName;
+        return name;
     }
 }

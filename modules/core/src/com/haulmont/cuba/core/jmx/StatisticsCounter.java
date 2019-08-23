@@ -18,42 +18,30 @@
 package com.haulmont.cuba.core.jmx;
 
 import com.haulmont.cuba.core.app.MiddlewareStatisticsAccumulator;
+import com.haulmont.cuba.core.global.GlobalConfig;
 import com.haulmont.cuba.core.sys.AppContext;
+import com.haulmont.cuba.core.sys.connectionpool.ConnectionPoolInfo;
+import com.haulmont.cuba.core.sys.connectionpool.ConnectionPoolSpecificFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 @Component("cuba_StatisticsCounterMBean")
 public class StatisticsCounter implements StatisticsCounterMBean {
 
     private static final Logger log = LoggerFactory.getLogger(StatisticsCounter.class);
 
-    protected final Pattern DS_MBEAN_PATTERN;
-
     @Inject
     protected MiddlewareStatisticsAccumulator accumulator;
 
-    protected volatile ObjectName dbConnPoolObjectName;
+    @Inject
+    protected GlobalConfig globalConfig;
 
-    protected volatile boolean dbConnPoolNotFound;
-
-    public StatisticsCounter() {
-        String name = "CubaDS";
-        String jndiName = AppContext.getProperty("cuba.dataSourceJndiName");
-        if (jndiName != null) {
-            String[] parts = jndiName.split("/");
-            name = parts[parts.length - 1];
-        }
-        String re = "Catalina:type=DataSource,.*,class=javax.sql.DataSource,name=\".*" + name + "\"";
-        DS_MBEAN_PATTERN = Pattern.compile(re);
-    }
+    private volatile ConnectionPoolInfo connectionPoolInfo;
 
     @Override
     public Long getActiveTransactionsCount() {
@@ -115,44 +103,41 @@ public class StatisticsCounter implements StatisticsCounterMBean {
         return accumulator.getImplicitFlushCount();
     }
 
-    private int getDbConnectionPoolMBeanAttr(String attrName) {
-        if (dbConnPoolNotFound)
-            return 0;
+    @Override
+    public int getDbConnectionPoolNumActive() {
+        connectionPoolInfo = getConnectionPoolInfo();
         try {
-            MBeanServerConnection connection = ManagementFactory.getPlatformMBeanServer();
-            if (dbConnPoolObjectName == null) {
-                Set<ObjectName> names = connection.queryNames(null, null);
-                for (ObjectName name : names) {
-                    if (DS_MBEAN_PATTERN.matcher(name.toString()).matches()) {
-                        dbConnPoolObjectName = name;
-                        break;
-                    }
-                }
-            }
-            if (dbConnPoolObjectName != null) {
-                return (int) connection.getAttribute(dbConnPoolObjectName, attrName);
-            } else {
-                dbConnPoolNotFound = true;
-            }
+            return connectionPoolInfo.getActiveConnectionsCount();
         } catch (Exception e) {
-            log.warn("Error DB connection pool attribute " + attrName + ": " + e);
+            log.warn(String.format("Can't get number of active connections from the %s!", connectionPoolInfo.getPoolName()));
         }
         return 0;
     }
 
     @Override
-    public int getDbConnectionPoolNumActive() {
-        return getDbConnectionPoolMBeanAttr("numActive");
-    }
-
-    @Override
     public int getDbConnectionPoolNumIdle() {
-        return getDbConnectionPoolMBeanAttr("numIdle");
+        connectionPoolInfo = getConnectionPoolInfo();
+        try {
+            return connectionPoolInfo.getIdleConnectionsCount();
+        } catch (Exception e) {
+            log.warn(String.format("Can't get number of idle connections from the %s!", connectionPoolInfo.getPoolName()));
+        }
+        return 0;
     }
 
     @Override
     public int getDbConnectionPoolMaxTotal() {
-        return getDbConnectionPoolMBeanAttr("maxTotal");
+        connectionPoolInfo = getConnectionPoolInfo();
+        try {
+            return connectionPoolInfo.getTotalConnectionsCount();
+        } catch (Exception e) {
+            log.warn(String.format("Can't get number of total connections from the %s!", connectionPoolInfo.getPoolName()));
+        }
+        return 0;
+    }
+
+    protected ConnectionPoolInfo getConnectionPoolInfo() {
+        return ConnectionPoolSpecificFactory.getConnectionPoolInfo(globalConfig.getConnectionPoolName());
     }
 
     @Override

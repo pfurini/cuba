@@ -16,20 +16,22 @@
 
 package com.haulmont.cuba.core.sys.connectionpool;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.core.global.GlobalConfig;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.management.ObjectName;
 
+@Component
 public abstract class ConnectionPoolInfoImpl implements ConnectionPoolInfo {
 
+    @Inject
     protected GlobalConfig globalConfig;
     protected ObjectName registeredPoolName;
 
-    public ConnectionPoolInfoImpl() {
-        Configuration configuration = AppBeans.get(Configuration.NAME);
-        globalConfig = configuration.getConfig(GlobalConfig.class);
+    @PostConstruct
+    protected void init() {
         this.registeredPoolName = ConnectionPoolUtils.getPoolObjectName(getRegexPattern());
     }
 
