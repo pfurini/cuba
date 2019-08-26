@@ -439,8 +439,10 @@ public class AttributeEditor extends AbstractEditor<CategoryAttribute> {
             for (String componentId : fields) {
                 optionalAttributeFieldGroup.getFieldNN(componentId).setVisible(true);
             }
-            getDialogOptions().setWidth(themeConstants.get("cuba.gui.AttributeEditor.twoColumnsWidth"));
-            optionalAttributeFieldGroup.setVisible(true);
+            if ("main".equals(tabsheet.getSelectedTab().getName())) {
+                getDialogOptions().setWidth(themeConstants.get("cuba.gui.AttributeEditor.twoColumnsWidth"));
+                optionalAttributeFieldGroup.setVisible(true);
+            }
         }
         if (attribute.getDataType() == ENTITY) {
             if (!Strings.isNullOrEmpty(attribute.getEntityClass())) {
