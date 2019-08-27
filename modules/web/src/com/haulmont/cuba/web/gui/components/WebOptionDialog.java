@@ -66,6 +66,9 @@ public class WebOptionDialog extends WebAbstractDialog implements OptionDialog {
     }
 
     protected Action[] createActions() {
+        if (actions == null) {
+            return new Action[]{};
+        }
         return actions.stream()
                     .map(this::createAction)
                     .collect(Collectors.toList())
@@ -89,6 +92,9 @@ public class WebOptionDialog extends WebAbstractDialog implements OptionDialog {
     @Nullable
     @Override
     public Object getSubPart(String name) {
+        if (actions == null) {
+            return null;
+        }
         return actions.stream()
                 .filter(action -> Objects.equals(action.getId(), name))
                 .findFirst()

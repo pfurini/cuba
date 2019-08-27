@@ -140,17 +140,17 @@ public interface Notification extends Facet {
     void show();
 
     /**
-     * Sets the given {@code Supplier} as notification message provider.
+     * Sets the given {@code Supplier} as notification description provider.
      *
-     * @param messageProvider message provider
+     * @param descriptionProvider message provider
      */
     @StudioDelegate
-    void setMessageProvider(Supplier<String> messageProvider);
+    void setDescriptionProvider(Supplier<String> descriptionProvider);
 
     /**
-     * @return notification message provider
+     * @return notification description provider
      */
-    Supplier<String> getMessageProvider();
+    Supplier<String> getDescriptionProvider();
 
     /**
      * Adds the given {@code Consumer} as notification {@link CloseEvent} listener.

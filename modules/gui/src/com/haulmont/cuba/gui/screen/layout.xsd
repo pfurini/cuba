@@ -460,6 +460,13 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="notificationContentMode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TEXT"/>
+            <xs:enumeration value="HTML"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="sortDirection">
         <xs:restriction base="xs:string">
             <xs:enumeration value="ASCENDING"/>
@@ -3376,7 +3383,7 @@
         <xs:attribute name="type" type="notificationTypeEnum"/>
         <xs:attribute name="delay" type="xs:int"/>
 
-        <xs:attribute name="contentMode" type="contentMode"/>
+        <xs:attribute name="contentMode" type="notificationContentMode"/>
         <xs:attribute name="styleName" type="xs:string"/>
         <xs:attribute name="position" type="align"/>
     </xs:complexType>
@@ -3421,7 +3428,7 @@
         <xs:complexContent>
             <xs:extension base="dialogType">
                 <xs:sequence>
-                    <xs:element name="actions" type="dialogActionsType"/>
+                    <xs:element name="actions" type="dialogActionsType" minOccurs="0"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

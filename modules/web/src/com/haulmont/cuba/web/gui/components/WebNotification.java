@@ -38,7 +38,7 @@ public class WebNotification extends WebAbstractFacet implements Notification {
     protected ContentMode contentMode = ContentMode.TEXT;
     protected Notifications.Position position = Notifications.Position.DEFAULT;
 
-    protected Supplier<String> messageProvider;
+    protected Supplier<String> descriptionProvider;
 
     @Override
     public void setCaption(String caption) {
@@ -116,13 +116,13 @@ public class WebNotification extends WebAbstractFacet implements Notification {
     }
 
     @Override
-    public void setMessageProvider(Supplier<String> messageProvider) {
-        this.messageProvider = messageProvider;
+    public void setDescriptionProvider(Supplier<String> descriptionProvider) {
+        this.descriptionProvider = descriptionProvider;
     }
 
     @Override
-    public Supplier<String> getMessageProvider() {
-        return messageProvider;
+    public Supplier<String> getDescriptionProvider() {
+        return descriptionProvider;
     }
 
     @Override
@@ -136,8 +136,8 @@ public class WebNotification extends WebAbstractFacet implements Notification {
                 .getNotifications();
 
         String description = this.description;
-        if (messageProvider != null) {
-            description = messageProvider.get();
+        if (descriptionProvider != null) {
+            description = descriptionProvider.get();
         }
 
         notifications.create(type)
