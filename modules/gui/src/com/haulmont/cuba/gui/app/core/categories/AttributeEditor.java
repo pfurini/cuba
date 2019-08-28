@@ -398,6 +398,12 @@ public class AttributeEditor extends AbstractEditor<CategoryAttribute> {
                         MessageType.CONFIRMATION_HTML
                                 .modal(false)
                                 .width(560f)));
+        recalculationScript.addValueChangeListener(e -> {
+            dependsOnAttributesListEditor.setRequired(false);
+            if (!Strings.isNullOrEmpty(e.getValue())) {
+                dependsOnAttributesListEditor.setRequired(true);
+            }
+        });
 
         dependsOnAttributesListEditor = uiComponents.create(ListEditor.NAME);
         dependsOnAttributesListEditor.setValueSource(new DatasourceValueSource(configurationDs, "dependsOnAttributes"));
