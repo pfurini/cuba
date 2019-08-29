@@ -184,7 +184,7 @@ public class WebListEditor<V> extends WebV8AbstractField<WebListEditor.CubaListE
 
     @Override
     public boolean isEmpty() {
-        return delegate.getValue() == null || delegate.getValue().isEmpty();
+        return CollectionUtils.isEmpty(delegate.getValue());
     }
 
     @Override

@@ -57,6 +57,7 @@ import com.haulmont.cuba.gui.icons.Icons;
 import com.haulmont.cuba.gui.sys.ScreensHelper;
 import com.haulmont.cuba.gui.theme.ThemeConstants;
 import com.haulmont.cuba.security.entity.FilterEntity;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 import org.dom4j.Element;
@@ -398,12 +399,6 @@ public class AttributeEditor extends AbstractEditor<CategoryAttribute> {
                         MessageType.CONFIRMATION_HTML
                                 .modal(false)
                                 .width(560f)));
-        recalculationScript.addValueChangeListener(e -> {
-            dependsOnAttributesListEditor.setRequired(false);
-            if (!Strings.isNullOrEmpty(e.getValue())) {
-                dependsOnAttributesListEditor.setRequired(true);
-            }
-        });
 
         dependsOnAttributesListEditor = uiComponents.create(ListEditor.NAME);
         dependsOnAttributesListEditor.setValueSource(new DatasourceValueSource(configurationDs, "dependsOnAttributes"));
@@ -411,6 +406,11 @@ public class AttributeEditor extends AbstractEditor<CategoryAttribute> {
         dependsOnAttributesListEditor.setFrame(frame);
         dependsOnAttributesListEditor.setItemType(ListEditor.ItemType.ENTITY);
         dependsOnAttributesListEditor.setEntityName("sys$CategoryAttribute");
+        dependsOnAttributesListEditor.addValidator(categoryAttributes -> {
+            if (recalculationScript.getValue() != null && CollectionUtils.isEmpty(categoryAttributes)) {
+                throw new ValidationException(getMessage("dependsOnAttributesValidationMsg"));
+            }
+        });
 
         calculatedAttrsAndOptionsFieldGroup.getFieldNN("dependsOnAttributes").setComponent(dependsOnAttributesListEditor);
 
