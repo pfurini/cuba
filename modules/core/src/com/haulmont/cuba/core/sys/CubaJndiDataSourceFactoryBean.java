@@ -16,19 +16,14 @@
 
 package com.haulmont.cuba.core.sys;
 
-import com.haulmont.cuba.core.sys.jdbc.ProxyDataSource;
-
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
-public class CubaJndiDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
+/**
+ * @deprecated Use {@link CubaDataSourceFactoryBean} instead
+ */
+@Deprecated
+public class CubaJndiDataSourceFactoryBean extends CubaDataSourceFactoryBean {
     @Override
-    protected Object lookupWithFallback() throws NamingException {
-        Object object = super.lookupWithFallback();
-        if (object instanceof DataSource) {
-            return new ProxyDataSource((DataSource) object);
-        } else {
-            return object;
-        }
+    public Object getObject() {
+        dataSourceProvider = "jndi";
+        return super.getObject();
     }
 }
