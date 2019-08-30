@@ -16,13 +16,27 @@
 
 package com.haulmont.cuba.core.sys;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
 import javax.sql.DataSource;
 
 public class CubaDataSourceFactoryBean extends AbstractFactoryBean<Object> {
+    DataSource jndiDataSource;
+    DataSource applicationDataSource;
+    String dataSourceProviderPropertyName;
+
+    public void setDataSourceProviderPropertyName(String dataSourceProviderPropertyName) {
+        this.dataSourceProviderPropertyName = dataSourceProviderPropertyName;
+    }
+
+    public void setJndiDataSource(DataSource jndiDataSource) {
+        this.jndiDataSource = jndiDataSource;
+    }
+
+    public void setApplicationDataSource(DataSource applicationDataSource) {
+        this.applicationDataSource = applicationDataSource;
+    }
+
     @Override
     public Class<DataSource> getObjectType() {
         return DataSource.class;
@@ -30,13 +44,11 @@ public class CubaDataSourceFactoryBean extends AbstractFactoryBean<Object> {
 
     @Override
     protected Object createInstance() throws Exception {
-        String dataSourceProvider = AppContext.getProperty("cuba.dataSourceProvider");
-        FactoryBean factoryBean = null;
+        String dataSourceProvider = AppContext.getProperty(dataSourceProviderPropertyName);
         if ("APPLICATION".equals(dataSourceProvider)) {
-            factoryBean = AppBeans.get("cubaApplicationDataSource");
+            return applicationDataSource;
         } else {
-            factoryBean = AppBeans.get("cubaJndiDataSource");
+            return jndiDataSource;
         }
-        return factoryBean == null ? null : factoryBean.getObject();
     }
 }

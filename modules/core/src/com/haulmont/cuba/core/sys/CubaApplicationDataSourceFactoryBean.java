@@ -16,11 +16,28 @@
 
 package com.haulmont.cuba.core.sys;
 
+import com.haulmont.cuba.core.sys.jdbc.ProxyDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
 public class CubaApplicationDataSourceFactoryBean extends AbstractFactoryBean<Object> {
+    String jdbcUrlPropertyName;
+    String usernamePropertyName;
+    String passwordPropertyName;
+
+    public void setJdbcUrlPropertyName(String jdbcUrlPropertyName) {
+        this.jdbcUrlPropertyName = jdbcUrlPropertyName;
+    }
+
+    public void setUsernamePropertyName(String usernamePropertyName) {
+        this.usernamePropertyName = usernamePropertyName;
+    }
+
+    public void setPasswordPropertyName(String passwordPropertyName) {
+        this.passwordPropertyName = passwordPropertyName;
+    }
+
     @Override
     public Class<HikariDataSource> getObjectType() {
         return HikariDataSource.class;
@@ -29,11 +46,12 @@ public class CubaApplicationDataSourceFactoryBean extends AbstractFactoryBean<Ob
     @Override
     protected Object createInstance() throws Exception {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/hikari");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/hikaripool");
         config.setUsername("postgres");
         config.setPassword("postgres");
         config.setRegisterMbeans(true);
 
-        return new HikariDataSource(config);
+        HikariDataSource ds = new HikariDataSource(config);
+        return new ProxyDataSource(ds);
     }
 }

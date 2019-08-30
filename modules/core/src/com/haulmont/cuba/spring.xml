@@ -30,9 +30,17 @@
         <property name="resourceRef" value="true"/>
     </bean>
 
-    <bean id="cubaApplicationDataSource" class="com.haulmont.cuba.core.sys.CubaApplicationDataSourceFactoryBean"/>
+    <bean id="cubaApplicationDataSource" class="com.haulmont.cuba.core.sys.CubaApplicationDataSourceFactoryBean">
+        <property name="jdbcUrlPropertyName" value="cuba.dataSource.jdbcUrl"/>
+        <property name="usernamePropertyName" value="cuba.dataSource.username"/>
+        <property name="passwordPropertyName" value="cuba.dataSource.password"/>
+    </bean>
 
-    <bean id="cubaDataSource" class="com.haulmont.cuba.core.sys.CubaDataSourceFactoryBean"/>
+    <bean id="cubaDataSource" class="com.haulmont.cuba.core.sys.CubaDataSourceFactoryBean">
+        <property name="jndiDataSource" ref="cubaJndiDataSource"/>
+        <property name="applicationDataSource" ref="cubaApplicationDataSource"/>
+        <property name="dataSourceProviderPropertyName" value="cuba.dataSourceProvider"/>
+    </bean>
 
     <bean id="jpaVendorAdapter" class="com.haulmont.cuba.core.sys.CubaEclipseLinkJpaVendorAdapter">
         <property name="generateDdl" value="false"/>
