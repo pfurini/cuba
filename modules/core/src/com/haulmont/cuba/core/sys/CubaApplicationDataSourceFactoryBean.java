@@ -46,12 +46,19 @@ public class CubaApplicationDataSourceFactoryBean extends AbstractFactoryBean<Ob
     @Override
     protected Object createInstance() throws Exception {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/hikaripool");
-        config.setUsername("postgres");
-        config.setPassword("postgres");
-        config.setRegisterMbeans(true);
+        String jdbcUrl = AppContext.getProperty(jdbcUrlPropertyName);
+        String username = AppContext.getProperty(usernamePropertyName);
+        String password = AppContext.getProperty(passwordPropertyName);
 
-        HikariDataSource ds = new HikariDataSource(config);
-        return new ProxyDataSource(ds);
+        if (jdbcUrl != null) {
+            config.setJdbcUrl(jdbcUrl);
+            config.setUsername(username);
+            config.setPassword(password);
+            config.setRegisterMbeans(true);
+
+            HikariDataSource ds = new HikariDataSource(config);
+            return new ProxyDataSource(ds);
+        }
+        return null;
     }
 }
