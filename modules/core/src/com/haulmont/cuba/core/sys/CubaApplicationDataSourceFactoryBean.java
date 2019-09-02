@@ -50,15 +50,17 @@ public class CubaApplicationDataSourceFactoryBean extends AbstractFactoryBean<Ob
         String username = AppContext.getProperty(usernamePropertyName);
         String password = AppContext.getProperty(passwordPropertyName);
 
+        HikariDataSource ds;
         if (jdbcUrl != null) {
             config.setJdbcUrl(jdbcUrl);
             config.setUsername(username);
             config.setPassword(password);
             config.setRegisterMbeans(true);
 
-            HikariDataSource ds = new HikariDataSource(config);
-            return new ProxyDataSource(ds);
+            ds = new HikariDataSource(config);
+        } else {
+            ds = new HikariDataSource();
         }
-        return null;
+        return new ProxyDataSource(ds);
     }
 }

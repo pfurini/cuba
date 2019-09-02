@@ -24,6 +24,11 @@ public class CubaDataSourceFactoryBean extends AbstractFactoryBean<Object> {
     DataSource jndiDataSource;
     DataSource applicationDataSource;
     String dataSourceProviderPropertyName;
+    String jdbcUrlPropertyName;
+
+    public void setJdbcUrlPropertyName(String jdbcUrlPropertyName) {
+        this.jdbcUrlPropertyName = jdbcUrlPropertyName;
+    }
 
     public void setDataSourceProviderPropertyName(String dataSourceProviderPropertyName) {
         this.dataSourceProviderPropertyName = dataSourceProviderPropertyName;
@@ -46,6 +51,9 @@ public class CubaDataSourceFactoryBean extends AbstractFactoryBean<Object> {
     protected Object createInstance() throws Exception {
         String dataSourceProvider = AppContext.getProperty(dataSourceProviderPropertyName);
         if ("APPLICATION".equals(dataSourceProvider)) {
+            if (AppContext.getProperty(jdbcUrlPropertyName) == null) {
+                throw new RuntimeException("cuba.dataSource.jdbcUrl parameter must be filled in case of APPLICATION connection pool provider");
+            }
             return applicationDataSource;
         } else {
             return jndiDataSource;

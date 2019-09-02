@@ -40,6 +40,7 @@
         <property name="jndiDataSource" ref="cubaJndiDataSource"/>
         <property name="applicationDataSource" ref="cubaApplicationDataSource"/>
         <property name="dataSourceProviderPropertyName" value="cuba.dataSourceProvider"/>
+        <property name="jdbcUrlPropertyName" value="cuba.dataSource.jdbcUrl"/>
     </bean>
 
     <bean id="jpaVendorAdapter" class="com.haulmont.cuba.core.sys.CubaEclipseLinkJpaVendorAdapter">
