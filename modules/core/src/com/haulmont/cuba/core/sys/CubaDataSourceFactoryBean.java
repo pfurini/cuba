@@ -56,7 +56,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiDataSourceFactoryBean {
 
     protected DataSource getApplicationDataSource() {
         if (dataSourceName == null) {
-            dataSourceName = "MainDS";
+            dataSourceName = "CubaDS";
         }
         if (dataSourceMap.containsKey(dataSourceName)) {
             return dataSourceMap.get(dataSourceName);
@@ -76,6 +76,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiDataSourceFactoryBean {
         config.setUsername(username);
         config.setPassword(password);
         config.setRegisterMbeans(true);
+        config.setPoolName("HikariPool-" + dataSourceName);
 
         ds = new HikariDataSource(config);
         dataSourceMap.put(dataSourceName, ds);
