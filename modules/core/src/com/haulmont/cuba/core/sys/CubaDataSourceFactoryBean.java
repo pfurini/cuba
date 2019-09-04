@@ -25,13 +25,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CubaDataSourceFactoryBean extends CubaJndiDataSourceFactoryBean {
-    String dataSourceName;
-    String dataSourceProviderPropertyName = "cuba.dataSourceProvider";
-    String jdbcUrlPropertyName = "cuba.dataSource.jdbcUrl";
-    String usernamePropertyName = "cuba.dataSource.username";
-    String passwordPropertyName = "cuba.dataSource.password";
+    protected String dataSourceName;
+    protected String mainDataSourceJndiName = "cuba.dataSourceJndiName";
+    protected String dataSourceProviderPropertyName = "cuba.dataSourceProvider";
+    protected String jdbcUrlPropertyName = "cuba.dataSource.jdbcUrl";
+    protected String usernamePropertyName = "cuba.dataSource.username";
+    protected String passwordPropertyName = "cuba.dataSource.password";
+    protected String dataSourceJndiNamePrefix = "cuba.dataSourceJndiName_";
 
-    static Map<String, DataSource> dataSourceMap = new HashMap<>();
+    protected static Map<String, DataSource> dataSourceMap = new HashMap<>();
 
     @Override
     public Class<DataSource> getObjectType() {
@@ -40,11 +42,11 @@ public class CubaDataSourceFactoryBean extends CubaJndiDataSourceFactoryBean {
 
     @Override
     public Object getObject() {
-        if(!"cuba.dataSourceJndiName".equals(getJndiNameAppProperty())){
-            dataSourceName = getJndiNameAppProperty().replace("cuba.dataSourceJndiName_","");
+        if(!mainDataSourceJndiName.equals(getJndiNameAppProperty())){
+            dataSourceName = getJndiNameAppProperty().replace(dataSourceJndiNamePrefix,"");
         }
         if (dataSourceName != null) {
-            updateDbParamsNames();
+            updateDbParamsPropertiesNames();
         }
         String dataSourceProvider = AppContext.getProperty(dataSourceProviderPropertyName);
         if ("APPLICATION".equals(dataSourceProvider)) {
@@ -56,35 +58,32 @@ public class CubaDataSourceFactoryBean extends CubaJndiDataSourceFactoryBean {
 
     protected DataSource getApplicationDataSource() {
         if (dataSourceName == null) {
-            dataSourceName = "CubaDS";
+            dataSourceName = "_main_";
         }
         if (dataSourceMap.containsKey(dataSourceName)) {
             return dataSourceMap.get(dataSourceName);
         }
 
-        HikariConfig config = new HikariConfig();
-        String jdbcUrl = AppContext.getProperty(jdbcUrlPropertyName);
         String username = AppContext.getProperty(usernamePropertyName);
         String password = AppContext.getProperty(passwordPropertyName);
-
+        String jdbcUrl = AppContext.getProperty(jdbcUrlPropertyName);
         if (jdbcUrl == null) {
             throw new RuntimeException("cuba.dataSource_%DS-NAME%.jdbcUrl parameter must be filled in case of APPLICATION connection pool provider");
         }
 
-        HikariDataSource ds;
+        HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
         config.setUsername(username);
         config.setPassword(password);
         config.setRegisterMbeans(true);
         config.setPoolName("HikariPool-" + dataSourceName);
 
-        ds = new HikariDataSource(config);
+        HikariDataSource ds = new HikariDataSource(config);
         dataSourceMap.put(dataSourceName, ds);
-
         return new ProxyDataSource(ds);
     }
 
-    protected void updateDbParamsNames() {
+    protected void updateDbParamsPropertiesNames() {
         dataSourceProviderPropertyName = dataSourceProviderPropertyName + "_" + dataSourceName;
         jdbcUrlPropertyName = jdbcUrlPropertyName.replace("dataSource", "dataSource_" + dataSourceName);
         usernamePropertyName = usernamePropertyName.replace("dataSource", "dataSource_" + dataSourceName);
