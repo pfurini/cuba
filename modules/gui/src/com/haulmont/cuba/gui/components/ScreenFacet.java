@@ -42,14 +42,14 @@ public interface ScreenFacet<T extends Screen> extends Facet {
 
     /**
      * Sets the id of screen to be opened.
-     * @param screen screen id
+     * @param screenId screen id
      */
-    void setScreen(String screen);
+    void setScreenId(String screenId);
 
     /**
      * @return screen id
      */
-    String getScreen();
+    String getScreenId();
 
     /**
      * Sets how the screen should be opened
@@ -72,6 +72,11 @@ public interface ScreenFacet<T extends Screen> extends Facet {
      * @return properties that will be injected into opened screen via public setters.
      */
     Collection<UiControllerProperty> getProperties();
+
+    /**
+     * @return new screen instance
+     */
+    T create();
 
     /**
      * Shows and returns screen.

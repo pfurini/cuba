@@ -41,7 +41,7 @@ class ScreenFacetTest extends UiScreenSpec {
         then: 'Attribute values are propagated'
 
         facet.id == 'testScreenFacet'
-        facet.screen == 'test_ScreenToOpenWithFacet'
+        facet.screenId == 'test_ScreenToOpenWithFacet'
         facet.launchMode == OpenMode.NEW_TAB
 
         when: 'Show method is triggered'

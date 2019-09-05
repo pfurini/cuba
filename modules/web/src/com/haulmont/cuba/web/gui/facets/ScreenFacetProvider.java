@@ -76,7 +76,7 @@ public class ScreenFacetProvider implements FacetProvider<ScreenFacet> {
     protected void loadScreen(ScreenFacet facet, Element element) {
         String screen = element.attributeValue("screen");
         if (isNotEmpty(screen)) {
-            facet.setScreen(screen);
+            facet.setScreenId(screen);
         }
     }
 

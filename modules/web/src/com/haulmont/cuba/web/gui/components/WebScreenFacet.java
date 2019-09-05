@@ -35,18 +35,20 @@ public class WebScreenFacet<T extends Screen> extends WebAbstractFacet
 
     protected BeanLocator beanLocator;
 
-    protected String screen;
+    protected String screenId;
     protected Screens.LaunchMode launchMode = OpenMode.NEW_TAB;
     protected Collection<UiControllerProperty> properties;
 
+    protected T screen;
+
     @Override
-    public void setScreen(String screen) {
-        this.screen = screen;
+    public void setScreenId(String screenId) {
+        this.screenId = screenId;
     }
 
     @Override
-    public String getScreen() {
-        return screen;
+    public String getScreenId() {
+        return screenId;
     }
 
     @Override
@@ -70,25 +72,29 @@ public class WebScreenFacet<T extends Screen> extends WebAbstractFacet
     }
 
     @Override
-    public T show() {
+    public T create() {
         Frame owner = getOwner();
         if (owner == null) {
             throw new IllegalStateException("Screen facet is not attached to Frame");
         }
 
-        Screen screen = UiControllerUtils.getScreenContext(owner.getFrameOwner())
+        //noinspection unchecked
+        screen = (T) UiControllerUtils.getScreenContext(owner.getFrameOwner())
                 .getScreens()
-                .create(this.screen, launchMode);
+                .create(this.screenId, launchMode);
 
         UiControllerPropertyInjector injector =
                 beanLocator.getPrototype(UiControllerPropertyInjector.NAME,
                         screen, owner.getFrameOwner(), properties);
         injector.inject();
 
-        screen.show();
+        return screen;
+    }
 
+    @Override
+    public T show() {
         //noinspection unchecked
-        return (T) screen;
+        return (T) create().show();
     }
 
     @Override
