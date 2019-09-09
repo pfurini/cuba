@@ -26,6 +26,7 @@ import com.haulmont.cuba.core.sys.servlet.events.ServletContextDestroyedEvent;
 import com.haulmont.cuba.core.sys.servlet.events.ServletContextInitializedEvent;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.StringTokenizer;
@@ -33,6 +34,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.AbstractRefreshableApplicationContext;
+import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -75,6 +79,7 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
 
             beforeInitAppContext();
             initAppContext();
+            initActiveProfiles(sc);
             afterInitAppContext();
 
             ApplicationContext applicationContext = AppContext.getApplicationContext();
@@ -97,6 +102,19 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
             throw e;
         }
     }
+
+    protected void initActiveProfiles(ServletContext sc) {
+        String[] environmentProfiles = org.springframework.util.StringUtils.commaDelimitedListToStringArray(
+                sc.getInitParameter(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME));
+
+        if (ArrayUtils.isNotEmpty(environmentProfiles)) {
+            ((ConfigurableEnvironment)AppContext.getApplicationContext().getEnvironment()).setActiveProfiles(environmentProfiles);
+            if (AppContext.getApplicationContext() instanceof AbstractRefreshableApplicationContext) {
+                ((AbstractRefreshableApplicationContext)AppContext.getApplicationContext()).refresh();
+            }
+        }
+    }
+
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
@@ -174,7 +192,32 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
             throw new IllegalStateException(APP_PROPS_CONFIG_PARAM + " servlet context parameter not defined");
 
         final Properties properties = new Properties();
+        loadPropertiesFromConfig(sc, properties, propsConfigName);
 
+        String activeProfiles = System.getProperty("spring.profiles.active");
+        String activeProfiles2 = sc.getInitParameter("spring.profiles.active");
+        if(activeProfiles != null) {
+            String[] activeProfilesArray = activeProfiles.split(",");
+            for (String activeProfile : activeProfilesArray) {
+                String profilePropsConfigName = propsConfigName.replace("app.properties", "app-" + activeProfile.trim() + ".properties");
+                loadPropertiesFromConfig(sc, properties, profilePropsConfigName);
+            }
+        }
+
+        for (Object key : properties.keySet()) {
+            AppContext.setProperty((String) key, properties.getProperty((String) key).trim());
+        }
+
+        if (log.isTraceEnabled()) {
+            String props = Arrays.stream(AppContext.getPropertyNames())
+                    .map(key -> key + "=" + AppContext.getProperty(key))
+                    .sorted()
+                    .collect(Collectors.joining("\n"));
+            log.trace("AppProperties of the '{}' block:\n{}", getBlock(), props);
+        }
+    }
+
+    protected void loadPropertiesFromConfig(ServletContext sc, Properties properties, String propsConfigName) {
         DefaultResourceLoader resourceLoader = new DefaultResourceLoader();
         StringTokenizer tokenizer = new StringTokenizer(propsConfigName);
         tokenizer.setQuoteChar('"');
@@ -188,7 +231,7 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
                     if (resource.exists())
                         stream = resource.getInputStream();
                 } else {
-                   stream = sc.getResourceAsStream(str);
+                    stream = sc.getResourceAsStream(str);
                 }
 
                 if (stream != null) {
@@ -205,18 +248,6 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
             } finally {
                 IOUtils.closeQuietly(stream);
             }
-        }
-
-        for (Object key : properties.keySet()) {
-            AppContext.setProperty((String) key, properties.getProperty((String) key).trim());
-        }
-
-        if (log.isTraceEnabled()) {
-            String props = Arrays.stream(AppContext.getPropertyNames())
-                    .map(key -> key + "=" + AppContext.getProperty(key))
-                    .sorted()
-                    .collect(Collectors.joining("\n"));
-            log.trace("AppProperties of the '{}' block:\n{}", getBlock(), props);
         }
     }
 
