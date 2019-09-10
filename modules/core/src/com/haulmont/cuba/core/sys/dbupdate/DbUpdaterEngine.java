@@ -20,6 +20,7 @@ package com.haulmont.cuba.core.sys.dbupdate;
 import com.google.common.collect.ImmutableList;
 import com.haulmont.bali.db.DbUtils;
 import com.haulmont.bali.db.QueryRunner;
+import com.haulmont.cuba.core.global.Stores;
 import com.haulmont.cuba.core.sys.DbInitializationException;
 import com.haulmont.cuba.core.sys.DbUpdater;
 import com.haulmont.cuba.core.sys.PostUpdateScripts;
@@ -66,7 +67,7 @@ public class DbUpdaterEngine implements DbUpdater {
     protected DataSource dataSource;
 
     protected String dbScriptsDirectory;
-    protected String storeName;
+    protected String storeName = Stores.MAIN;
     protected String dbmsType;
     protected String dbmsVersion;
 
