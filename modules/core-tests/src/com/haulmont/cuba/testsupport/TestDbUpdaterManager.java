@@ -16,9 +16,9 @@
 
 package com.haulmont.cuba.testsupport;
 
-import com.haulmont.cuba.core.sys.dbupdate.DbUpdaterImpl;
+import com.haulmont.cuba.core.sys.dbupdate.DbUpdaterManager;
 
-public class TestDbUpdaterImpl extends DbUpdaterImpl {
+public class TestDbUpdaterManager extends DbUpdaterManager {
 
     @Override
     protected void applicationInitialized() {
