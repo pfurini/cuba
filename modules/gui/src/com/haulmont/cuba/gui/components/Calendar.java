@@ -321,9 +321,8 @@ public interface Calendar extends Component.BelongToFrame, Component.HasCaption,
          * @return moved event entity or null if it is not entity based event
          */
         @Nullable
-        @SuppressWarnings("unchecked")
-        public <E extends Entity> E getEntity() {
-            return (E) entity;
+        public Entity getEntity() {
+            return entity;
         }
     }
 
@@ -388,13 +387,11 @@ public interface Calendar extends Component.BelongToFrame, Component.HasCaption,
         }
 
         /**
-         * @param <E> entity
          * @return event entity that was clicked or null if it is not entity based event
          */
         @Nullable
-        @SuppressWarnings("unchecked")
-        public <E extends Entity> E getEntity() {
-            return (E) entity;
+        public Entity getEntity() {
+            return entity;
         }
 
         public CalendarEvent getCalendarEvent() {
@@ -445,13 +442,11 @@ public interface Calendar extends Component.BelongToFrame, Component.HasCaption,
         }
 
         /**
-         * @param <E> entity
          * @return event entity that was resized or null if it is not entity based event
          */
         @Nullable
-        @SuppressWarnings("uchecked")
-        public <E extends Entity> E getEntity() {
-            return (E) entity;
+        public Entity getEntity() {
+            return entity;
         }
 
         public CalendarEvent getCalendarEvent() {
