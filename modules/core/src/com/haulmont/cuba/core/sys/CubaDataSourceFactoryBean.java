@@ -31,9 +31,9 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     protected static final String DBMS_VERSION = "cuba.dbmsVersion";
     protected static final String HOST = "dataSource.host";
     protected static final String PORT = "dataSource.port";
-    protected static final String DB_NAME = "cuba.dbmsVersion";
-    protected static final String CONNECTION_PARAMS = "cuba.dbmsVersion";
-    protected static final String JDBC_URL = "cuba.dbmsVersion";
+    protected static final String DB_NAME = "dataSource.dbName";
+    protected static final String CONNECTION_PARAMS = "dataSource.connectionParams";
+    protected static final String JDBC_URL = "jdbcUrl";
     protected static final String CUBA = "cuba";
     protected static final String MS_SQL_2005 = "2005";
     public static final String POSTGRES_DBMS = "postgres";
