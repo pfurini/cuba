@@ -20,20 +20,22 @@ import com.haulmont.cuba.core.sys.jdbc.ProxyDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 
-public class CubaDataSourceFactoryBean extends CubaJndiDataSourceFactoryBean {
-    protected String dataSourceName;
-    protected String mainDataSourceJndiName = "cuba.dataSourceJndiName";
-    protected String dataSourceProviderPropertyName = "cuba.dataSourceProvider";
-    protected String jdbcUrlPropertyName = "cuba.dataSource.jdbcUrl";
-    protected String usernamePropertyName = "cuba.dataSource.username";
-    protected String passwordPropertyName = "cuba.dataSource.password";
-    protected String dataSourceJndiNamePrefix = "cuba.dataSourceJndiName_";
+public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
+    protected final String DATASOURCE_PROVEDER_PROPERTY_NAME = "cuba.dataSourceProvider";
+    private String dataSourceName;
 
-    protected static Map<String, DataSource> dataSourceMap = new HashMap<>();
+    public String getDataSourceName() {
+        return dataSourceName;
+    }
+
+    public void setDataSourceName(String dataSourceName) {
+        this.dataSourceName = dataSourceName;
+    }
 
     @Override
     public Class<DataSource> getObjectType() {
@@ -42,51 +44,80 @@ public class CubaDataSourceFactoryBean extends CubaJndiDataSourceFactoryBean {
 
     @Override
     public Object getObject() {
-        if(!mainDataSourceJndiName.equals(getJndiNameAppProperty())){
-            dataSourceName = getJndiNameAppProperty().replace(dataSourceJndiNamePrefix,"");
-        }
-        if (dataSourceName != null) {
-            updateDbParamsPropertiesNames();
-        }
-        String dataSourceProvider = AppContext.getProperty(dataSourceProviderPropertyName);
-        if ("APPLICATION".equals(dataSourceProvider)) {
+        String dataSourceProvider = AppContext.getProperty(getDSProviderPropertyName());
+        if ("application".equals(dataSourceProvider)) {
             return getApplicationDataSource();
         } else {
             return super.getObject();
         }
     }
 
+    protected String getDSProviderPropertyName() {
+        if (dataSourceName != null) {
+            return DATASOURCE_PROVEDER_PROPERTY_NAME + "_" + dataSourceName;
+        }
+        return DATASOURCE_PROVEDER_PROPERTY_NAME;
+    }
+
     protected DataSource getApplicationDataSource() {
-        if (dataSourceName == null) {
-            dataSourceName = "_main_";
-        }
-        if (dataSourceMap.containsKey(dataSourceName)) {
-            return dataSourceMap.get(dataSourceName);
-        }
+        Properties hikariConfigProperties = getHikariConfigProperties();
 
-        String username = AppContext.getProperty(usernamePropertyName);
-        String password = AppContext.getProperty(passwordPropertyName);
-        String jdbcUrl = AppContext.getProperty(jdbcUrlPropertyName);
-        if (jdbcUrl == null) {
-            throw new RuntimeException("cuba.dataSource_%DS-NAME%.jdbcUrl parameter must be filled in case of APPLICATION connection pool provider");
-        }
+        HikariConfig config = new HikariConfig(hikariConfigProperties);
 
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(jdbcUrl);
-        config.setUsername(username);
-        config.setPassword(password);
         config.setRegisterMbeans(true);
-        config.setPoolName("HikariPool-" + dataSourceName);
+        config.setPoolName("HikariPool-" + (dataSourceName == null ? "main" : dataSourceName));
 
         HikariDataSource ds = new HikariDataSource(config);
-        dataSourceMap.put(dataSourceName, ds);
         return new ProxyDataSource(ds);
     }
 
-    protected void updateDbParamsPropertiesNames() {
-        dataSourceProviderPropertyName = dataSourceProviderPropertyName + "_" + dataSourceName;
-        jdbcUrlPropertyName = jdbcUrlPropertyName.replace("dataSource", "dataSource_" + dataSourceName);
-        usernamePropertyName = usernamePropertyName.replace("dataSource", "dataSource_" + dataSourceName);
-        passwordPropertyName = passwordPropertyName.replace("dataSource", "dataSource_" + dataSourceName);
+    protected Properties getHikariConfigProperties() {
+        Properties hikariConfigProperties = new Properties();
+        String[] propertiesNames = AppContext.getPropertyNames();
+        String filterParam = ".dataSource.";
+        if (dataSourceName != null) {
+            filterParam = ".dataSource_" + dataSourceName + ".";
+        }
+        String hikariConfigDSPrefix;
+        String cubaConfigDSPrefix = "cuba" + filterParam;
+        String hikariPropertyName;
+
+        for (String cubaPropertyName : propertiesNames) {
+            if (!cubaPropertyName.contains(filterParam)) {
+                continue;
+            }
+            String value = AppContext.getProperty(cubaPropertyName);
+            if (value == null) {
+                continue;
+            }
+
+            hikariPropertyName = cubaPropertyName.replace(cubaConfigDSPrefix, "");
+            hikariConfigDSPrefix = "dataSource.";
+            if (isHikariConfigField(hikariPropertyName)) {
+                hikariConfigDSPrefix = "";
+            }
+            hikariConfigProperties.put(cubaPropertyName.replace(cubaConfigDSPrefix, hikariConfigDSPrefix), value);
+        }
+        return hikariConfigProperties;
+    }
+
+    protected boolean isHikariConfigField(String propertyName) {
+        Field[] fields = HikariConfig.class.getDeclaredFields();
+        for (Field field : fields) {
+            if (propertyName.equals(field.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected Object lookupWithFallback() throws NamingException {
+        Object object = super.lookupWithFallback();
+        if (object instanceof DataSource) {
+            return new ProxyDataSource((DataSource) object);
+        } else {
+            return object;
+        }
     }
 }
