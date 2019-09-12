@@ -179,7 +179,10 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
         loadPropertiesFromConfig(sc, properties, propsConfigName);
 
         String activeProfiles = System.getProperty("spring.profiles.active");
-        String activeProfiles2 = sc.getInitParameter("spring.profiles.active");
+        if (activeProfiles == null) {
+            activeProfiles = sc.getInitParameter("spring.profiles.active");
+        }
+
         if(activeProfiles != null) {
             String[] activeProfilesArray = activeProfiles.split(",");
             for (String activeProfile : activeProfilesArray) {
