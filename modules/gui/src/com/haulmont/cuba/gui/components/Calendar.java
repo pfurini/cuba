@@ -277,12 +277,22 @@ public interface Calendar extends Component.BelongToFrame, Component.HasCaption,
     class CalendarEventMoveEvent extends EventObject {
         protected CalendarEvent calendarEvent;
         protected Date newStart;
+        protected Entity entity;
 
+        @Deprecated
         public CalendarEventMoveEvent(Calendar calendar, CalendarEvent calendarEvent, Date newStart) {
             super(calendar);
 
             this.calendarEvent = calendarEvent;
             this.newStart = newStart;
+        }
+
+        public CalendarEventMoveEvent(Calendar calendar, CalendarEvent calendarEvent, Date newStart, @Nullable Entity entity) {
+            super(calendar);
+
+            this.calendarEvent = calendarEvent;
+            this.newStart = newStart;
+            this.entity = entity;
         }
 
         @Override
@@ -305,6 +315,15 @@ public interface Calendar extends Component.BelongToFrame, Component.HasCaption,
 
         public Date getNewStart() {
             return newStart;
+        }
+
+        /**
+         * @return moved event entity or null if it is not entity based event
+         */
+        @Nullable
+        @SuppressWarnings("unchecked")
+        public <E extends Entity> E getEntity() {
+            return (E) entity;
         }
     }
 
@@ -368,8 +387,14 @@ public interface Calendar extends Component.BelongToFrame, Component.HasCaption,
             this.entity = entity;
         }
 
-        public Entity getEntity() {
-            return entity;
+        /**
+         * @param <E> entity
+         * @return event entity that was clicked or null if it is not entity based event
+         */
+        @Nullable
+        @SuppressWarnings("unchecked")
+        public <E extends Entity> E getEntity() {
+            return (E) entity;
         }
 
         public CalendarEvent getCalendarEvent() {
@@ -419,9 +444,14 @@ public interface Calendar extends Component.BelongToFrame, Component.HasCaption,
             this.entity = entity;
         }
 
+        /**
+         * @param <E> entity
+         * @return event entity that was resized or null if it is not entity based event
+         */
         @Nullable
-        public Entity getEntity() {
-            return entity;
+        @SuppressWarnings("uchecked")
+        public <E extends Entity> E getEntity() {
+            return (E) entity;
         }
 
         public CalendarEvent getCalendarEvent() {
