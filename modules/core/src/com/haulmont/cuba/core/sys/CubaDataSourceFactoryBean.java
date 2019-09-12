@@ -26,7 +26,22 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
-    protected final String DATASOURCE_PROVEDER_PROPERTY_NAME = "cuba.dataSourceProvider";
+    protected static final String DATASOURCE_PROVIDER_PROPERTY_NAME = "cuba.dataSourceProvider";
+    protected static final String DBMS_TYPE = "cuba.dbmsType";
+    protected static final String DBMS_VERSION = "cuba.dbmsVersion";
+    protected static final String HOST = "dataSource.host";
+    protected static final String PORT = "dataSource.port";
+    protected static final String DB_NAME = "cuba.dbmsVersion";
+    protected static final String CONNECTION_PARAMS = "cuba.dbmsVersion";
+    protected static final String JDBC_URL = "cuba.dbmsVersion";
+    protected static final String CUBA = "cuba";
+    protected static final String MS_SQL_2005 = "2005";
+    public static final String POSTGRES_DBMS = "postgres";
+    public static final String MSSQL_DBMS = "mssql";
+    public static final String ORACLE_DBMS = "oracle";
+    public static final String MYSQL_DBMS = "mysql";
+    public static final String HSQL_DBMS = "hsql";
+
     private String dataSourceName;
 
     public String getDataSourceName() {
@@ -52,20 +67,13 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
         }
     }
 
-    protected String getDSProviderPropertyName() {
-        if (dataSourceName != null) {
-            return DATASOURCE_PROVEDER_PROPERTY_NAME + "_" + dataSourceName;
-        }
-        return DATASOURCE_PROVEDER_PROPERTY_NAME;
-    }
-
     protected DataSource getApplicationDataSource() {
         Properties hikariConfigProperties = getHikariConfigProperties();
 
         HikariConfig config = new HikariConfig(hikariConfigProperties);
 
         config.setRegisterMbeans(true);
-        config.setPoolName("HikariPool-" + (dataSourceName == null ? "main" : dataSourceName));
+        config.setPoolName("HikariPool-" + (dataSourceName == null ? "MAIN" : dataSourceName));
 
         HikariDataSource ds = new HikariDataSource(config);
         return new ProxyDataSource(ds);
@@ -79,7 +87,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
             filterParam = ".dataSource_" + dataSourceName + ".";
         }
         String hikariConfigDSPrefix;
-        String cubaConfigDSPrefix = "cuba" + filterParam;
+        String cubaConfigDSPrefix = CUBA + filterParam;
         String hikariPropertyName;
 
         for (String cubaPropertyName : propertiesNames) {
@@ -98,7 +106,45 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
             }
             hikariConfigProperties.put(cubaPropertyName.replace(cubaConfigDSPrefix, hikariConfigDSPrefix), value);
         }
+        if (hikariConfigProperties.getProperty(JDBC_URL) == null) {
+            hikariConfigProperties.setProperty(JDBC_URL, getJdbcUrlFromParts(hikariConfigProperties));
+        }
         return hikariConfigProperties;
+    }
+
+    protected String getJdbcUrlFromParts(Properties properties) {
+        String urlPrefix = getUrlPrefix();
+        String jdbcUrl = urlPrefix + properties.getProperty(HOST) + ":" +
+                properties.getProperty(PORT) + "/" +
+                properties.getProperty(DB_NAME);
+        if (properties.get(CONNECTION_PARAMS) != null) {
+            jdbcUrl = jdbcUrl + properties.get(CONNECTION_PARAMS);
+        }
+        return jdbcUrl;
+    }
+
+    protected String getUrlPrefix() {
+        String dbmsType = AppContext.getProperty(getDbmsTypeProperty());
+        if (dbmsType == null) {
+            throw new RuntimeException("dbmsType should be specified for each dataSource!");
+        }
+        switch (dbmsType) {
+            case POSTGRES_DBMS:
+                return "jdbc:postgresql://";
+            case MSSQL_DBMS:
+                if (MS_SQL_2005.equals(AppContext.getProperty(getDbmsVersionProperty()))) {
+                    return "jdbc:jtds:sqlserver://";
+                }
+                return "jdbc:sqlserver://";
+            case ORACLE_DBMS:
+                return "jdbc:oracle:thin:@//";
+            case MYSQL_DBMS:
+                return "jdbc:mysql://";
+            case HSQL_DBMS:
+                return "jdbc:hsqldb:hsql://";
+            default:
+                throw new RuntimeException("dbmsType is unsupported!");
+        }
     }
 
     protected boolean isHikariConfigField(String propertyName) {
@@ -119,5 +165,26 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
         } else {
             return object;
         }
+    }
+
+    protected String getDSProviderPropertyName() {
+        if (dataSourceName != null) {
+            return DATASOURCE_PROVIDER_PROPERTY_NAME + "_" + dataSourceName;
+        }
+        return DATASOURCE_PROVIDER_PROPERTY_NAME;
+    }
+
+    protected String getDbmsTypeProperty() {
+        if (dataSourceName != null) {
+            return DBMS_TYPE + "_" + DBMS_TYPE;
+        }
+        return DBMS_TYPE;
+    }
+
+    protected String getDbmsVersionProperty() {
+        if (dataSourceName != null) {
+            return DBMS_VERSION + "_" + DBMS_VERSION;
+        }
+        return DBMS_VERSION;
     }
 }
