@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -178,9 +179,9 @@ public abstract class AbstractWebAppContextLoader extends AbstractAppContextLoad
         final Properties properties = new Properties();
         loadPropertiesFromConfig(sc, properties, propsConfigName);
 
-        String activeProfiles = System.getProperty("spring.profiles.active");
+        String activeProfiles = System.getProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME);
         if (activeProfiles == null) {
-            activeProfiles = sc.getInitParameter("spring.profiles.active");
+            activeProfiles = sc.getInitParameter(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME);
         }
 
         if(activeProfiles != null) {
