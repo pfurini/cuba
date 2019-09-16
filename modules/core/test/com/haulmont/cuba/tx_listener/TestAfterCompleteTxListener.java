@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Component("cuba_TestAfterCommitTxListener")
 public class TestAfterCompleteTxListener implements AfterCompleteTransactionListener {

@@ -34,9 +34,10 @@ import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
@@ -46,9 +47,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@Ignore
+@Disabled
 public class FieldGroupTest extends CubaClientTestCase {
 
     @Mocked
@@ -69,7 +70,7 @@ public class FieldGroupTest extends CubaClientTestCase {
     protected ValueBinder valueBinder;
     protected OptionsBinder optionsBinder;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         addEntityPackage("com.haulmont.cuba");
         setupInfrastructure();
@@ -417,66 +418,77 @@ public class FieldGroupTest extends CubaClientTestCase {
         assertEquals(getComposition(fcLogin), getGridCellComposition(fieldGroup, 1, 0));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void addExistingField() {
-        FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
-        fieldGroup.setColumns(2);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
+            fieldGroup.setColumns(2);
 
-        FieldGroup.FieldConfig fcName = fieldGroup.createField("name");
-        fcName.setProperty("name");
-        fcName.setEditable(false);
-        fieldGroup.addField(fcName);
+            FieldGroup.FieldConfig fcName = fieldGroup.createField("name");
+            fcName.setProperty("name");
+            fcName.setEditable(false);
+            fieldGroup.addField(fcName);
 
-        fieldGroup.addField(fcName);
+            fieldGroup.addField(fcName);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void addIncorrectColumn() {
-        FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
-        fieldGroup.setColumns(2);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
 
-        FieldGroup.FieldConfig fcName = fieldGroup.createField("name");
-        fcName.setProperty("name");
-        fcName.setEditable(false);
-        fieldGroup.addField(fcName);
+            fieldGroup.setColumns(2);
 
-        fieldGroup.addField(fcName, 2);
+            FieldGroup.FieldConfig fcName = fieldGroup.createField("name");
+            fcName.setProperty("name");
+            fcName.setEditable(false);
+            fieldGroup.addField(fcName);
+
+            fieldGroup.addField(fcName, 2);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void addIncorrectRow() {
-        FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
-        fieldGroup.setColumns(2);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
+            fieldGroup.setColumns(2);
 
-        FieldGroup.FieldConfig fcName = fieldGroup.createField("name");
-        fcName.setProperty("name");
-        fcName.setEditable(false);
-        fieldGroup.addField(fcName);
+            FieldGroup.FieldConfig fcName = fieldGroup.createField("name");
+            fcName.setProperty("name");
+            fcName.setEditable(false);
+            fieldGroup.addField(fcName);
 
-        fieldGroup.addField(fcName, 0, 3);
+            fieldGroup.addField(fcName, 0, 3);
+        });
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void changeBoundComponent() {
-        FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
-        fieldGroup.setColumns(2);
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
+            fieldGroup.setColumns(2);
 
-        FieldGroup.FieldConfig fcName = fieldGroup.createField("name");
-        fcName.setProperty("name");
-        fcName.setEditable(false);
-        fieldGroup.addField(fcName);
+            FieldGroup.FieldConfig fcName = fieldGroup.createField("name");
+            fcName.setProperty("name");
+            fcName.setEditable(false);
+            fieldGroup.addField(fcName);
 
-        fieldGroup.bind();
+            fieldGroup.bind();
 
-        fcName.setComponent(uiComponents.create(TextArea.NAME));
+            fcName.setComponent(uiComponents.create(TextArea.NAME));
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void removeNonDefinedField() {
-        FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
-        fieldGroup.setColumns(2);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            FieldGroup fieldGroup = uiComponents.create(FieldGroup.class);
+            fieldGroup.setColumns(2);
 
-        fieldGroup.removeField("none");
+            fieldGroup.removeField("none");
+        });
     }
 
     protected Object getComposition(FieldGroup.FieldConfig fc) {

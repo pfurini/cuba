@@ -19,6 +19,7 @@ package spec.cuba.core.metadata
 import com.haulmont.bali.db.ListArrayHandler
 import com.haulmont.bali.db.QueryRunner
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.core.sys.persistence.DbmsSpecificFactory
 import com.haulmont.cuba.core.sys.persistence.SequenceSupport
 import com.haulmont.cuba.testmodel.number_id.NumberIdJoinedChild
@@ -28,15 +29,8 @@ import com.haulmont.cuba.testmodel.number_id.NumberIdSeqNameSecond
 import com.haulmont.cuba.testmodel.number_id.NumberIdSingleTableChild
 import com.haulmont.cuba.testmodel.number_id.NumberIdSingleTableGrandChild
 import com.haulmont.cuba.testmodel.number_id.NumberIdSingleTableRoot
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class NumberIdGenerationTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class NumberIdGenerationTest extends TestContainerSpecification {
 
     private Metadata metadata
     private SequenceSupport sequenceSupport

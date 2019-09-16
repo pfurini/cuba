@@ -23,23 +23,16 @@ import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.DataManager
 import com.haulmont.cuba.core.global.Metadata
 import com.haulmont.cuba.core.global.View
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.core.sys.serialization.KryoSerialization
 import com.haulmont.cuba.core.sys.serialization.SerializationException
 import com.haulmont.cuba.testmodel.sales.Order
 import com.haulmont.cuba.testmodel.sales.OrderLine
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class KryoSerializationTest extends Specification {
-
-    @Shared
-    @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class KryoSerializationTest extends TestContainerSpecification {
 
     private Persistence persistence = cont.persistence()
     private Metadata metadata = cont.metadata()

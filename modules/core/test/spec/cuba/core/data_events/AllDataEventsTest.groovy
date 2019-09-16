@@ -19,17 +19,11 @@ package spec.cuba.core.data_events
 import com.haulmont.cuba.core.Transaction
 import com.haulmont.cuba.core.TransactionalDataManager
 import com.haulmont.cuba.core.global.*
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.sales_1.Order
 import com.haulmont.cuba.testmodel.sales_1.TestEntityChangedEventListener
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class AllDataEventsTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class AllDataEventsTest extends TestContainerSpecification {
 
     private TestEntityChangedEventListener listener
     private Events events

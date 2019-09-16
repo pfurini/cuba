@@ -24,27 +24,25 @@ import com.haulmont.cuba.testmodel.selfinherited.ChildEntity
 import com.haulmont.cuba.testmodel.selfinherited.ChildEntityDetail
 import com.haulmont.cuba.testmodel.selfinherited.ChildEntityReferrer
 import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
 import spock.lang.Specification
 
 class JoinedInheritanceTestClass extends Specification {
 
-    @Shared
-    @ClassRule
-    public TestContainer cont = new TestContainer()
+    public static TestContainer cont = new TestContainer()
             .setAppPropertiesFiles(Arrays.asList(
                 "com/haulmont/cuba/app.properties",
                 "com/haulmont/cuba/testsupport/test-app.properties",
                 "com/haulmont/cuba/test-app.properties",
                 "spec/cuba/core/inheritance/test-inheritance-app.properties"))
 
-    private Persistence persistence = cont.persistence()
-    private Metadata metadata = cont.metadata()
-
-    private dataManager
+    private Persistence persistence
+    private Metadata metadata
+    private DataManager dataManager
 
     void setup() {
+        cont.beforeAll(null);
+        persistence = cont.persistence()
+        metadata = cont.metadata()
         dataManager = AppBeans.get(DataManager)
     }
 
@@ -55,6 +53,7 @@ class JoinedInheritanceTestClass extends Specification {
         runner.update('delete from TEST_CHILD_ENTITY_REFERRER')
         runner.update('delete from TEST_CHILD_ENTITY')
         runner.update('delete from TEST_ROOT_ENTITY')
+        cont.afterAll(null);
     }
 
     def "store master-detail"() {

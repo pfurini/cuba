@@ -19,21 +19,14 @@ package spec.cuba.core.datatypes
 import com.haulmont.chile.core.datatypes.DatatypeRegistry
 import com.haulmont.chile.core.datatypes.impl.*
 import com.haulmont.cuba.core.global.AppBeans
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.localdatetime.LocalDateTimeEntity
 import com.haulmont.cuba.testmodel.numberformat.TestNumberValuesEntity
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
 import java.text.ParseException
 import java.time.*
 
-class DatatypeTest extends Specification {
-
-    @Shared
-    @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class DatatypeTest extends TestContainerSpecification {
 
     private Locale savedLocale
 

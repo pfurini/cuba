@@ -20,15 +20,9 @@ import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaClass
 import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaProperty
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.ExtendedEntities
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
+import com.haulmont.cuba.core.TestContainerSpecification
 
-class ExtendedEntitiesTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class ExtendedEntitiesTest extends TestContainerSpecification {
 
     private ExtendedEntities extendedEntities
 

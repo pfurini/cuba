@@ -27,16 +27,14 @@ import com.haulmont.cuba.web.container.CubaTestContainer
 import com.haulmont.cuba.web.testsupport.TestContainer
 import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy
 import org.junit.ClassRule
+import spec.cuba.web.TestContainerSpecification
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.util.function.Consumer
 
 @SuppressWarnings("GroovyAssignabilityCheck")
-class KeyValueInstanceLoaderTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = CubaTestContainer.Common.INSTANCE
+class KeyValueInstanceLoaderTest extends TestContainerSpecification {
 
     private Metadata metadata
     private DataManager dataManager

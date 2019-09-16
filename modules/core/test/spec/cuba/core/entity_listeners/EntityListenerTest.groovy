@@ -19,21 +19,15 @@ package spec.cuba.core.entity_listeners
 import com.haulmont.cuba.core.global.*
 import com.haulmont.cuba.core.listener.TestUserDetachListener
 import com.haulmont.cuba.core.listener.TestUserEntityListener
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.core.sys.listener.EntityListenerManager
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.User
-import com.haulmont.cuba.testsupport.TestContainer
 import com.haulmont.cuba.testsupport.TestSupport
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
 import java.util.function.Consumer
 
-class EntityListenerTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class EntityListenerTest extends TestContainerSpecification {
 
     private DataManager dataManager
     private EntityStates entityStates

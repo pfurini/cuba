@@ -24,15 +24,13 @@ import com.haulmont.cuba.web.testmodel.sales.OrderLine
 import com.haulmont.cuba.web.testmodel.sales.Product
 import com.haulmont.cuba.web.testsupport.TestContainer
 import org.junit.ClassRule
+import spec.cuba.web.TestContainerSpecification
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.util.function.Consumer
 
-class PropertyContainerTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = CubaTestContainer.Common.INSTANCE
+class PropertyContainerTest extends TestContainerSpecification {
 
     private Metadata metadata
     private DataManager dataManager

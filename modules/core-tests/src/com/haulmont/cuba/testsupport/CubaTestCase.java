@@ -24,6 +24,7 @@ import com.haulmont.cuba.core.global.PasswordEncryption;
 import com.haulmont.cuba.core.sys.AppContext;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.util.*;
 
@@ -58,13 +59,13 @@ public abstract class CubaTestCase extends TestCase {
 
     private class CommonTestContainer extends TestContainer {
         @Override
-        public void before() throws Throwable {
-            super.before();
+        public void beforeAll(ExtensionContext context) {
+            super.beforeAll(context);
         }
 
         @Override
-        public void after() {
-            super.after();
+        public void afterAll(ExtensionContext context) {
+            super.afterAll(context);
         }
 
         @Override
@@ -97,7 +98,7 @@ public abstract class CubaTestCase extends TestCase {
                 cont.setAppComponents(getTestAppComponents());
                 cont.setAppPropertiesFiles(getTestAppProperties());
                 cont.setSpringConfig(getTestSpringConfig());
-                cont.before();
+                cont.beforeAll(null);
                 initialized = true;
             }
 

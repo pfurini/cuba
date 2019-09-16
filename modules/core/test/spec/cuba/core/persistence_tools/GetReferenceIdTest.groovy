@@ -20,17 +20,11 @@ import com.haulmont.cuba.core.PersistenceTools
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.View
 import com.haulmont.cuba.core.global.ViewRepository
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.sales.Customer
 import com.haulmont.cuba.testmodel.sales.Order
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class GetReferenceIdTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class GetReferenceIdTest extends TestContainerSpecification {
 
     private PersistenceTools persistenceTools
 

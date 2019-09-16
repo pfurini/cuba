@@ -26,20 +26,14 @@ import com.haulmont.cuba.core.entity.CategoryAttribute
 import com.haulmont.cuba.core.entity.ReferenceToEntity
 import com.haulmont.cuba.core.entity.contracts.Id
 import com.haulmont.cuba.core.global.*
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.security.app.EntityLog
 import com.haulmont.cuba.testmodel.sales_1.*
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 
-class EntityChangedEventTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class EntityChangedEventTest extends TestContainerSpecification {
 
     private TestEntityChangedEventListener listener
     private Events events

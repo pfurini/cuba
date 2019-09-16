@@ -34,8 +34,8 @@ import javax.persistence.FlushModeType;
 import java.util.Collection;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Component("cuba_TestBeforeCommitTxListener")
 public class TestBeforeCommitTxListener implements BeforeCommitTransactionListener {

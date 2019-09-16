@@ -23,17 +23,11 @@ import com.haulmont.cuba.core.entity.QueryResult
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.Metadata
 import com.haulmont.cuba.core.global.UserSessionSource
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.security.app.UserSessions
 import com.haulmont.cuba.security.global.UserSession
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class QueryResultsManagerTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class QueryResultsManagerTest extends TestContainerSpecification {
 
     private Persistence persistence
     private Metadata metadata

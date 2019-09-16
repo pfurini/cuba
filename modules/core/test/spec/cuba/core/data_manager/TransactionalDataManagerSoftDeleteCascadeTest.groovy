@@ -21,19 +21,13 @@ import com.haulmont.cuba.core.TransactionalDataManager
 import com.haulmont.cuba.core.entity.contracts.Id
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.DataManager
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.security.app.EntityLog
 import com.haulmont.cuba.testmodel.entitychangedevent.EceTestLogEntry
 import com.haulmont.cuba.testmodel.entitychangedevent.EceTestProduct
 import com.haulmont.cuba.testmodel.entitychangedevent.EceTestStock
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class TransactionalDataManagerSoftDeleteCascadeTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class TransactionalDataManagerSoftDeleteCascadeTest extends TestContainerSpecification {
 
     DataManager dm
     TransactionalDataManager tdm

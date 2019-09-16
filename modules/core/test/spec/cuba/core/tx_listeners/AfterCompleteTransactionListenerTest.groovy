@@ -19,21 +19,15 @@ package spec.cuba.core.tx_listeners
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.EntityStates
 import com.haulmont.cuba.core.global.View
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.Role
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.security.entity.UserRole
-import com.haulmont.cuba.testsupport.TestContainer
 import com.haulmont.cuba.testsupport.TestSupport
 import com.haulmont.cuba.tx_listener.TestAfterCompleteTxListener
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class AfterCompleteTransactionListenerTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class AfterCompleteTransactionListenerTest extends TestContainerSpecification {
 
     def "reference CAN be fetched in afterComplete if entity is not partial"() {
 

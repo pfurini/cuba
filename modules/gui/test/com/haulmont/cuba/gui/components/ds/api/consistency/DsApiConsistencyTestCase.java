@@ -31,7 +31,7 @@ import com.haulmont.cuba.security.entity.Role;
 import com.haulmont.cuba.security.entity.User;
 import mockit.Mocked;
 import mockit.Expectations;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.util.UUID;
 

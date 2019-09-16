@@ -18,16 +18,10 @@ package spec.cuba.core.persistence_xml
 
 import com.haulmont.cuba.core.global.Stores
 import com.haulmont.cuba.core.sys.AppContext
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.core.sys.persistence.PersistenceConfigProcessor
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class PersistenceXmlPostProcessorTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class PersistenceXmlPostProcessorTest extends TestContainerSpecification {
 
     private String workDir
     private PersistenceConfigProcessor persistenceConfigProcessor

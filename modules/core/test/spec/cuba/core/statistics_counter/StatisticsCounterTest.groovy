@@ -21,16 +21,10 @@ import com.haulmont.cuba.core.app.MiddlewareStatisticsAccumulator
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.jmx.StatisticsCounterMBean
 import com.haulmont.cuba.core.sys.AppContext
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.sales.Customer
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class StatisticsCounterTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class StatisticsCounterTest extends TestContainerSpecification {
 
     private Customer customer1
     private StatisticsCounterMBean statCounter

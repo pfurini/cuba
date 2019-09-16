@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright (c) 2008-2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.core;
+package spec.cuba.web
 
-import org.apache.commons.lang3.SystemUtils;
-import org.junit.jupiter.api.Test;
+import com.haulmont.cuba.web.container.CubaTestContainer
+import com.haulmont.cuba.web.testsupport.TestContainer
+import spock.lang.Specification
 
-public class JdkVersionTest {
-    @Test
-    public void test() {
-        if (SystemUtils.IS_JAVA_1_8) {
-            System.out.println(
-                    "---------------tests are running on JAVA 8---------------"
-            );
-        } else if (SystemUtils.IS_JAVA_10) {
-            System.out.println(
-                    "---------------tests are running on JAVA 10---------------"
-            );
-        }
+class TestContainerSpecification extends Specification{
+    public static TestContainer cont = CubaTestContainer.Common.INSTANCE
+
+    def setupSpec() {
+        cont.beforeAll(null);
+    }
+
+    def cleanupSpec() {
+        cont.afterAll(null);
     }
 }

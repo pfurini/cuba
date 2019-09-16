@@ -32,7 +32,9 @@ import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.StringTokenizer;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -75,7 +77,7 @@ import java.util.*;
  *     }
  * </pre>
  */
-public class TestContainer extends ExternalResource {
+public class TestContainer implements BeforeAllCallback, AfterAllCallback {
 
     public static class Common extends TestContainer {
 
@@ -87,16 +89,16 @@ public class TestContainer extends ExternalResource {
         }
 
         @Override
-        public void before() throws Throwable {
+        public void beforeAll(ExtensionContext context) {
             if (!initialized) {
-                super.before();
+                super.beforeAll(context);
                 initialized = true;
             }
             setupContext();
         }
 
         @Override
-        public void after() {
+        public void afterAll(ExtensionContext context) {
             cleanupContext();
             // never stops - do not call super
         }
@@ -270,7 +272,7 @@ public class TestContainer extends ExternalResource {
     }
 
     @Override
-    protected void before() throws Throwable {
+    public void beforeAll(ExtensionContext context) {
         log.info("Starting test container " + this);
         System.setProperty("cuba.unitTestMode", "true");
 
@@ -286,7 +288,7 @@ public class TestContainer extends ExternalResource {
     }
 
     @Override
-    protected void after() {
+    public void afterAll(ExtensionContext context) {
         log.info("Stopping test container " + this);
         try {
             ((PersistenceImpl) AppBeans.get(Persistence.class)).dispose();

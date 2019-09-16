@@ -20,23 +20,17 @@ package spec.cuba.core.data_manager
 import com.haulmont.cuba.core.entity.contracts.Id
 import com.haulmont.cuba.core.global.*
 import com.haulmont.cuba.core.sys.AppContext
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.testmodel.primary_keys.CompositeKeyEntity
 import com.haulmont.cuba.testmodel.primary_keys.EntityKey
 import com.haulmont.cuba.testmodel.sales_1.OrderLine
 import com.haulmont.cuba.testmodel.sales_1.Product
-import com.haulmont.cuba.testsupport.TestContainer
 import com.haulmont.cuba.testsupport.TestSupport
 import groovy.sql.Sql
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class DataManagerTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class DataManagerTest extends TestContainerSpecification {
 
     private DataManager dataManager
 

@@ -25,24 +25,18 @@ import com.haulmont.cuba.core.global.Metadata
 import com.haulmont.cuba.core.sys.AppContext
 import com.haulmont.cuba.core.sys.NumberIdCache
 import com.haulmont.cuba.core.sys.SecurityContextAwareRunnable
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.core.sys.persistence.DbmsSpecificFactory
 import com.haulmont.cuba.core.sys.persistence.SequenceSupport
 import com.haulmont.cuba.testmodel.number_id.NumberIdSingleTableRoot
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import spock.lang.Shared
-import spock.lang.Specification
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class NumberIdConcurrencyTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class NumberIdConcurrencyTest extends TestContainerSpecification {
 
     private Metadata metadata
     private DataManager dataManager

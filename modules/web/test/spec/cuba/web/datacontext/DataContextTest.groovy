@@ -36,14 +36,12 @@ import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy
 import org.eclipse.persistence.internal.queries.EntityFetchGroup
 import org.eclipse.persistence.queries.FetchGroupTracker
 import org.junit.ClassRule
+import spec.cuba.web.TestContainerSpecification
 import spock.lang.Shared
 import spock.lang.Specification
 
 @SuppressWarnings(["GroovyAccessibility", "GroovyAssignabilityCheck"])
-class DataContextTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = CubaTestContainer.Common.INSTANCE
+class DataContextTest extends TestContainerSpecification {
 
     private DataComponents factory
     private EntityStates entityStates

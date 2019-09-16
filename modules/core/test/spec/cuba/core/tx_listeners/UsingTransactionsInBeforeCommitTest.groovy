@@ -21,20 +21,14 @@ import com.haulmont.cuba.core.Persistence
 import com.haulmont.cuba.core.Transaction
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.security.app.EntityLog
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.User
-import com.haulmont.cuba.testsupport.TestContainer
 import com.haulmont.cuba.testsupport.TestSupport
 import com.haulmont.cuba.tx_listener.TestBeforeCommitTxListener
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class UsingTransactionsInBeforeCommitTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class UsingTransactionsInBeforeCommitTest extends TestContainerSpecification {
 
     private Metadata metadata
     private Persistence persistence

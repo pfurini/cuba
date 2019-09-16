@@ -5,17 +5,10 @@ import com.haulmont.cuba.core.app.JpqlSortExpressionProvider
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.Metadata
 import com.haulmont.cuba.core.global.Sort
-import com.haulmont.cuba.testsupport.TestContainer
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testsupport.TestJpqlSortExpressionProvider
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class QuerySortTest extends Specification {
-
-    @Shared
-    @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class QuerySortTest extends TestContainerSpecification {
 
     def "sort"() {
 

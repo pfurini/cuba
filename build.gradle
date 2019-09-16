@@ -135,8 +135,11 @@ configure([sharedLibModule, globalModule, coreModule, clientModule, guiModule,
     apply(plugin: 'com.github.spotbugs')
 
     dependencies {
-        testCompile(bom['org.jmockit:jmockit'])
-        testCompile(bom['junit:junit'])
+        compile(bom['org.jmockit:jmockit'])
+        compile(bom['org.junit.jupiter:junit-jupiter-api'])
+        compile(bom['org.junit.jupiter:junit-jupiter-engine'])
+        compile(bom['org.junit.vintage:junit-vintage-engine'])
+
         testCompile(bom['org.spockframework:spock-core']) {
             exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
         }
@@ -170,6 +173,7 @@ configure([sharedLibModule, globalModule, coreModule, clientModule, guiModule,
     }
 
     test {
+        useJUnitPlatform()
         maxHeapSize = '256m'
 
         if (System.getProperty('logback.configurationFile')) {
@@ -268,7 +272,7 @@ configure(sharedLibModule) {
     dependencies {
         compile(bom['ch.qos.logback:logback-classic'])
         compile(bom['org.slf4j:log4j-over-slf4j'])
-        
+
         compileOnly(bom['javax.servlet:javax.servlet-api'])
 
         jdbc(bom['org.postgresql:postgresql'])
@@ -448,8 +452,9 @@ configure(coreModule) {
     }
 
     task testEntityCache(type: Test) {
+        useJUnitPlatform()
         scanForTestClasses = false
-        includes = ['com/haulmont/cuba/entity_cache/EntityCacheTestSuite.class']
+        includes = ['**/**TestClass.class']
 
         if (System.getProperty('logback.configurationFile')) {
             systemProperty 'logback.configurationFile', System.getProperty('logback.testEntityCache.configurationFile')
@@ -521,7 +526,10 @@ configure(coreTestsModule) {
         compile(coreModule)
 
         compile(bom['org.apache.commons:commons-dbcp2'])
-        compile(bom['junit:junit'])
+        compile(bom['org.junit.jupiter:junit-jupiter-api'])
+        compile(bom['org.junit.jupiter:junit-jupiter-engine'])
+        compile(bom['org.junit.vintage:junit-vintage-engine'])
+
         compile(bom['javax.servlet:javax.servlet-api'])
     }
 
@@ -556,7 +564,10 @@ configure(clientTestsModule) {
         compile(clientModule)
 
         compile(bom['org.jmockit:jmockit'])
-        compile(bom['junit:junit'])
+        compile(bom['org.junit.jupiter:junit-jupiter-api'])
+        compile(bom['org.junit.jupiter:junit-jupiter-engine'])
+        compile(bom['org.junit.vintage:junit-vintage-engine'])
+
         compile(bom['javax.servlet:javax.servlet-api'])
     }
 
@@ -970,7 +981,7 @@ configure(portalModule) {
 }
 
 task restart(dependsOn: ['stop', ':cuba-core:deploy', ':cuba-web:deploy', ':cuba-web-toolkit:deploy'],
-             description: 'Redeploys applications and restarts local Tomcat') {
+        description: 'Redeploys applications and restarts local Tomcat') {
     doLast {
         ant.waitfor(maxwait: 6, maxwaitunit: 'second', checkevery: 2, checkeveryunit: 'second') {
             not {
