@@ -25,8 +25,8 @@ import com.haulmont.cuba.core.sys.jpql.model.JpqlEntityModelImpl;
 import com.haulmont.cuba.gui.components.autocomplete.impl.HintProvider;
 import com.haulmont.cuba.gui.components.autocomplete.impl.HintResponse;
 import org.antlr.runtime.RecognitionException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.EnumSet;
@@ -799,7 +799,7 @@ public class HintProviderTest {
 
         HintProvider hintProvider = createTestHintProvider(model);
         HintResponse hintResponse = hintProvider.requestHint("select a.~ from Car a, in(a.drivers) a where a.model = ?1");
-        Assert.assertNotNull(hintResponse.getErrorMessage());
+        Assertions.assertNotNull(hintResponse.getErrorMessage());
     }
 
     @Test

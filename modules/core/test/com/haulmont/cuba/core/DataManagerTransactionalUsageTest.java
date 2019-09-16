@@ -26,9 +26,9 @@ import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.testmodel.sales_1.OrderLine;
 import com.haulmont.cuba.testmodel.sales_1.Product;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
@@ -153,7 +153,7 @@ public class DataManagerTransactionalUsageTest {
     protected DataManager dataManager;
     private Persistence persistence;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dataManager = AppBeans.get(DataManager.class);
         persistence = cont.persistence();

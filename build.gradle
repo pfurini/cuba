@@ -136,7 +136,11 @@ configure([sharedLibModule, globalModule, coreModule, clientModule, guiModule,
 
     dependencies {
         testCompile(bom['org.jmockit:jmockit'])
-        testCompile(bom['junit:junit'])
+        compile(bom['org.junit.jupiter:junit-jupiter-api'])
+        compile(bom['org.junit.vintage:junit-vintage-engine'])
+        compile(bom['org.junit.platform:junit-platform-launcher'])
+        compile(bom['org.junit.platform:junit-platform-runner'])
+
         testCompile(bom['org.spockframework:spock-core']) {
             exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
         }
@@ -521,7 +525,11 @@ configure(coreTestsModule) {
         compile(coreModule)
 
         compile(bom['org.apache.commons:commons-dbcp2'])
-        compile(bom['junit:junit'])
+        compile(bom['org.junit.jupiter:junit-jupiter-api'])
+        compile(bom['org.junit.vintage:junit-vintage-engine'])
+        compile(bom['org.junit.platform:junit-platform-launcher'])
+        compile(bom['org.junit.platform:junit-platform-runner'])
+
         compile(bom['javax.servlet:javax.servlet-api'])
     }
 
@@ -556,7 +564,11 @@ configure(clientTestsModule) {
         compile(clientModule)
 
         compile(bom['org.jmockit:jmockit'])
-        compile(bom['junit:junit'])
+        compile(bom['org.junit.jupiter:junit-jupiter-api'])
+        compile(bom['org.junit.vintage:junit-vintage-engine'])
+        compile(bom['org.junit.platform:junit-platform-launcher'])
+        compile(bom['org.junit.platform:junit-platform-runner'])
+
         compile(bom['javax.servlet:javax.servlet-api'])
     }
 

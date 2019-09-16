@@ -20,7 +20,7 @@ import com.haulmont.cuba.testmodel.petclinic.Owner;
 import com.haulmont.cuba.testmodel.petclinic.Pet;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
 

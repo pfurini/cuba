@@ -23,8 +23,8 @@ import com.haulmont.cuba.core.global.View;
 import com.haulmont.cuba.core.global.ViewProperty;
 import com.haulmont.cuba.gui.data.impl.testmodel1.TestDetailEntity;
 import com.haulmont.cuba.gui.data.impl.testmodel1.TestMasterEntity;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
@@ -35,7 +35,7 @@ public class AbstractViewRepositoryTest extends CubaClientTestCase {
     private MetaClass testMasterEntity;
     private MetaClass testDetailEntity;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         addEntityPackage("com.haulmont.cuba.gui.data.impl.testmodel1");
         setViewConfig("/com/haulmont/cuba/gui/data/impl/testmodel1/test-views.xml");

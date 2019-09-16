@@ -25,8 +25,8 @@ import com.haulmont.cuba.gui.data.impl.testmodel1.TestMasterEntity;
 import com.haulmont.cuba.gui.executors.BackgroundWorker;
 import mockit.Mocked;
 import mockit.Expectations;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,7 +40,7 @@ public class CollectionDatasourceTest extends CubaClientTestCase {
     @Mocked
     protected BackgroundWorker backgroundWorker;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         addEntityPackage("com.haulmont.cuba");
         setupInfrastructure();

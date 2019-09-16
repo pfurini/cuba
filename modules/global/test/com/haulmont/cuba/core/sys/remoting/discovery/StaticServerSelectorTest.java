@@ -18,7 +18,7 @@ package com.haulmont.cuba.core.sys.remoting.discovery;
 
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.security.global.UserSession;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nullable;
 import java.util.*;

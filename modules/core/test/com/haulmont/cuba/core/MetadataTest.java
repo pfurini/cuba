@@ -29,9 +29,9 @@ import com.haulmont.cuba.core.global.MetadataTools;
 import com.haulmont.cuba.security.entity.*;
 import com.haulmont.cuba.testmodel.not_persistent.TestNotPersistentEntity;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
@@ -44,7 +44,7 @@ public class MetadataTest {
 
     private Metadata metadata;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         metadata = cont.metadata();
     }

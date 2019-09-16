@@ -19,8 +19,8 @@ package com.haulmont.chile.core.datatypes.impl;
 
 import com.haulmont.chile.core.datatypes.Datatype;
 import com.haulmont.chile.core.datatypes.Datatypes;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Locale;
@@ -32,7 +32,7 @@ public class IntegerDatatypeTest extends AbstractDatatypeTestCase {
     private Datatype<Integer> intDt;
 
     @Override
-    @Before
+    @BeforeEach
     public void setUp() {
         super.setUp();
 

@@ -17,9 +17,9 @@
 package com.haulmont.cuba.core.sys;
 
 import org.apache.commons.text.StringTokenizer;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ public class AppPropertiesTest {
 
     AppProperties appProperties;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         AppComponent cuba = new AppComponent("cuba");
         AppComponent reports = new AppComponent("reports");

@@ -22,9 +22,9 @@ import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.testmodel.primary_keys.JoinedLongIdBar;
 import com.haulmont.cuba.testmodel.primary_keys.JoinedLongIdFoo;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertNotEquals;
 
@@ -36,7 +36,7 @@ public class LongKeyTest {
     private Persistence persistence;
     private Metadata metadata;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         persistence = cont.persistence();
         metadata = cont.metadata();

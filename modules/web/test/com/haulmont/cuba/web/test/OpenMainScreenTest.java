@@ -22,7 +22,7 @@ import com.haulmont.cuba.web.app.main.MainScreen;
 import com.haulmont.cuba.web.container.CubaTestContainer;
 import com.haulmont.cuba.web.testsupport.TestUiEnvironment;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

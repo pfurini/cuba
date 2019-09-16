@@ -21,9 +21,9 @@ import com.haulmont.cuba.core.global.View;
 import com.haulmont.cuba.security.entity.Group;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class OrmBehaviorTest {
 
     private static final Logger log = LoggerFactory.getLogger(OrmBehaviorTest.class);
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         cont.deleteRecord("SEC_USER", userId);
         cont.deleteRecord("SEC_GROUP", groupId);

@@ -23,7 +23,8 @@ import com.haulmont.cuba.core.entity.diff.EntityDiff;
 import com.haulmont.cuba.core.global.PersistenceHelper;
 import com.haulmont.cuba.core.global.View;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.*;
 
 import java.util.UUID;
 
@@ -34,13 +35,13 @@ public class PersistenceHelperTest {
     @ClassRule
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         QueryRunner runner = new QueryRunner(cont.persistence().getDataSource());
         runner.update("delete from SYS_SERVER");
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         QueryRunner runner = new QueryRunner(cont.persistence().getDataSource());
         runner.update("delete from SYS_SERVER");
@@ -175,9 +176,9 @@ public class PersistenceHelperTest {
 
         try {
             PersistenceHelper.checkLoaded(reloadedServer, "data", "running");
-            Assert.fail("Must throw exception");
+            Assertions.fail("Must throw exception");
         } catch (IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().contains("Server.running"));
+            Assertions.assertTrue(e.getMessage().contains("Server.running"));
         }
     }
 }

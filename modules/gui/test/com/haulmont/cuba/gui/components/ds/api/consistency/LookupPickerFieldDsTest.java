@@ -22,8 +22,8 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.security.entity.Group;
 import com.haulmont.cuba.security.entity.User;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 
 import static org.junit.Assert.*;
 
-@Ignore
+@Disabled
 public class LookupPickerFieldDsTest extends DsApiConsistencyTestCase {
 
     @Test

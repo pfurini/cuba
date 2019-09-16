@@ -32,8 +32,8 @@ import com.haulmont.cuba.gui.sys.UiControllerReflectionInspector;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.dom4j.Element;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.lang.reflect.Field;
@@ -57,7 +57,7 @@ public class ControllerDependencyInjectorTest extends CubaClientTestCase {
     @Mocked
     TestWindowManager screens;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         setupInfrastructure();
         new Expectations() {

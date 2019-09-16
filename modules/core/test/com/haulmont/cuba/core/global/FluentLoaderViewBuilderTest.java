@@ -19,9 +19,10 @@ package com.haulmont.cuba.core.global;
 
 import com.haulmont.cuba.testmodel.petclinic.Pet;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class FluentLoaderViewBuilderTest {
 
     private DataManager dataManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dataManager = AppBeans.get(DataManager.class);
     }

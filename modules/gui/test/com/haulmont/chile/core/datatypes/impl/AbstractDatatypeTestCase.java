@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.haulmont.cuba.client.testsupport.CubaClientTestCase;
 import com.haulmont.cuba.core.sys.AppContext;
 import mockit.Expectations;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.util.Locale;
 

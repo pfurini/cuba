@@ -24,10 +24,10 @@ import com.haulmont.cuba.core.global.ClientType;
 import com.haulmont.cuba.security.app.UserSettingService;
 import com.haulmont.cuba.testsupport.TestContainer;
 import com.haulmont.cuba.testsupport.TestUserSessionSource;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -39,12 +39,12 @@ public class UserSettingServiceTest {
 
     private UserSettingService uss;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         uss = AppBeans.get(UserSettingService.NAME);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         Transaction tx = cont.persistence().createTransaction();
         try {

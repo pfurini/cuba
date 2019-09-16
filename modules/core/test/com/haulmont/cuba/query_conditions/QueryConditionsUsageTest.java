@@ -6,9 +6,9 @@ import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.core.global.queryconditions.LogicalCondition;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +26,7 @@ public class QueryConditionsUsageTest {
 
     private DataManager dataManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dataManager = AppBeans.get(DataManager.class);
     }

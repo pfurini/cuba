@@ -23,10 +23,10 @@ import com.haulmont.cuba.security.entity.Role;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.security.entity.UserRole;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class UnfetchedAttributeTest {
     
     private Group group;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         group = new Group();
         group.setName("Some group");
@@ -124,7 +124,7 @@ public class UnfetchedAttributeTest {
         assertNotNull(user.getGroup());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         Transaction tx = cont.persistence().createTransaction();
         try {

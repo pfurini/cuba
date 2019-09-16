@@ -27,10 +27,10 @@ import com.haulmont.cuba.testmodel.sales.Order;
 import com.haulmont.cuba.testsupport.TestContainer;
 import com.haulmont.cuba.testsupport.TestSupport;
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -53,7 +53,7 @@ public class NonDetachedTest {
     private CascadeEntity cascadeEntity1;
     private CascadeEntity cascadeEntity2;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         persistence = cont.persistence();
         metadata = cont.metadata();
@@ -100,7 +100,7 @@ public class NonDetachedTest {
                 .addProperty("user", new View(User.class).addProperty("login").addProperty("name"));
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         cont.deleteRecord(order, customer, user, cascadeEntity2, cascadeEntity1);
     }

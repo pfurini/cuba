@@ -22,8 +22,8 @@ import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.DsBuilder;
 import com.haulmont.cuba.gui.data.impl.DatasourceImpl;
 import com.haulmont.cuba.security.entity.User;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
-@Ignore
+@Disabled
 public class DateFieldTest extends AbstractComponentTestCase {
 
     @Test

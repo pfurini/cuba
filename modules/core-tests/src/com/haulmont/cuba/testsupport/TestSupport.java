@@ -17,8 +17,7 @@
 
 package com.haulmont.cuba.testsupport;
 
-import org.junit.Assert;
-
+import org.junit.jupiter.api.Assertions;
 import java.io.Serializable;
 
 import static com.haulmont.cuba.core.sys.serialization.SerializationSupport.deserialize;
@@ -45,7 +44,7 @@ public class TestSupport {
     public static void assertFail(Runnable runnable) {
         try {
             runnable.run();
-            Assert.fail();
+            Assertions.fail();
         } catch (Exception ignored) {
         }
     }

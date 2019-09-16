@@ -27,8 +27,8 @@ import com.haulmont.cuba.core.sys.xmlparsing.Dom4jToolsConfig;
 import com.haulmont.cuba.gui.xml.layout.ScreenXmlParser;
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class XmlInheritanceTest extends CubaClientTestCase {
     protected ScreenXmlParser screenXmlParser;
     protected BeanLocator beanLocator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         addEntityPackage("com.haulmont.cuba");
         setupInfrastructure();

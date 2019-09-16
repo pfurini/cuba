@@ -33,8 +33,8 @@ import com.haulmont.cuba.gui.data.impl.testmodel1.TestPartEntity;
 import com.haulmont.cuba.gui.executors.BackgroundWorker;
 import mockit.Mocked;
 import mockit.Expectations;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -62,7 +62,7 @@ public class DsContextApplyChangesTest extends CubaClientTestCase {
     @Mocked
     protected BackgroundWorker backgroundWorker;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         addEntityPackage("com.haulmont.cuba");
         setViewConfig("/com/haulmont/cuba/gui/data/impl/testmodel1/test-views.xml");

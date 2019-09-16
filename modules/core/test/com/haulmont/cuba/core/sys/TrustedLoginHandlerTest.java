@@ -20,9 +20,9 @@ package com.haulmont.cuba.core.sys;
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.security.sys.TrustedLoginHandler;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,7 +34,7 @@ public class TrustedLoginHandlerTest {
 
     private TrustedLoginHandler trustedLoginHandler;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         trustedLoginHandler = AppBeans.get(TrustedLoginHandler.class);
     }

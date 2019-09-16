@@ -29,10 +29,10 @@ import com.haulmont.cuba.security.entity.*;
 import com.haulmont.cuba.security.global.UserSession;
 import com.haulmont.cuba.testsupport.TestContainer;
 import com.haulmont.cuba.testsupport.TestUserSessionSource;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Locale;
@@ -56,7 +56,7 @@ public class DataManagerSecurityTest {
     private UserRole userRole;
     private Server server;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         passwordEncryption = AppBeans.get(PasswordEncryption.class);
 
@@ -102,7 +102,7 @@ public class DataManagerSecurityTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         cont.deleteRecord(userRole, user, group, permission, role, server);
     }

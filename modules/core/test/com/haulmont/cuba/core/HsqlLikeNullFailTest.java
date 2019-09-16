@@ -23,10 +23,10 @@ import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.security.entity.Group;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +39,7 @@ public class HsqlLikeNullFailTest {
     @ClassRule
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         DataManager dataManager = AppBeans.get(DataManager.NAME);
 
@@ -56,7 +56,7 @@ public class HsqlLikeNullFailTest {
         dataManager.commit(user);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         cont.deleteRecord("SEC_USER", UUID.fromString("de0f39d2-e60a-11e1-9b55-3860770d7eaf"));
     }

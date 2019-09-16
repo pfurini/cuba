@@ -26,9 +26,9 @@ import com.haulmont.cuba.testsupport.TestContainer;
 import com.haulmont.cuba.testsupport.TestMailSender;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -57,7 +57,7 @@ public class EmailerTest {
 
     private EmailerConfig emailerConfig;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         emailer = AppBeans.get(EmailerAPI.NAME);
         testMailSender = AppBeans.get(CubaMailSender.NAME);

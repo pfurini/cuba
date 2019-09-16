@@ -20,8 +20,8 @@ package com.haulmont.cuba.gui.autocomplete.impl;
 import com.haulmont.cuba.core.sys.jpql.InferredType;
 import com.haulmont.cuba.gui.components.autocomplete.impl.HintRequest;
 import com.haulmont.cuba.gui.components.autocomplete.impl.MacroProcessor;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 
@@ -30,7 +30,7 @@ import static junit.framework.Assert.assertEquals;
 public class MacroProcessorTest {
     private MacroProcessor processor;
 
-    @Before
+    @BeforeEach
     public void initProcessor() {
         processor = new MacroProcessor();
     }

@@ -30,10 +30,10 @@ import com.haulmont.cuba.security.global.UserSession;
 import com.haulmont.cuba.testsupport.TestContainer;
 import com.haulmont.cuba.testsupport.TestSupport;
 import com.haulmont.cuba.testsupport.TestUserSessionSource;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.List;
@@ -62,7 +62,7 @@ public class NonEntityQueryTest {
             userRole1Id,
             entitySnapshotId;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dataManager = AppBeans.get(DataManager.class);
         passwordEncryption = AppBeans.get(PasswordEncryption.class);
@@ -162,7 +162,7 @@ public class NonEntityQueryTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         cont.deleteRecord("SYS_SERVER", serverId);
         cont.deleteRecord("SEC_USER_ROLE", userRole1Id);

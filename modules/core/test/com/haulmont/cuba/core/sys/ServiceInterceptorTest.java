@@ -29,7 +29,7 @@ import com.haulmont.cuba.security.global.UserSession;
 import com.haulmont.cuba.testsupport.TestAppender;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;

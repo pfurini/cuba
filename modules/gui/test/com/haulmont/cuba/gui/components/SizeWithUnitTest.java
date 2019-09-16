@@ -17,7 +17,7 @@
 package com.haulmont.cuba.gui.components;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.core.Is.is;
 

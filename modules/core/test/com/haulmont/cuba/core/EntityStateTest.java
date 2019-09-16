@@ -22,9 +22,9 @@ import com.haulmont.cuba.security.entity.Group;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.testsupport.TestContainer;
 import com.haulmont.cuba.testsupport.TestSupport;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
@@ -38,7 +38,7 @@ public class EntityStateTest {
 
     private UUID userId;
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (userId != null)
             cont.deleteRecord("SEC_USER", userId);

@@ -24,10 +24,10 @@ import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.security.entity.UserRole;
 import com.haulmont.cuba.testsupport.TestContainer;
 import com.haulmont.cuba.testsupport.TestSupport;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class GetReferenceIdTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
     private User user;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         try (Transaction tx = cont.persistence().createTransaction()) {
             user = cont.metadata().create(User.class);
@@ -54,7 +54,7 @@ public class GetReferenceIdTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         cont.deleteRecord(user);
     }

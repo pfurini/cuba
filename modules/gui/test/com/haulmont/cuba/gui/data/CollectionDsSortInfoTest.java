@@ -1,7 +1,7 @@
 package com.haulmont.cuba.gui.data;
 
 import com.haulmont.cuba.gui.data.CollectionDatasource.Sortable.SortInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.haulmont.cuba.gui.data.CollectionDatasource.Sortable.Order.ASC;
 import static com.haulmont.cuba.gui.data.CollectionDatasource.Sortable.Order.DESC;

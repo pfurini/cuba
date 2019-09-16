@@ -17,9 +17,9 @@
 package com.haulmont.cuba.core.global;
 
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
 
@@ -29,7 +29,7 @@ public class EntityLoadInfoBuilderTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
     private EntityLoadInfoBuilder builder;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         builder = AppBeans.get(EntityLoadInfoBuilder.class);
     }

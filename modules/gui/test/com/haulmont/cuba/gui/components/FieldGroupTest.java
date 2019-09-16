@@ -34,9 +34,9 @@ import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
@@ -48,7 +48,7 @@ import java.util.Locale;
 
 import static org.junit.Assert.*;
 
-@Ignore
+@Disabled
 public class FieldGroupTest extends CubaClientTestCase {
 
     @Mocked
@@ -69,7 +69,7 @@ public class FieldGroupTest extends CubaClientTestCase {
     protected ValueBinder valueBinder;
     protected OptionsBinder optionsBinder;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         addEntityPackage("com.haulmont.cuba");
         setupInfrastructure();

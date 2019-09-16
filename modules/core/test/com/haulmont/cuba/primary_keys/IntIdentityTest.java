@@ -22,9 +22,9 @@ import com.haulmont.cuba.core.Transaction;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.testmodel.primary_keys.IntIdentityEntity;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -37,7 +37,7 @@ public class IntIdentityTest {
     private Metadata metadata;
     private Persistence persistence;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         QueryRunner runner = new QueryRunner(cont.persistence().getDataSource());
         runner.update("delete from TEST_INT_IDENTITY");

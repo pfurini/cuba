@@ -23,10 +23,10 @@ import com.haulmont.cuba.security.entity.Constraint;
 import com.haulmont.cuba.security.entity.Group;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,7 +44,7 @@ public class EclipseLinkQueriesTest {
     private Group rootGroup;
     private Group group;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         cont.persistence().createTransaction().execute(em ->  {
             rootGroup = em.find(Group.class, UUID.fromString("0fa2b1a5-1d68-4d69-9fbd-dff348347f93"));
@@ -71,7 +71,7 @@ public class EclipseLinkQueriesTest {
         });
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         cont.deleteRecord("SEC_GROUP_HIERARCHY", "GROUP_ID", group.getId());
         cont.deleteRecord(user1, user2, group);

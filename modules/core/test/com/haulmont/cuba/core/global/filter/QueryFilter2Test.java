@@ -21,7 +21,7 @@ import com.haulmont.bali.util.Dom4j;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.dom4j.Element;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class QueryFilter2Test {
 

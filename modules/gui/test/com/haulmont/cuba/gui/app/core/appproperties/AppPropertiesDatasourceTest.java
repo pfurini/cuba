@@ -19,8 +19,8 @@ package com.haulmont.cuba.gui.app.core.appproperties;
 
 import com.haulmont.cuba.client.testsupport.CubaClientTestCase;
 import com.haulmont.cuba.core.config.AppPropertyEntity;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 
 public class AppPropertiesDatasourceTest extends CubaClientTestCase {
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         setupInfrastructure();
     }

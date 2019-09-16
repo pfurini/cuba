@@ -28,10 +28,10 @@ import com.haulmont.cuba.security.entity.*;
 import com.haulmont.cuba.security.global.LoginException;
 import com.haulmont.cuba.security.global.UserSession;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 import java.util.UUID;
@@ -53,7 +53,7 @@ public class PermissionTest {
 
     private PasswordEncryption passwordEncryption;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         passwordEncryption = AppBeans.get(PasswordEncryption.class);
 
@@ -121,7 +121,7 @@ public class PermissionTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         Transaction tx = cont.persistence().createTransaction();
         try {

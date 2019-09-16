@@ -20,7 +20,7 @@ package com.haulmont.cuba.core.sys;
 import com.haulmont.cuba.core.Transaction;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;

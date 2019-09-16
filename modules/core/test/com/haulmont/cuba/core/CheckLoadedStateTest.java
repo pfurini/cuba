@@ -20,7 +20,9 @@ import com.haulmont.cuba.core.global.*;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.testmodel.checkview.UserRelatedNews;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.*;
+import org.junit.ClassRule;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +54,7 @@ public class CheckLoadedStateTest {
         try {
             entityStates.checkLoaded(user, "group");
 
-            Assert.fail("user.group is not loaded");
+            Assertions.fail("user.group is not loaded");
         } catch (IllegalArgumentException e) {
             Assert.assertThat(e.getMessage(), containsString("group is not loaded"));
         }
@@ -72,7 +74,7 @@ public class CheckLoadedStateTest {
         try {
             entityStates.checkLoaded(user, "group");
 
-            Assert.fail("user.group is not loaded");
+            Assertions.fail("user.group is not loaded");
         } catch (IllegalArgumentException e) {
             Assert.assertThat(e.getMessage(), containsString("group is not loaded"));
         }
@@ -80,7 +82,7 @@ public class CheckLoadedStateTest {
         try {
             entityStates.checkLoaded(user, "password");
 
-            Assert.fail("user.password is not loaded");
+            Assertions.fail("user.password is not loaded");
         } catch (IllegalArgumentException e) {
             Assert.assertThat(e.getMessage(), containsString("password is not loaded"));
         }
@@ -88,7 +90,7 @@ public class CheckLoadedStateTest {
         try {
             entityStates.checkLoaded(user, "email");
 
-            Assert.fail("user.email is not loaded");
+            Assertions.fail("user.email is not loaded");
         } catch (IllegalArgumentException e) {
             Assert.assertThat(e.getMessage(), containsString("email is not loaded"));
         }
@@ -116,7 +118,7 @@ public class CheckLoadedStateTest {
 
             entityStates.checkLoadedWithView(userMinimal, View.LOCAL);
 
-            Assert.fail("user local attributes are not loaded");
+            Assertions.fail("user local attributes are not loaded");
         } catch (IllegalArgumentException e) {
             Assert.assertThat(e.getMessage(), containsString(" is not loaded"));
         }
@@ -136,7 +138,7 @@ public class CheckLoadedStateTest {
 
             entityStates.checkLoadedWithView(user, "user.edit");
 
-            Assert.fail("user edit attributes are not loaded");
+            Assertions.fail("user edit attributes are not loaded");
         } catch (IllegalArgumentException e) {
             Assert.assertThat(e.getMessage(), containsString(" is not loaded"));
         }
@@ -185,7 +187,7 @@ public class CheckLoadedStateTest {
 
             entityStates.checkLoadedWithView(minimalRecord, view);
 
-            Assert.fail("minimal record attributes are not loaded");
+            Assertions.fail("minimal record attributes are not loaded");
         } catch (IllegalArgumentException e) {
             Assert.assertThat(e.getMessage(), containsString("userLogin is not loaded"));
         }
@@ -234,13 +236,13 @@ public class CheckLoadedStateTest {
 
             entityStates.checkLoadedWithView(localRecord, view);
 
-            Assert.fail("local record attributes are not loaded");
+            Assertions.fail("local record attributes are not loaded");
         } catch (IllegalArgumentException e) {
             Assert.assertThat(e.getMessage(), containsString("parent is not loaded"));
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         if (userRelatedNewsId != null) {
             cont.deleteRecord("TEST_USER_RELATED_NEWS", userRelatedNewsId);

@@ -20,9 +20,9 @@ package com.haulmont.cuba.core.global;
 import com.haulmont.cuba.core.sys.AbstractViewRepository;
 import com.haulmont.cuba.security.entity.UserRole;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 
@@ -36,7 +36,7 @@ public class ViewRepositoryOverwriteTest {
 
     private ViewRepository repository;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         repository = cont.metadata().getViewRepository();
 

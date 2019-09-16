@@ -19,8 +19,8 @@ package com.haulmont.cuba.gui.components.ds.api.consistency;
 import com.haulmont.cuba.gui.components.CheckBox;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.security.entity.User;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
 
@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("unchecked")
-@Ignore
+@Disabled
 public class CheckBoxDsTest extends DsApiConsistencyTestCase {
 
     @Test

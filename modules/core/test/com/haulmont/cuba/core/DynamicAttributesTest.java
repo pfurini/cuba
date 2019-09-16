@@ -34,7 +34,8 @@ import com.haulmont.cuba.security.entity.UserRole;
 import com.haulmont.cuba.testmodel.primary_keys.CompositeKeyEntity;
 import com.haulmont.cuba.testmodel.primary_keys.EntityKey;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,7 +64,7 @@ public class DynamicAttributesTest {
     protected Role role;
     protected CompositeKeyEntity compositeKeyEntity;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dataManager = AppBeans.get(DataManager.class);
         metadata = AppBeans.get(Metadata.class);
@@ -307,7 +308,7 @@ public class DynamicAttributesTest {
         dataManager.commit(role);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         QueryRunner runner = new QueryRunner(cont.persistence().getDataSource());
         runner.update("delete from SYS_ATTR_VALUE");
