@@ -74,6 +74,30 @@ public interface ScreenFacet<T extends Screen> extends Facet {
     Collection<UiControllerProperty> getProperties();
 
     /**
+     * @return id of action that triggers screen
+     */
+    String getActionTarget();
+
+    /**
+     * Sets that screen should be shown when action with id {@code actionId} is performed.
+     *
+     * @param actionId action id
+     */
+    void setActionTarget(String actionId);
+
+    /**
+     * @return id of button that triggers screen
+     */
+    String getButtonTarget();
+
+    /**
+     * Sets that screen should be shown when button with id {@code actionId} is clicked.
+     *
+     * @param buttonId button id
+     */
+    void setButtonTarget(String buttonId);
+
+    /**
      * @return new screen instance
      */
     T create();

@@ -64,6 +64,7 @@ public class ScreenFacetProvider implements FacetProvider<ScreenFacet> {
         loadScreen(facet, element);
         loadOpenMode(facet, element);
         loadProperties(facet, element, context);
+        loadTarget(facet, element, context);
     }
 
     protected void loadId(ScreenFacet facet, Element element) {
@@ -126,5 +127,23 @@ public class ScreenFacetProvider implements FacetProvider<ScreenFacet> {
         }
 
         facet.setProperties(properties);
+    }
+
+    protected void loadTarget(ScreenFacet facet, Element element,
+                              ComponentLoader.ComponentContext context) {
+        String actionTarget = element.attributeValue("action");
+        String buttonTarget = element.attributeValue("button");
+
+        if (isNotEmpty(actionTarget) && isNotEmpty(buttonTarget)) {
+            throw new GuiDevelopmentException(
+                    "Notification facet should have either action or button target",
+                    context);
+        }
+
+        if (isNotEmpty(actionTarget)) {
+            facet.setActionTarget(actionTarget);
+        } else if (isNotEmpty(buttonTarget)) {
+            facet.setButtonTarget(buttonTarget);
+        }
     }
 }

@@ -3386,6 +3386,8 @@
         <xs:attribute name="contentMode" type="notificationContentMode"/>
         <xs:attribute name="styleName" type="xs:string"/>
         <xs:attribute name="position" type="align"/>
+
+        <xs:attributeGroup ref="facetTriggerType"/>
     </xs:complexType>
 
     <xs:simpleType name="notificationTypeEnum">
@@ -3412,6 +3414,7 @@
         <xs:attribute name="styleName" type="xs:string"/>
 
         <xs:attributeGroup ref="hasSize"/>
+        <xs:attributeGroup ref="facetTriggerType"/>
     </xs:complexType>
 
     <!-- MessageDialog Facet -->
@@ -3457,6 +3460,7 @@
         <xs:attribute name="primary" type="xs:boolean"/>
     </xs:complexType>
 
+    <!-- Screen Facet -->
     <xs:complexType name="screenType">
         <xs:all>
             <xs:element name="properties" type="screenProperties" minOccurs="0"/>
@@ -3465,6 +3469,8 @@
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="screen" type="xs:string" use="required"/>
         <xs:attribute name="openMode" type="screenOpenModeType"/>
+
+        <xs:attributeGroup ref="facetTriggerType"/>
     </xs:complexType>
 
     <xs:simpleType name="screenOpenModeType">
@@ -3476,6 +3482,11 @@
             <xs:enumeration value="ROOT"/>
         </xs:restriction>
     </xs:simpleType>
+
+    <xs:attributeGroup name="facetTriggerType">
+        <xs:attribute name="action" type="xs:string"/>
+        <xs:attribute name="button" type="xs:string"/>
+    </xs:attributeGroup>
 
     <xs:complexType name="facets">
         <xs:sequence>

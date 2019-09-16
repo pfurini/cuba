@@ -17,16 +17,25 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.bali.events.Subscription;
+import com.haulmont.cuba.gui.GuiDevelopmentException;
 import com.haulmont.cuba.gui.Notifications;
 import com.haulmont.cuba.gui.Notifications.NotificationType;
+import com.haulmont.cuba.gui.components.Action;
+import com.haulmont.cuba.gui.components.ActionsHolder;
+import com.haulmont.cuba.gui.components.Button;
+import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.ContentMode;
 import com.haulmont.cuba.gui.components.Frame;
 import com.haulmont.cuba.gui.components.Notification;
+import com.haulmont.cuba.gui.components.actions.BaseAction;
 import com.haulmont.cuba.gui.screen.UiControllerUtils;
 import com.haulmont.cuba.web.gui.WebAbstractFacet;
 
+import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class WebNotification extends WebAbstractFacet implements Notification {
 
@@ -39,6 +48,9 @@ public class WebNotification extends WebAbstractFacet implements Notification {
     protected Notifications.Position position = Notifications.Position.DEFAULT;
 
     protected Supplier<String> descriptionProvider;
+
+    protected String actionId;
+    protected String buttonId;
 
     @Override
     public void setCaption(String caption) {
@@ -126,6 +138,33 @@ public class WebNotification extends WebAbstractFacet implements Notification {
     }
 
     @Override
+    public String getActionTarget() {
+        return actionId;
+    }
+
+    @Override
+    public void setActionTarget(String actionId) {
+        this.actionId = actionId;
+    }
+
+    @Override
+    public String getButtonTarget() {
+        return buttonId;
+    }
+
+    @Override
+    public void setButtonTarget(String buttonId) {
+        this.buttonId = buttonId;
+    }
+
+    @Override
+    public void setOwner(@Nullable Frame owner) {
+        super.setOwner(owner);
+
+        subscribe();
+    }
+
+    @Override
     public void show() {
         Frame owner = getOwner();
         if (owner == null) {
@@ -149,5 +188,58 @@ public class WebNotification extends WebAbstractFacet implements Notification {
                 .withPosition(position)
                 .withCloseListener(e -> publish(CloseEvent.class, new CloseEvent(this)))
                 .show();
+    }
+
+    protected void subscribe() {
+        Frame owner = getOwner();
+        if (owner == null) {
+            throw new IllegalStateException("Notification is not attached to Frame");
+        }
+
+        if (isNotEmpty(actionId) && isNotEmpty(buttonId)) {
+            throw new GuiDevelopmentException(
+                    "Notification facet should have either action or button target", owner.getId());
+        }
+
+        if (isNotEmpty(actionId)) {
+            Action action = owner.getAction(actionId);
+
+            if (action == null) {
+                String postfixActionId = null;
+                int dotIdx = actionId.indexOf('.');
+                if (dotIdx > 0) {
+                    postfixActionId = actionId.substring(dotIdx + 1);
+                }
+
+                for (Component c : owner.getComponents()) {
+                    if (c instanceof ActionsHolder) {
+                        ActionsHolder actionsHolder = (ActionsHolder) c;
+                        action = actionsHolder.getAction(actionId);
+                        if (action == null) {
+                            action = actionsHolder.getAction(postfixActionId);
+                        }
+                        if (action != null) {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!(action instanceof BaseAction)) {
+                throw new GuiDevelopmentException(
+                        String.format("Unable to find Notification target button with id '%s'", actionId),
+                        owner.getId());
+            }
+
+            ((BaseAction) action).addActionPerformedListener(e -> show());
+        } else if (isNotEmpty(buttonId)) {
+            Component component = owner.getComponent(buttonId);
+            if (!(component instanceof Button)) {
+                throw new GuiDevelopmentException(
+                        String.format("Unable to find Notification target button with id '%s'", buttonId),
+                        owner.getId());
+            }
+            ((Button) component).addClickListener(e -> show());
+        }
     }
 }

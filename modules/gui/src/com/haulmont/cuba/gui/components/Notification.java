@@ -135,6 +135,32 @@ public interface Notification extends Facet {
     Notifications.Position getPosition();
 
     /**
+     * @return id of action that triggers notification
+     */
+    String getActionTarget();
+
+    /**
+     * Sets that notification should be shown when action with id {@code actionId}
+     * is performed.
+     *
+     * @param actionId action id
+     */
+    void setActionTarget(String actionId);
+
+    /**
+     * @return id of button that triggers notification
+     */
+    String getButtonTarget();
+
+    /**
+     * Sets that notification should be shown when button with id {@code actionId}
+     * is clicked.
+     *
+     * @param buttonId button id
+     */
+    void setButtonTarget(String buttonId);
+
+    /**
      * Shows notification.
      */
     void show();

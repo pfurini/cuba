@@ -17,6 +17,7 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.Dialogs;
+import com.haulmont.cuba.gui.GuiDevelopmentException;
 import com.haulmont.cuba.gui.components.ContentMode;
 import com.haulmont.cuba.gui.components.DialogFacet;
 import com.haulmont.cuba.gui.xml.FacetProvider;
@@ -42,6 +43,8 @@ public abstract class AbstractDialogFacetProvider<T extends DialogFacet>
         loadMaximized(facet, element);
         loadModal(facet, element);
         loadStyleName(facet, element);
+
+        loadTarget(facet, element, context);
     }
 
     protected void loadId(T facet, Element element) {
@@ -112,6 +115,24 @@ public abstract class AbstractDialogFacetProvider<T extends DialogFacet>
         String styleName = element.attributeValue("styleName");
         if (isNotEmpty(styleName)) {
             facet.setStyleName(styleName);
+        }
+    }
+
+    protected void loadTarget(T facet, Element element,
+                              ComponentLoader.ComponentContext context) {
+        String actionTarget = element.attributeValue("action");
+        String buttonTarget = element.attributeValue("button");
+
+        if (isNotEmpty(actionTarget) && isNotEmpty(buttonTarget)) {
+            throw new GuiDevelopmentException(
+                    "Dialog facet should have either action or button target",
+                    context);
+        }
+
+        if (isNotEmpty(actionTarget)) {
+            facet.setActionTarget(actionTarget);
+        } else if (isNotEmpty(buttonTarget)) {
+            facet.setButtonTarget(buttonTarget);
         }
     }
 

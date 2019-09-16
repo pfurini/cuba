@@ -147,6 +147,32 @@ public interface DialogFacet extends Facet {
     SizeUnit getHeightSizeUnit();
 
     /**
+     * @return id of action that triggers dialog
+     */
+    String getActionTarget();
+
+    /**
+     * Sets that dialog should be shown when action with id {@code actionId}
+     * is performed.
+     *
+     * @param actionId action id
+     */
+    void setActionTarget(String actionId);
+
+    /**
+     * @return id of button that triggers dialog
+     */
+    String getButtonTarget();
+
+    /**
+     * Sets that dialog should be shown when button with id {@code actionId}
+     * is clicked.
+     *
+     * @param buttonId button id
+     */
+    void setButtonTarget(String buttonId);
+
+    /**
      * Shows dialog.
      */
     void show();

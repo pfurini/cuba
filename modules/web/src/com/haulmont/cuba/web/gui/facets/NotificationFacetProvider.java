@@ -17,6 +17,7 @@
 package com.haulmont.cuba.web.gui.facets;
 
 import com.haulmont.cuba.core.global.MessageTools;
+import com.haulmont.cuba.gui.GuiDevelopmentException;
 import com.haulmont.cuba.gui.Notifications;
 import com.haulmont.cuba.gui.components.ContentMode;
 import com.haulmont.cuba.gui.components.Notification;
@@ -63,6 +64,7 @@ public class NotificationFacetProvider implements FacetProvider<Notification> {
         loadContentMode(facet, element);
         loadStyleName(facet, element);
         loadPosition(facet, element);
+        loadTarget(facet, element, context);
     }
 
     protected void loadId(Notification facet, Element element) {
@@ -120,6 +122,23 @@ public class NotificationFacetProvider implements FacetProvider<Notification> {
         String position = element.attributeValue("position");
         if (isNotEmpty(position)) {
             facet.setPosition(Notifications.Position.valueOf(position));
+        }
+    }
+
+    protected void loadTarget(Notification facet, Element element,
+                              ComponentLoader.ComponentContext context) {
+        String actionTarget = element.attributeValue("action");
+        String buttonTarget = element.attributeValue("button");
+
+        if (isNotEmpty(actionTarget) && isNotEmpty(buttonTarget)) {
+            throw new GuiDevelopmentException(
+                    "Notification facet should have either action or button target", context);
+        }
+
+        if (isNotEmpty(actionTarget)) {
+            facet.setActionTarget(actionTarget);
+        } else if (isNotEmpty(buttonTarget)) {
+            facet.setButtonTarget(buttonTarget);
         }
     }
 
