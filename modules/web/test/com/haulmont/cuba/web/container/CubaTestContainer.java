@@ -17,6 +17,7 @@
 package com.haulmont.cuba.web.container;
 
 import com.haulmont.cuba.web.testsupport.TestContainer;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.util.Arrays;
 
@@ -32,16 +33,16 @@ public class CubaTestContainer extends TestContainer {
         }
 
         @Override
-        public void before() throws Throwable {
+        public void beforeAll(ExtensionContext context) {
             if (!initialized) {
-                super.before();
+                super.beforeAll(context);
                 initialized = true;
             }
             setupContext();
         }
 
         @Override
-        public void after() {
+        public void afterAll(ExtensionContext context) {
             cleanupContext();
             // never stops - do not call super
         }

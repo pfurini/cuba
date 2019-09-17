@@ -21,7 +21,7 @@ import com.haulmont.cuba.gui.screen.Screen;
 import com.haulmont.cuba.web.app.main.MainScreen;
 import com.haulmont.cuba.web.container.CubaTestContainer;
 import com.haulmont.cuba.web.testsupport.TestUiEnvironment;
-import org.junit.Rule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Sample test with {@link TestUiEnvironment}.
  */
 public class OpenMainScreenTest {
-    @Rule
+    @RegisterExtension
     public TestUiEnvironment environment =
             new TestUiEnvironment(CubaTestContainer.Common.INSTANCE) // use cuba shared test container
                     .withScreenPackages("com.haulmont.cuba.web.app.main") // replaces default screen packages

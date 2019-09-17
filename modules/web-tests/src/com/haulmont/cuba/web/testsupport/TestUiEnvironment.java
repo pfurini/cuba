@@ -34,9 +34,7 @@ import com.haulmont.cuba.gui.theme.ThemeConstants;
 import com.haulmont.cuba.security.app.UserManagementService;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.security.global.UserSession;
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.*;
 import com.haulmont.cuba.web.App;
 import com.haulmont.cuba.web.AppUI;
 import com.haulmont.cuba.web.Connection;
@@ -105,7 +103,7 @@ import static org.apache.commons.lang3.reflect.FieldUtils.getDeclaredField;
  *
  * @see TestContainer
  */
-public class TestUiEnvironment implements BeforeAllCallback, AfterAllCallback {
+public class TestUiEnvironment implements BeforeEachCallback, AfterEachCallback {
 
     public static final String USER_ID = "b8a050db-3ade-487e-817d-781a31918657";
 
@@ -127,12 +125,12 @@ public class TestUiEnvironment implements BeforeAllCallback, AfterAllCallback {
     }
 
     @Override
-    public void beforeAll(ExtensionContext context) {
+    public void beforeEach(ExtensionContext context) {
         setupEnvironment(context);
     }
 
     @Override
-    public void afterAll(ExtensionContext context) {
+    public void afterEach(ExtensionContext context) {
         cleanupEnvironment(context);
     }
 
