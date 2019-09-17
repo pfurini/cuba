@@ -46,10 +46,7 @@ import spock.lang.Specification
 
 import static org.apache.commons.lang3.reflect.FieldUtils.getDeclaredField
 
-class WebSpec extends Specification {
-
-    @Shared @ClassRule
-    TestContainer cont = CubaTestContainer.Common.INSTANCE
+class WebSpec extends TestContainerSpecification {
 
     Metadata metadata
     MetadataTools metadataTools

@@ -24,17 +24,9 @@ import com.haulmont.cuba.core.global.View
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.Role
 import com.haulmont.cuba.security.entity.User
-import com.haulmont.cuba.testsupport.TestContainer
 import com.haulmont.cuba.testsupport.TestSupport
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class EntitySnapshotApiTest extends Specification {
-
-    @Shared
-    @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class EntitySnapshotApiTest extends TestContainerSpecification {
 
     private EntitySnapshotAPI snapshotApi
     private Role role

@@ -304,7 +304,7 @@ public class LookupPickerFieldTest extends AbstractComponentTestCase {
 
         component.setDatasource(testDs, "group");
 
-        assertSame("Value should be from options ds", g, component.getValue());
+        assertSame(g, component.getValue(), "Value should be from options ds");
 
         component.setValue(g2);
 

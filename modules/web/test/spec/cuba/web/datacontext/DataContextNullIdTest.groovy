@@ -21,13 +21,11 @@ import com.haulmont.cuba.web.container.CubaTestContainer
 import com.haulmont.cuba.web.testmodel.datacontext.TestStringIdEntity
 import com.haulmont.cuba.web.testsupport.TestContainer
 import org.junit.ClassRule
+import spec.cuba.web.TestContainerSpecification
 import spock.lang.Shared
 import spock.lang.Specification
 
-class DataContextNullIdTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = CubaTestContainer.Common.INSTANCE
+class DataContextNullIdTest extends TestContainerSpecification {
 
     private DataComponents factory
 

@@ -31,7 +31,6 @@ import spock.lang.Specification
 class JoinedInheritanceTestClass extends Specification {
 
     @Shared
-    @ClassRule
     public TestContainer cont = new TestContainer()
             .setAppPropertiesFiles(Arrays.asList(
                 "com/haulmont/cuba/app.properties",
@@ -55,6 +54,14 @@ class JoinedInheritanceTestClass extends Specification {
         runner.update('delete from TEST_CHILD_ENTITY_REFERRER')
         runner.update('delete from TEST_CHILD_ENTITY')
         runner.update('delete from TEST_ROOT_ENTITY')
+    }
+
+    def setupSpec() {
+        cont.beforeAll(null);
+    }
+
+    def cleanupSpec() {
+        cont.afterAll(null);
     }
 
     def "store master-detail"() {

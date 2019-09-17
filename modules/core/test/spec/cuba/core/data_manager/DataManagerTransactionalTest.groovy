@@ -21,6 +21,7 @@ import com.haulmont.cuba.core.Transaction
 import com.haulmont.cuba.core.TransactionalDataManager
 import com.haulmont.cuba.core.entity.BaseEntityInternalAccess
 import com.haulmont.cuba.core.global.*
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.core.sys.listener.EntityListenerManager
 import com.haulmont.cuba.testmodel.embedded.AddressEmbedded
 import com.haulmont.cuba.testmodel.embedded.AddressEmbeddedContainer
@@ -28,16 +29,9 @@ import com.haulmont.cuba.testmodel.sales.Customer
 import com.haulmont.cuba.testmodel.sales.Order
 import com.haulmont.cuba.testmodel.sales.OrderLine
 import com.haulmont.cuba.testmodel.sales.TestCustomerListenerBean
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
 import org.springframework.transaction.support.TransactionSynchronizationManager
-import spock.lang.Shared
-import spock.lang.Specification
 
-class DataManagerTransactionalTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class DataManagerTransactionalTest extends TestContainerSpecification {
 
     private Persistence persistence
     private TransactionalDataManager txDataManager

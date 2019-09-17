@@ -19,18 +19,11 @@ package spec.cuba.core.deletepolicy
 import com.haulmont.bali.db.QueryRunner
 import com.haulmont.cuba.core.Persistence
 import com.haulmont.cuba.core.global.*
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.deletepolicy.DeletePolicy_OneToMany_First
 import com.haulmont.cuba.testmodel.deletepolicy.DeletePolicy_Root
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class DeletePolicy_Unlink_OneToManyTest extends Specification {
-
-    @Shared
-    @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class DeletePolicy_Unlink_OneToManyTest extends TestContainerSpecification {
 
     private Persistence persistence = cont.persistence()
     private Metadata metadata = cont.metadata()

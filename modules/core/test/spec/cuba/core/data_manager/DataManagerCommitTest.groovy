@@ -23,17 +23,11 @@ import com.haulmont.cuba.core.global.CommitContext
 import com.haulmont.cuba.core.global.DataManager
 import com.haulmont.cuba.core.global.EntitySet
 import com.haulmont.cuba.core.global.EntityStates
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.sales.Customer
 import com.haulmont.cuba.testmodel.sales.Order
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class DataManagerCommitTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class DataManagerCommitTest extends TestContainerSpecification {
 
     private DataManager dataManager
     private EntityStates entityStates

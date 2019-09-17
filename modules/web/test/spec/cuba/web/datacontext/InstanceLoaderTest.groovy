@@ -27,6 +27,7 @@ import com.haulmont.cuba.web.testmodel.datacontext.Foo
 import com.haulmont.cuba.web.testsupport.TestContainer
 import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy
 import org.junit.ClassRule
+import spec.cuba.web.TestContainerSpecification
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -35,10 +36,7 @@ import java.util.function.Consumer
 import static com.haulmont.cuba.client.testsupport.TestSupport.reserialize
 
 @SuppressWarnings("GroovyAssignabilityCheck")
-class InstanceLoaderTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = CubaTestContainer.Common.INSTANCE
+class InstanceLoaderTest extends TestContainerSpecification {
 
     private Metadata metadata
     private DataManager dataManager

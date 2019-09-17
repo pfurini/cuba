@@ -281,7 +281,7 @@ public class LookupFieldTest extends AbstractComponentTestCase {
 
         component.setDatasource(testDs, "group");
 
-        assertTrue("Value should be from value ds", g == component.getValue());
+        assertTrue(g == component.getValue(), "Value should be from value ds");
 
         component.setValue(g2);
 

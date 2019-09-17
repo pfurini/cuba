@@ -25,23 +25,15 @@ import com.haulmont.cuba.core.entity.BaseDbGeneratedIdEntity
 import com.haulmont.cuba.core.entity.BaseStringIdEntity
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.MetadataTools
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.security.app.EntityLogAPI
 import com.haulmont.cuba.security.entity.EntityLogItem
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.LoggedAttribute
 import com.haulmont.cuba.security.entity.LoggedEntity
-import com.haulmont.cuba.testsupport.TestContainer
 import com.haulmont.cuba.testsupport.TestSupport
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class AbstractEntityLogTest extends Specification {
-
-
-    @Shared
-    @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class AbstractEntityLogTest extends TestContainerSpecification {
 
 
     protected EntityLogAPI entityLog

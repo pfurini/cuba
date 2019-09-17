@@ -19,17 +19,10 @@ package spec.cuba.core.self_reference
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.DataManager
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.self_reference.SelfReferencedEntity
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class SelfReferencedEntityTest extends Specification {
-
-    @Shared
-    @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class SelfReferencedEntityTest extends TestContainerSpecification {
 
     private Metadata metadata = cont.metadata()
     private dataManager = AppBeans.get(DataManager.class)

@@ -21,19 +21,13 @@ import com.haulmont.cuba.core.Persistence
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.EntityStates
 import com.haulmont.cuba.core.global.Metadata
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.core.sys.listener.EntityListenerManager
 import com.haulmont.cuba.testmodel.jpa_cascade.JpaCascadeBar
 import com.haulmont.cuba.testmodel.jpa_cascade.JpaCascadeFoo
 import com.haulmont.cuba.testmodel.jpa_cascade.JpaCascadeItem
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class JpaCascadeTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class JpaCascadeTest extends TestContainerSpecification {
 
     private Metadata metadata
     private Persistence persistence

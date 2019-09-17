@@ -18,15 +18,9 @@ package spec.cuba.core.config
 
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.Configuration
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
+import com.haulmont.cuba.core.TestContainerSpecification
 
-class ConfigInterfaceTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class ConfigInterfaceTest extends TestContainerSpecification {
 
     private Configuration configuration
 

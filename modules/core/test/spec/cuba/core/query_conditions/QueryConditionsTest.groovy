@@ -6,16 +6,10 @@ import com.haulmont.cuba.core.global.queryconditions.ConditionJpqlGenerator
 import com.haulmont.cuba.core.global.queryconditions.ConditionXmlLoader
 import com.haulmont.cuba.core.global.queryconditions.LogicalCondition
 import com.haulmont.cuba.core.global.queryconditions.PropertyCondition
-import com.haulmont.cuba.testsupport.TestContainer
+import com.haulmont.cuba.core.TestContainerSpecification
 import org.dom4j.Element
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class QueryConditionsTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class QueryConditionsTest extends TestContainerSpecification {
 
     private ConditionXmlLoader xmlSerializer
     private ConditionJpqlGenerator jpqlGenerator

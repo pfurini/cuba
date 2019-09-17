@@ -18,17 +18,11 @@ package spec.cuba.core.entity_serialization
 
 import com.haulmont.cuba.core.app.serialization.EntitySerializationAPI
 import com.haulmont.cuba.core.global.AppBeans
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.entity_serialization.Serialization_MetaProperty
 import com.haulmont.cuba.testmodel.numberformat.TestNumberValuesEntity
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class EntityJsonDeserializationTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class EntityJsonDeserializationTest extends TestContainerSpecification {
 
     private EntitySerializationAPI entitySerializationAPI
 

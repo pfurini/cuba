@@ -8,18 +8,12 @@ package spec.cuba.core.entity_serialization
 import com.haulmont.cuba.core.app.serialization.EntitySerializationAPI
 import com.haulmont.cuba.core.app.serialization.EntitySerializationOption
 import com.haulmont.cuba.core.global.AppBeans
+import com.haulmont.cuba.core.TestContainerSpecification
 import com.haulmont.cuba.testmodel.entity_serialization.Serialization_Order
 import com.haulmont.cuba.testmodel.entity_serialization.Serialization_OrderItem
-import com.haulmont.cuba.testsupport.TestContainer
 import groovy.json.JsonSlurper
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
 
-class EntityJsonSerializationTest extends Specification {
-
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class EntityJsonSerializationTest extends TestContainerSpecification {
 
     private EntitySerializationAPI entitySerializationAPI
 

@@ -8,14 +8,9 @@ package spec.cuba.core.bean_validation
 import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.global.RemoteException
 import com.haulmont.cuba.core.sys.MethodValidationTestService
-import com.haulmont.cuba.testsupport.TestContainer
-import org.junit.ClassRule
-import spock.lang.Shared
-import spock.lang.Specification
+import com.haulmont.cuba.core.TestContainerSpecification
 
-class MethodValidationTest extends Specification {
-    @Shared @ClassRule
-    public TestContainer cont = TestContainer.Common.INSTANCE
+class MethodValidationTest extends TestContainerSpecification {
 
     private MethodValidationTestService service
 

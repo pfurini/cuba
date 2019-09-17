@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import java.text.ParseException;
 import java.util.Locale;
 
-import static junit.framework.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IntegerDatatypeTest extends AbstractDatatypeTestCase {
 

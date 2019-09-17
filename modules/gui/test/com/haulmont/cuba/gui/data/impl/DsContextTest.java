@@ -146,7 +146,7 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Detail editor
         dataService.commitValidator = null;
         detailDsContext.commit();
-        assertEquals("Commit Detail DsContext", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Detail DsContext");
 
         // Commit Master editor
         dataService.commitValidator = new TestDataSupplier.CommitValidator() {
@@ -163,7 +163,7 @@ public class DsContextTest extends CubaClientTestCase {
             }
         };
         masterDsContext.commit();
-        assertEquals("Commit Master DsContext", 1, dataService.commitCount);
+        assertEquals(1, dataService.commitCount, "Commit Master DsContext");
     }
 
     @Test
@@ -185,7 +185,7 @@ public class DsContextTest extends CubaClientTestCase {
 
         dataService.commitValidator = null;
         detailDsContext.commit();
-        assertEquals("Commit Detail DsContext", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Detail DsContext");
 
         // Commit Master editor
         dataService.commitValidator = new TestDataSupplier.CommitValidator() {
@@ -200,7 +200,7 @@ public class DsContextTest extends CubaClientTestCase {
             }
         };
         masterDsContext.commit();
-        assertEquals("Commit Master DsContext", 1, dataService.commitCount);
+        assertEquals(1, dataService.commitCount, "Commit Master DsContext");
     }
 
     @Test
@@ -240,11 +240,11 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Part editor
         dataService.commitValidator = null;
         partDsContext.commit();
-        assertEquals("Commit Part", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Part");
 
         dataService.commitValidator = null;
         detailDsContext.commit();
-        assertEquals("Commit Detail DsContext", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Detail DsContext");
 
         // Commit Master editor
         dataService.commitValidator = new TestDataSupplier.CommitValidator() {
@@ -262,7 +262,7 @@ public class DsContextTest extends CubaClientTestCase {
             }
         };
         masterDsContext.commit();
-        assertEquals("Commit Master DsContext", 1, dataService.commitCount);
+        assertEquals(1, dataService.commitCount, "Commit Master DsContext");
     }
 
     @Test
@@ -296,7 +296,7 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Detail editor
         dataService.commitValidator = null;
         detailDsContext.commit();
-        assertEquals("Commit Detail DsContext", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Detail DsContext");
 
         // Select Detail to edit
         detailsDs.setItem(detail2);
@@ -315,7 +315,7 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Detail editor 2nd time
         dataService.commitValidator = null;
         detailDsContext.commit();
-        assertEquals("Commit Detail DsContext", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Detail DsContext");
 
         // Commit Master editor
         dataService.commitValidator = new TestDataSupplier.CommitValidator() {
@@ -332,7 +332,7 @@ public class DsContextTest extends CubaClientTestCase {
             }
         };
         masterDsContext.commit();
-        assertEquals("Commit Master DsContext", 1, dataService.commitCount);
+        assertEquals(1, dataService.commitCount, "Commit Master DsContext");
     }
 
     @Test
@@ -368,12 +368,12 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Part editor
         dataService.commitValidator = null;
         partDsContext.commit();
-        assertEquals("Commit Part", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Part");
 
         // Commit Detail editor
         dataService.commitValidator = null;
         detailDsContext.commit();
-        assertEquals("Commit Detail", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Detail");
 
         // Commit Master editor
         dataService.commitValidator = new TestDataSupplier.CommitValidator() {
@@ -387,7 +387,7 @@ public class DsContextTest extends CubaClientTestCase {
             }
         };
         masterDsContext.commit();
-        assertEquals("Commits Master", 1, dataService.commitCount);
+        assertEquals(1, dataService.commitCount, "Commits Master");
     }
 
     @Test
@@ -423,7 +423,7 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Part editor
         dataService.commitValidator = null;
         partDsContext.commit();
-        assertEquals("Commit Part", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Part");
 
         // Select Part to edit
         partsDs.setItem(null);
@@ -441,12 +441,12 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Part editor 2nd time
         dataService.commitValidator = null;
         partDsContext.commit();
-        assertEquals("Commit Part", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Part");
 
         // Commit Detail editor
         dataService.commitValidator = null;
         detailDsContext.commit();
-        assertEquals("Commit Detail", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Detail");
 
         // Select Detail to edit
         detailsDs.setItem(detail2);
@@ -471,7 +471,7 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Part editor 3rd time
         dataService.commitValidator = null;
         partDsContext.commit();
-        assertEquals("Commit Part", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Part");
 
         // Add new part
         final TestPartEntity newPart = new TestPartEntity();
@@ -487,12 +487,12 @@ public class DsContextTest extends CubaClientTestCase {
         // Commit Part editor 4th time
         dataService.commitValidator = null;
         partDsContext.commit();
-        assertEquals("Commit Part", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Part");
 
         // Commit Detail editor 2nd
         dataService.commitValidator = null;
         detailDsContext.commit();
-        assertEquals("Commit Detail", 0, dataService.commitCount);
+        assertEquals(0, dataService.commitCount, "Commit Detail");
 
         // Commit Master editor
         dataService.commitValidator = new TestDataSupplier.CommitValidator() {
@@ -512,7 +512,7 @@ public class DsContextTest extends CubaClientTestCase {
             }
         };
         masterDsContext.commit();
-        assertEquals("Commits Master", 1, dataService.commitCount);
+        assertEquals(1, dataService.commitCount, "Commits Master");
     }
 
     private void setupParentDs(CollectionDatasource parent, Datasource child, Entity<UUID> item) {
