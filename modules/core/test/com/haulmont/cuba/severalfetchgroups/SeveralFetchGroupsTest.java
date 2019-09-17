@@ -28,7 +28,7 @@ import com.haulmont.cuba.testmodel.severalfetchgroups.SeveralFetchGroups_Tariff;
 import com.haulmont.cuba.testmodel.severalfetchgroups.SeveralFetchGroups_TariffVersion;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.jupiter.api.*;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -36,7 +36,7 @@ import java.util.UUID;
 
 public class SeveralFetchGroupsTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     private Metadata metadata;

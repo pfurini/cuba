@@ -24,8 +24,8 @@ import com.haulmont.cuba.web.testsupport.TestUiEnvironment;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Sample test with {@link TestUiEnvironment}.

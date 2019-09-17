@@ -25,6 +25,7 @@ import com.haulmont.cuba.core.global.View
 import com.haulmont.cuba.testmodel.localdatetime.LocalDateTimeEntity
 import com.haulmont.cuba.testsupport.TestContainer
 import org.junit.ClassRule
+import org.junit.jupiter.api.Disabled
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
@@ -131,7 +132,7 @@ class LocalDateTimeTest extends Specification {
         e.offsetDateTime.isEqual(offsetDateTime)
     }
 
-    @Ignore
+    @Disabled
     def "load/store OffsetTime"() {
         when:
         def e = dataManager.load(LocalDateTimeEntity).id(entity.id).view(View.LOCAL).one()
@@ -187,7 +188,7 @@ class LocalDateTimeTest extends Specification {
         e.offsetDateTime.isEqual(offsetDateTime)
     }
 
-    @Ignore
+    @Disabled
     def "find by OffsetTime"() {
         when:
         def e = dataManager.load(LocalDateTimeEntity)
@@ -251,7 +252,7 @@ class LocalDateTimeTest extends Specification {
         e.offsetDateTime.isEqual(offsetDateTime)
     }
 
-    @Ignore
+    @Disabled
     def "find by OffsetTime greater than"() {
         when:
         def e = dataManager.load(LocalDateTimeEntity)

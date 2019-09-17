@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CollectionDatasourceTest extends CubaClientTestCase {
 

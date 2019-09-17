@@ -34,6 +34,9 @@ import com.haulmont.cuba.gui.theme.ThemeConstants;
 import com.haulmont.cuba.security.app.UserManagementService;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.security.global.UserSession;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import com.haulmont.cuba.web.App;
 import com.haulmont.cuba.web.AppUI;
 import com.haulmont.cuba.web.Connection;
@@ -48,7 +51,6 @@ import com.vaadin.server.WebBrowser;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.rules.ExternalResource;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.util.*;
@@ -103,7 +105,7 @@ import static org.apache.commons.lang3.reflect.FieldUtils.getDeclaredField;
  *
  * @see TestContainer
  */
-public class TestUiEnvironment extends ExternalResource {
+public class TestUiEnvironment implements BeforeAllCallback, AfterAllCallback {
 
     public static final String USER_ID = "b8a050db-3ade-487e-817d-781a31918657";
 
@@ -125,22 +127,18 @@ public class TestUiEnvironment extends ExternalResource {
     }
 
     @Override
-    protected void before() throws Throwable {
-        super.before();
-
-        setupEnvironment();
+    public void beforeAll(ExtensionContext context) {
+        setupEnvironment(context);
     }
 
     @Override
-    protected void after() {
-        super.after();
-
-        cleanupEnvironment();
+    public void afterAll(ExtensionContext context) {
+        cleanupEnvironment(context);
     }
 
-    protected void setupEnvironment() {
+    protected void setupEnvironment(ExtensionContext context) {
         try {
-            container.before();
+            container.beforeAll(context);
         } catch (Throwable throwable) {
             throw new RuntimeException("Unable to start container", throwable);
         }
@@ -254,7 +252,7 @@ public class TestUiEnvironment extends ExternalResource {
         return user;
     }
 
-    protected void cleanupEnvironment() {
+    protected void cleanupEnvironment(ExtensionContext context) {
         resetScreens();
 
         UI.setCurrent(null);
@@ -267,7 +265,7 @@ public class TestUiEnvironment extends ExternalResource {
         TestClientCacheManager clientCacheManager = container.getBean(ClientCacheManager.NAME);
         clientCacheManager.getCache().remove(DynamicAttributesCacheStrategy.NAME);
 
-        container.after();
+        container.afterAll(context);
     }
 
     protected void exportScreens(String... packages) {

@@ -23,7 +23,7 @@ import com.haulmont.cuba.core.global.GlobalConfig;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DbUpdaterEngineTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     private File dbmsDir;

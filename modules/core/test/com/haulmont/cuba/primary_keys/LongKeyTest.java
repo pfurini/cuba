@@ -23,14 +23,14 @@ import com.haulmont.cuba.testmodel.primary_keys.JoinedLongIdBar;
 import com.haulmont.cuba.testmodel.primary_keys.JoinedLongIdFoo;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class LongKeyTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     private Persistence persistence;

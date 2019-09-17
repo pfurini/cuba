@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AppPropertiesTest {
 
@@ -103,7 +103,7 @@ public class AppPropertiesTest {
         StringTokenizer tokenizer = new StringTokenizer(propValue);
         String[] locations = tokenizer.getTokenArray();
 
-        Assert.assertArrayEquals(new String[] {"1.xml", "2.xml"}, locations);
+        Assertions.assertArrayEquals(new String[] {"1.xml", "2.xml"}, locations);
     }
 
     @Test

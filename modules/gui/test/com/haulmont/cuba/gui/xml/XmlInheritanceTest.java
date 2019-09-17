@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("ReassignmentInjectVariable")
 public class XmlInheritanceTest extends CubaClientTestCase {

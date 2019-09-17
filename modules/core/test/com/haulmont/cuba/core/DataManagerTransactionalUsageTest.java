@@ -27,7 +27,7 @@ import com.haulmont.cuba.testmodel.sales_1.OrderLine;
 import com.haulmont.cuba.testmodel.sales_1.Product;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DataManagerTransactionalUsageTest {
 
@@ -147,7 +147,7 @@ public class DataManagerTransactionalUsageTest {
         }
     }
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     protected DataManager dataManager;

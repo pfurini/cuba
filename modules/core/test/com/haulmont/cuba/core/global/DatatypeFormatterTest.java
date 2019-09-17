@@ -20,18 +20,18 @@ package com.haulmont.cuba.core.global;
 import com.haulmont.chile.core.datatypes.Datatypes;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SuppressWarnings("unchecked")
 public class DatatypeFormatterTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     private DatatypeFormatter formatter;

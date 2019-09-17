@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assertions.assertEquals;
 
 public class MacroProcessorTest {
     private MacroProcessor processor;

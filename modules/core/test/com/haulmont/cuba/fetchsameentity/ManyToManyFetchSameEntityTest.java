@@ -27,14 +27,14 @@ import com.haulmont.cuba.testmodel.many2many_fetchsameentity.Many2Many_FetchSame
 import com.haulmont.cuba.testmodel.many2many_fetchsameentity.Many2Many_FetchSame2;
 import com.haulmont.cuba.testmodel.many2many_fetchsameentity.Many2Many_FetchSame3;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.*;
 
 import java.util.Collections;
 import java.util.List;
 
 public class ManyToManyFetchSameEntityTest {
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     protected Many2Many_FetchSame1 same1_1, same1_2, same1_3;

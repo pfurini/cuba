@@ -26,11 +26,11 @@ import com.haulmont.cuba.testmodel.fetchsameentity.FetchSameMainEntity;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 
 public class FetchSameEntityTest {
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     protected FetchSameMainEntity mainEntity;

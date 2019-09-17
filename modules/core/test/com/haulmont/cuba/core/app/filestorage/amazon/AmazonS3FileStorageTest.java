@@ -22,7 +22,7 @@ import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.apache.commons.io.IOUtils;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.*;
 
 import java.io.InputStream;
@@ -32,7 +32,7 @@ import java.util.Date;
 @Disabled
 public class AmazonS3FileStorageTest {
     public static final String FILE_CONTENT = "This text is for Amazon S3 service test. Second version.";
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     protected AmazonS3FileStorage fileStorageAPI;

@@ -27,7 +27,7 @@ import com.haulmont.cuba.core.mp_test.nested.MpTestNestedEnum;
 import com.haulmont.cuba.core.mp_test.nested.MpTestNestedObj;
 import com.haulmont.cuba.testsupport.TestAppender;
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
@@ -35,11 +35,11 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MessagesTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     private final TestAppender appender;

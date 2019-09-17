@@ -22,7 +22,7 @@ import com.haulmont.cuba.core.entity.SchedulingType;
 import com.haulmont.cuba.core.global.TimeSource;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.jupiter.api.Assertions;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -39,7 +39,7 @@ public class SchedulingTest {
 
     private SimpleDateFormat simpleDateFormat;
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     public SchedulingTest() {

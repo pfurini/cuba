@@ -40,7 +40,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import static com.haulmont.cuba.gui.screen.FrameOwner.NO_OPTIONS;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 @SuppressWarnings("IncorrectCreateGuiComponent")
 public class ControllerDependencyInjectorTest extends CubaClientTestCase {

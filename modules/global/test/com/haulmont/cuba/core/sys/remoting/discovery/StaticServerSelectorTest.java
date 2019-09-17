@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StaticServerSelectorTest {
 

@@ -22,7 +22,7 @@ import com.haulmont.cuba.testmodel.checkview.UserRelatedNews;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,11 +30,11 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CheckLoadedStateTest {
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     private UUID userRelatedNewsId = null;

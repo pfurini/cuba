@@ -29,18 +29,18 @@ import com.haulmont.cuba.testsupport.TestContainer;
 import org.eclipse.persistence.internal.helper.CubaUtil;
 import org.eclipse.persistence.jpa.JpaEntityManager;
 import org.eclipse.persistence.platform.database.DatabasePlatform;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SoftDeleteTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
     
     private UUID groupId;

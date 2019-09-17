@@ -28,13 +28,13 @@ import com.haulmont.cuba.testmodel.softdelete_notfounddeleted.SoftDelete_Task;
 import com.haulmont.cuba.testmodel.softdelete_notfounddeleted.SoftDelete_TaskValue;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.jupiter.api.*;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.UUID;
 
 public class SoftDeleteNotFoundDeletedTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 
     private UUID taskId;

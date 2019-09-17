@@ -44,6 +44,6 @@ public class EnumerationImplTest {
     public void testParseNonExistingId() throws ParseException {
         EnumerationImpl enumeration = new EnumerationImpl(FtsChangeType.class);
         Enum enumValue = enumeration.parse("ZZZ");
-        Assert.assertNull(enumValue);
+        Assertions.assertNull(enumValue);
     }
 }

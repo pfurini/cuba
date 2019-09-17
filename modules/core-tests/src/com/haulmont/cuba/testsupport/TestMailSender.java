@@ -18,7 +18,7 @@
 package com.haulmont.cuba.testsupport;
 
 import com.haulmont.cuba.core.sys.CubaMailSender;
-import junit.framework.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 
@@ -45,7 +45,7 @@ public class TestMailSender extends CubaMailSender {
     }
 
     public MimeMessage fetchSentEmail() {
-        Assert.assertFalse(myMessages.isEmpty());
+        Assertions.assertFalse(myMessages.isEmpty());
         return myMessages.remove(0);
     }
 

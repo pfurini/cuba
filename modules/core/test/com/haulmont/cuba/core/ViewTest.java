@@ -32,7 +32,7 @@ import com.haulmont.cuba.testsupport.TestContainer;
 import org.eclipse.persistence.queries.FetchGroupTracker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +43,11 @@ import java.util.UUID;
 
 import static com.haulmont.cuba.testsupport.TestSupport.assertFail;
 import static com.haulmont.cuba.testsupport.TestSupport.reserialize;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ViewTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer cont = TestContainer.Common.INSTANCE;
     
     private TimeSource timeSource;

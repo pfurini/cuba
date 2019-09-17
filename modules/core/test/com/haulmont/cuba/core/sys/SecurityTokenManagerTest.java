@@ -22,7 +22,7 @@ import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.testsupport.TestContainer;
 import org.junit.jupiter.api.Assertions;
-import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public class SecurityTokenManagerTest {
 
-    @ClassRule
+    @RegisterExtension
     public static TestContainer testContainer = TestContainer.Common.INSTANCE;
 
     @Test

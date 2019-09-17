@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import java.util.function.Consumer;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("unchecked")
 @Disabled
