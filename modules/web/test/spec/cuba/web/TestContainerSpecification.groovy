@@ -16,11 +16,12 @@
 
 package spec.cuba.web
 
+import com.haulmont.cuba.web.container.CubaTestContainer
 import com.haulmont.cuba.web.testsupport.TestContainer
 import spock.lang.Specification
 
 class TestContainerSpecification extends Specification{
-    public static TestContainer cont = TestContainer.Common.INSTANCE
+    public static TestContainer cont = CubaTestContainer.Common.INSTANCE
 
     def setupSpec() {
         cont.beforeAll(null);
