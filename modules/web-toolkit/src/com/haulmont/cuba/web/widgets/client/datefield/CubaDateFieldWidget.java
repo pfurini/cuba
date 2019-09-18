@@ -20,8 +20,11 @@ package com.haulmont.cuba.web.widgets.client.datefield;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.haulmont.cuba.web.widgets.client.textfield.CubaMaskedFieldWidget;
+import com.vaadin.client.DateTimeService;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VPopupCalendar;
+
+import java.util.Date;
 
 public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActionHandler.ShortcutActionHandlerOwner {
 
@@ -29,7 +32,14 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
 
     protected static final String EMPTY_FIELD_CLASS = "c-datefield-empty";
 
+    protected static final String RANGE_DATE_FORMAT = "yyyy-MM-dd";
+
     protected int tabIndex;
+
+    protected boolean autofill = false;
+
+    protected Date dateRangeStart;
+    protected Date dateRangeEnd;
 
     public CubaDateFieldWidget() {
         // handle shortcuts
@@ -64,6 +74,30 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
         super.setReadonly(readonly);
 
         getImpl().setTabIndex(readonly ? -1 : tabIndex);
+    }
+
+    public void setAutofill(boolean autofill) {
+        this.autofill = autofill;
+    }
+
+    public boolean isAutofill() {
+        return autofill;
+    }
+
+    public void setDateRangeStart(String rangeStart) {
+        this.dateRangeStart = parseRangeString(rangeStart);
+    }
+
+    public Date getDateRangeStart() {
+        return dateRangeStart;
+    }
+
+    public void setDateRangeEnd(String rangeEnd) {
+        this.dateRangeEnd = parseRangeString(rangeEnd);
+    }
+
+    public Date getDateRangeEnd() {
+        return dateRangeEnd;
     }
 
     protected void updateTabIndex(int tabIndex) {
@@ -104,6 +138,10 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
                 String newText = getText();
                 if (newText != null
                         && !newText.equals(valueBeforeEdit)) {
+                    if (isAutofill()) {
+                        newText = fillValue(newText);
+                    }
+
                     if (validateText(newText)) {
                         if (!newText.equals(nullRepresentation)) {
                             getElement().removeClassName(CubaDateFieldWidget.EMPTY_FIELD_CLASS);
@@ -141,5 +179,59 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
 
     public void updateTextState() {
         getImpl().updateTextState();
+    }
+
+    protected Date parseRangeString(String dateStr) {
+        if (dateStr == null || "".equals(dateStr)) {
+            return null;
+        }
+
+        return getDateTimeService().parseDate(dateStr, RANGE_DATE_FORMAT, lenient);
+    }
+
+    protected String fillValue(String value) {
+        if (!value.startsWith("__") && value.endsWith("__")) {
+            Date date = new Date();
+            String dateString = getDateTimeService().formatDate(date, getFormatString());
+
+            StringBuilder stringBuilder = new StringBuilder(value);
+            int index = stringBuilder.indexOf("__");
+            while (index != -1) {
+                stringBuilder.replace(index, index + 2, dateString.substring(index, index + 2));
+                index = stringBuilder.indexOf("__");
+            }
+            String filledValue = stringBuilder.toString();
+            value = adjustFilledValue(filledValue);
+
+            setText(value);
+        }
+        return value;
+    }
+
+    protected String adjustFilledValue(String value) {
+        DateTimeService service = getDateTimeService();
+
+        Date date = service.parseDate(value, getFormatString(), lenient);
+        Date adjustedDate = adjustDateByRange(date, getDateRangeStart(), getDateRangeEnd());
+
+        return date.equals(adjustedDate)
+                ? value
+                : service.formatDate(adjustedDate, getFormatString());
+    }
+
+    protected Date adjustDateByRange(Date date, Date rangeStart, Date rangeEnd) {
+        if (rangeStart == null && rangeEnd == null) {
+            return date;
+        }
+
+        if (rangeStart != null && date.before(rangeStart)) {
+            return rangeStart;
+        }
+
+        if (rangeEnd != null && date.after(rangeEnd)) {
+            return rangeEnd;
+        }
+
+        return date;
     }
 }

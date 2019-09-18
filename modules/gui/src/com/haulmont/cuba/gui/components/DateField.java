@@ -68,4 +68,16 @@ public interface DateField<V> extends Field<V>, HasDatatype<V>, Buffered, Compon
     void setZoneId(ZoneId zoneId);
 
     ZoneId getZoneId();
+
+    /**
+     * Sets auto filling of {@link DateField}.
+     *
+     * @param autofill true to enable auto filling, otherwise false
+     */
+    void setAutofill(boolean autofill);
+
+    /**
+     * @return true if auto filling is enabled, otherwise false
+     */
+    boolean isAutofill();
 }
