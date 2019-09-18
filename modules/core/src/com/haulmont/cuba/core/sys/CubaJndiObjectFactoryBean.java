@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright (c) 2008-2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.haulmont.cuba.core.sys;
 
-import org.springframework.jndi.JndiObjectFactoryBean;
 
 /**
  * This class is used for locating objects by name defined in application properties before
@@ -28,16 +26,6 @@ import org.springframework.jndi.JndiObjectFactoryBean;
  * which is configured through application properties.
  *
  */
-public class CubaJndiObjectFactoryBean extends JndiObjectFactoryBean {
+public class CubaJndiObjectFactoryBean extends CubaDataSourceFactoryBean {
 
-    private String jndiNameAppProperty;
-
-    public String getJndiNameAppProperty() {
-        return jndiNameAppProperty;
-    }
-
-    public void setJndiNameAppProperty(String jndiNameAppProperty) {
-        this.jndiNameAppProperty = jndiNameAppProperty;
-        setJndiName(AppContext.getProperty(jndiNameAppProperty));
-    }
 }

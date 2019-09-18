@@ -17,18 +17,18 @@
 package com.haulmont.cuba.core.sys;
 
 import com.haulmont.cuba.core.sys.jdbc.ProxyDataSource;
+import com.haulmont.cuba.core.sys.persistence.DbmsType;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.jndi.JndiObjectFactoryBean;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
+public class CubaDataSourceFactoryBean extends JndiObjectFactoryBean {
     protected static final String DATASOURCE_PROVIDER_PROPERTY_NAME = "cuba.dataSourceProvider";
-    protected static final String DBMS_TYPE = "cuba.dbmsType";
-    protected static final String DBMS_VERSION = "cuba.dbmsVersion";
     protected static final String HOST = "dataSource.host";
     protected static final String PORT = "dataSource.port";
     protected static final String DB_NAME = "dataSource.dbName";
@@ -36,20 +36,31 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     protected static final String JDBC_URL = "jdbcUrl";
     protected static final String CUBA = "cuba";
     protected static final String MS_SQL_2005 = "2005";
+    public static final String MAIN = "_MAIN_";
     public static final String POSTGRES_DBMS = "postgres";
     public static final String MSSQL_DBMS = "mssql";
     public static final String ORACLE_DBMS = "oracle";
     public static final String MYSQL_DBMS = "mysql";
     public static final String HSQL_DBMS = "hsql";
 
-    private String dataSourceName;
+    private String storeName;
+    private String jndiNameAppProperty;
 
-    public String getDataSourceName() {
-        return dataSourceName;
+    public String getStoreName() {
+        return storeName;
     }
 
-    public void setDataSourceName(String dataSourceName) {
-        this.dataSourceName = dataSourceName;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getJndiNameAppProperty() {
+        return jndiNameAppProperty;
+    }
+
+    public void setJndiNameAppProperty(String jndiNameAppProperty) {
+        this.jndiNameAppProperty = jndiNameAppProperty;
+        setJndiName(AppContext.getProperty(jndiNameAppProperty));
     }
 
     @Override
@@ -60,20 +71,23 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     @Override
     public Object getObject() {
         String dataSourceProvider = AppContext.getProperty(getDSProviderPropertyName());
-        if ("application".equals(dataSourceProvider)) {
-            return getApplicationDataSource();
-        } else {
+        if ("jndi".equals(dataSourceProvider)) {
             return super.getObject();
+        } else if (dataSourceProvider == null || "application".equals(dataSourceProvider)) {
+            return getApplicationDataSource();
         }
+        throw new RuntimeException("DataSource provider type is unsupported! Available: 'jndi', 'application'");
     }
 
     protected DataSource getApplicationDataSource() {
+        if (storeName == null) {
+            storeName = MAIN;
+        }
         Properties hikariConfigProperties = getHikariConfigProperties();
-
         HikariConfig config = new HikariConfig(hikariConfigProperties);
 
         config.setRegisterMbeans(true);
-        config.setPoolName("HikariPool-" + (dataSourceName == null ? "MAIN" : dataSourceName));
+        config.setPoolName("HikariPool-" + storeName);
 
         HikariDataSource ds = new HikariDataSource(config);
         return new ProxyDataSource(ds);
@@ -83,8 +97,8 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
         Properties hikariConfigProperties = new Properties();
         String[] propertiesNames = AppContext.getPropertyNames();
         String filterParam = ".dataSource.";
-        if (dataSourceName != null) {
-            filterParam = ".dataSource_" + dataSourceName + ".";
+        if (!MAIN.equals(storeName)) {
+            filterParam = ".dataSource_" + storeName + ".";
         }
         String hikariConfigDSPrefix;
         String cubaConfigDSPrefix = CUBA + filterParam;
@@ -124,7 +138,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     }
 
     protected String getUrlPrefix() {
-        String dbmsType = AppContext.getProperty(getDbmsTypeProperty());
+        String dbmsType = DbmsType.getType(storeName);
         if (dbmsType == null) {
             throw new RuntimeException("dbmsType should be specified for each dataSource!");
         }
@@ -132,7 +146,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
             case POSTGRES_DBMS:
                 return "jdbc:postgresql://";
             case MSSQL_DBMS:
-                if (MS_SQL_2005.equals(AppContext.getProperty(getDbmsVersionProperty()))) {
+                if (MS_SQL_2005.equals(AppContext.getProperty(DbmsType.getVersion(storeName)))) {
                     return "jdbc:jtds:sqlserver://";
                 }
                 return "jdbc:sqlserver://";
@@ -168,23 +182,9 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     }
 
     protected String getDSProviderPropertyName() {
-        if (dataSourceName != null) {
-            return DATASOURCE_PROVIDER_PROPERTY_NAME + "_" + dataSourceName;
+        if (storeName != null) {
+            return DATASOURCE_PROVIDER_PROPERTY_NAME + "_" + storeName;
         }
         return DATASOURCE_PROVIDER_PROPERTY_NAME;
-    }
-
-    protected String getDbmsTypeProperty() {
-        if (dataSourceName != null) {
-            return DBMS_TYPE + "_" + DBMS_TYPE;
-        }
-        return DBMS_TYPE;
-    }
-
-    protected String getDbmsVersionProperty() {
-        if (dataSourceName != null) {
-            return DBMS_VERSION + "_" + DBMS_VERSION;
-        }
-        return DBMS_VERSION;
     }
 }
