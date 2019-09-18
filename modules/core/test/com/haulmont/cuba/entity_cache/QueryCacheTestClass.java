@@ -39,9 +39,7 @@ import org.eclipse.persistence.internal.jpa.EntityManagerFactoryDelegate;
 import org.eclipse.persistence.jpa.JpaCache;
 import org.eclipse.persistence.sessions.server.ServerSession;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.*;
-import org.junit.rules.TestRule;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManagerFactory;

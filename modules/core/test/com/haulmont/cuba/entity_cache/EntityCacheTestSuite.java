@@ -17,26 +17,11 @@
 package com.haulmont.cuba.entity_cache;
 
 import com.haulmont.cuba.testsupport.TestContainer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-
 import java.util.Arrays;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({EntityCacheTestClass.class, QueryCacheTestClass.class})
 public class EntityCacheTestSuite {
 
     public static TestContainer cont = new TestContainer()
             .setAppPropertiesFiles(Arrays.asList("com/haulmont/cuba/app.properties", "com/haulmont/cuba/testsupport/test-app.properties", "com/haulmont/cuba/test-app.properties",
                     "com/haulmont/cuba/entity_cache/test-entitycache-app.properties"));
-
-    @BeforeAll
-    public static void setUp() throws Exception {
-    }
-
-    @AfterAll
-    public static void tearDown() throws Exception {
-    }
 }

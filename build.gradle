@@ -453,7 +453,8 @@ configure(coreModule) {
 
     task testEntityCache(type: Test) {
         scanForTestClasses = false
-        includes = ['com/haulmont/cuba/entity_cache/EntityCacheTestSuite.class']
+        includes = ['com/haulmont/cuba/entity_cache/EntityCacheTestClass.class',
+                    'com/haulmont/cuba/entity_cache/QueryCacheTestClass.class']
 
         if (System.getProperty('logback.configurationFile')) {
             systemProperty 'logback.configurationFile', System.getProperty('logback.testEntityCache.configurationFile')
