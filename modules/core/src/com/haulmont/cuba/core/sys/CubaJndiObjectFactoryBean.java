@@ -17,6 +17,8 @@
 package com.haulmont.cuba.core.sys;
 
 
+import org.springframework.jndi.JndiObjectFactoryBean;
+
 /**
  * This class is used for locating objects by name defined in application properties before
  * {@link CubaPropertyPlaceholderConfigurer} comes into play.
@@ -26,6 +28,15 @@ package com.haulmont.cuba.core.sys;
  * which is configured through application properties.
  *
  */
-public class CubaJndiObjectFactoryBean extends CubaDataSourceFactoryBean {
+public class CubaJndiObjectFactoryBean extends JndiObjectFactoryBean {
+    private String jndiNameAppProperty;
 
+    public String getJndiNameAppProperty() {
+        return jndiNameAppProperty;
+    }
+
+    public void setJndiNameAppProperty(String jndiNameAppProperty) {
+        this.jndiNameAppProperty = jndiNameAppProperty;
+        setJndiName(AppContext.getProperty(jndiNameAppProperty));
+    }
 }

@@ -27,12 +27,12 @@ import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class CubaDataSourceFactoryBean extends JndiObjectFactoryBean {
+public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     protected static final String DATASOURCE_PROVIDER_PROPERTY_NAME = "cuba.dataSourceProvider";
-    protected static final String HOST = "dataSource.host";
-    protected static final String PORT = "dataSource.port";
-    protected static final String DB_NAME = "dataSource.dbName";
-    protected static final String CONNECTION_PARAMS = "dataSource.connectionParams";
+    protected static final String HOST = "dataSource.cuba_host";
+    protected static final String PORT = "dataSource.cuba_port";
+    protected static final String DB_NAME = "dataSource.cuba_dbName";
+    protected static final String CONNECTION_PARAMS = "dataSource.cuba_connectionParams";
     protected static final String JDBC_URL = "jdbcUrl";
     protected static final String CUBA = "cuba";
     protected static final String MS_SQL_2005 = "2005";
@@ -42,25 +42,15 @@ public class CubaDataSourceFactoryBean extends JndiObjectFactoryBean {
     public static final String ORACLE_DBMS = "oracle";
     public static final String MYSQL_DBMS = "mysql";
     public static final String HSQL_DBMS = "hsql";
+    protected String dataSourceProvider;
 
     private String storeName;
-    private String jndiNameAppProperty;
-
     public String getStoreName() {
         return storeName;
     }
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
-    }
-
-    public String getJndiNameAppProperty() {
-        return jndiNameAppProperty;
-    }
-
-    public void setJndiNameAppProperty(String jndiNameAppProperty) {
-        this.jndiNameAppProperty = jndiNameAppProperty;
-        setJndiName(AppContext.getProperty(jndiNameAppProperty));
     }
 
     @Override
@@ -70,7 +60,7 @@ public class CubaDataSourceFactoryBean extends JndiObjectFactoryBean {
 
     @Override
     public Object getObject() {
-        String dataSourceProvider = AppContext.getProperty(getDSProviderPropertyName());
+        dataSourceProvider = AppContext.getProperty(getDSProviderPropertyName());
         if ("jndi".equals(dataSourceProvider)) {
             return super.getObject();
         } else if (dataSourceProvider == null || "application".equals(dataSourceProvider)) {
@@ -128,9 +118,13 @@ public class CubaDataSourceFactoryBean extends JndiObjectFactoryBean {
 
     protected String getJdbcUrlFromParts(Properties properties) {
         String urlPrefix = getUrlPrefix();
-        String jdbcUrl = urlPrefix + properties.getProperty(HOST) + ":" +
-                properties.getProperty(PORT) + "/" +
-                properties.getProperty(DB_NAME);
+        String host = properties.getProperty(HOST);
+        String port = properties.getProperty(PORT);
+        String dbName = properties.getProperty(DB_NAME);
+        if(host == null || port == null || dbName == null) {
+            return null;
+        }
+        String jdbcUrl = urlPrefix + host + ":" + port + "/" + dbName;
         if (properties.get(CONNECTION_PARAMS) != null) {
             jdbcUrl = jdbcUrl + properties.get(CONNECTION_PARAMS);
         }
