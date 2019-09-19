@@ -138,7 +138,7 @@ configure([sharedLibModule, globalModule, coreModule, clientModule, guiModule,
         compile(bom['org.jmockit:jmockit'])
         compile(bom['org.junit.jupiter:junit-jupiter-api'])
         compile(bom['org.junit.jupiter:junit-jupiter-engine'])
-        testCompile(bom['org.junit.vintage:junit-vintage-engine'])
+        compile(bom['org.junit.vintage:junit-vintage-engine'])
 
         testCompile(bom['org.spockframework:spock-core']) {
             exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
