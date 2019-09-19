@@ -185,7 +185,6 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
         if (dateStr == null || "".equals(dateStr)) {
             return null;
         }
-
         return getDateTimeService().parseDate(dateStr, RANGE_DATE_FORMAT, lenient);
     }
 
@@ -201,14 +200,14 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
                 index = stringBuilder.indexOf("__");
             }
             String filledValue = stringBuilder.toString();
-            value = adjustFilledValue(filledValue);
+            value = adjustStringValue(filledValue);
 
             setText(value);
         }
         return value;
     }
 
-    protected String adjustFilledValue(String value) {
+    protected String adjustStringValue(String value) {
         DateTimeService service = getDateTimeService();
 
         Date date = service.parseDate(value, getFormatString(), lenient);
@@ -220,18 +219,12 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
     }
 
     protected Date adjustDateByRange(Date date, Date rangeStart, Date rangeEnd) {
-        if (rangeStart == null && rangeEnd == null) {
-            return date;
-        }
-
         if (rangeStart != null && date.before(rangeStart)) {
             return rangeStart;
         }
-
         if (rangeEnd != null && date.after(rangeEnd)) {
             return rangeEnd;
         }
-
         return date;
     }
 }

@@ -70,7 +70,7 @@ public interface DateField<V> extends Field<V>, HasDatatype<V>, Buffered, Compon
     ZoneId getZoneId();
 
     /**
-     * Sets auto filling of {@link DateField}.
+     * Sets auto filling of {@link DateField} with the value of the current month and year after entering the day.
      *
      * @param autofill true to enable auto filling, otherwise false
      */
