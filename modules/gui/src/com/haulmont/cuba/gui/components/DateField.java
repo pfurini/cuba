@@ -70,14 +70,16 @@ public interface DateField<V> extends Field<V>, HasDatatype<V>, Buffered, Compon
     ZoneId getZoneId();
 
     /**
-     * Sets auto filling of {@link DateField} with the value of the current month and year after entering the day.
+     * Sets whether autofill feature is enabled.
+     * <p>
+     * When enabled uses current month and year.
      *
-     * @param autofill true to enable auto filling, otherwise false
+     * @param autofill whether autofill is enabled
      */
     void setAutofill(boolean autofill);
 
     /**
-     * @return true if auto filling is enabled, otherwise false
+     * @return whether autofill is enabled
      */
     boolean isAutofill();
 }
