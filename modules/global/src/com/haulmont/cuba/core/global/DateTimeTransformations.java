@@ -122,6 +122,46 @@ public class DateTimeTransformations {
     }
 
     /**
+     * @return the given {@code date} transformed into 12h format
+     */
+    public LocalTime transformTo12hTime(Object date) {
+        LocalTime time = transformToLocalTime(date);
+
+        return time.withHour(time.getHour() % 12);
+    }
+
+    /**
+     * Transforms the given {@code time} and {@code amPm} into 24h format.
+     *
+     * @param time time
+     * @param amPm am/pm
+     *
+     * @return transformed value
+     */
+    public LocalTime transformFrom12hTime(LocalTime time, AmPm amPm) {
+        int hour;
+
+        if (amPm == AmPm.AM) {
+            hour = time.getHour() % 12;
+        } else {
+            hour = time.getHour() + 12;
+            if (hour == 24) {
+                hour = 12;
+            }
+        }
+
+        return time.withHour(hour);
+    }
+
+    /**
+     * @return one of {@link AmPm} values depending of the given {@code date}
+     */
+    public AmPm getAmPm(Object date) {
+        LocalTime time = transformToLocalTime(date);
+        return time.getHour() < 12 ? AmPm.AM : AmPm.PM;
+    }
+
+    /**
      * Obtains an instance of specified by type date object from
      * from LocalTime
      * @param localTime date object, not null
@@ -156,5 +196,9 @@ public class DateTimeTransformations {
 
     private static RuntimeException newUnsupportedTypeException(Class javaType) {
         throw new IllegalArgumentException(String.format("Unsupported date type %s", javaType));
+    }
+
+    public enum AmPm {
+        AM, PM
     }
 }
