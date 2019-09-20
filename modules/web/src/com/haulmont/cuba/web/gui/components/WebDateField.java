@@ -22,11 +22,13 @@ import com.haulmont.chile.core.datatypes.Datatype;
 import com.haulmont.chile.core.datatypes.FormatStringsRegistry;
 import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.cuba.core.global.DateTimeTransformations;
+import com.haulmont.cuba.core.global.DateTimeTransformations.AmPm;
 import com.haulmont.cuba.core.global.Messages;
 import com.haulmont.cuba.core.global.UserSessionSource;
 import com.haulmont.cuba.gui.ComponentsHelper;
 import com.haulmont.cuba.gui.Notifications;
 import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.TimeField.TimeMode;
 import com.haulmont.cuba.gui.components.data.ConversionException;
 import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
 import com.haulmont.cuba.gui.components.data.ValueSource;
@@ -35,6 +37,7 @@ import com.haulmont.cuba.gui.sys.TestIdManager;
 import com.haulmont.cuba.gui.theme.ThemeConstants;
 import com.haulmont.cuba.web.App;
 import com.haulmont.cuba.web.AppUI;
+import com.haulmont.cuba.web.widgets.CubaComboBox;
 import com.haulmont.cuba.web.widgets.CubaCssActionsLayout;
 import com.haulmont.cuba.web.widgets.CubaDateField;
 import com.haulmont.cuba.web.widgets.CubaTimeField;
@@ -52,9 +55,14 @@ import java.time.*;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static com.haulmont.cuba.web.gui.components.WebTimeField.AM_PM_FIELD_STYLE_NAME;
+
 public class WebDateField<V extends Comparable<V>>
         extends WebAbstractViewComponent<CubaCssActionsLayout, LocalDateTime, V>
         implements DateField<V>, InitializingBean {
+
+    public static final String DATEFIELD_WITH_TIME_STYLENAME = "c-datefield-withtime";
 
     protected static final int VALIDATORS_LIST_INITIAL_CAPACITY = 2;
 
@@ -68,10 +76,14 @@ public class WebDateField<V extends Comparable<V>>
     protected V rangeStart;
     protected V rangeEnd;
 
+    protected TimeMode timeMode = TimeMode.H_24;
+    protected AmPm amPm = AmPm.AM;
+
     protected boolean updatingInstance;
 
     protected CubaDateField dateField;
     protected CubaTimeField timeField;
+    protected CubaComboBox<AmPm> amPmField;
 
     protected String dateTimeFormat;
 
@@ -95,11 +107,14 @@ public class WebDateField<V extends Comparable<V>>
         initDateField(dateField);
         timeField = createTimeField();
         initTimeField(timeField);
+        amPmField = createAmPmField();
+        initAmPmField(amPmField);
 
         setWidthAuto();
 
         dateField.addValueChangeListener(createDateValueChangeListener());
         timeField.addValueChangeListener(createTimeValueChangeListener());
+        amPmField.addValueChangeListener(createAmPmValueChangeListener());
     }
 
     protected CubaCssActionsLayout createComponent() {
@@ -120,6 +135,21 @@ public class WebDateField<V extends Comparable<V>>
 
     protected void initTimeField(CubaTimeField timeField) {
         timeField.setCaptionManagedByLayout(false);
+    }
+
+    protected CubaComboBox<AmPm> createAmPmField() {
+        return new CubaComboBox<>();
+    }
+
+    protected void initAmPmField(CubaComboBox<AmPm> amPmField) {
+        amPmField.addStyleName(AM_PM_FIELD_STYLE_NAME);
+
+        amPmField.setItems(AmPm.values());
+        amPmField.setValue(AmPm.AM);
+
+        amPmField.setEmptySelectionAllowed(false);
+        amPmField.setTextInputAllowed(false);
+        amPmField.setWidthUndefined();
     }
 
     @Inject
@@ -163,6 +193,15 @@ public class WebDateField<V extends Comparable<V>>
                 componentValueChanged(event.isUserOriginated());
     }
 
+    protected HasValue.ValueChangeListener<AmPm> createAmPmValueChangeListener() {
+        return e -> {
+            amPm = e.getValue();
+            if (use12hMode() && getValue() != null) {
+                componentValueChanged(e.isUserOriginated());
+            }
+        };
+    }
+
     protected void componentValueChanged(boolean isUserOriginated) {
         if (isUserOriginated) {
             V value;
@@ -192,6 +231,13 @@ public class WebDateField<V extends Comparable<V>>
                 publish(ValueChangeEvent.class, event);
             }
         }
+    }
+
+    @Override
+    public void setValue(V value) {
+        this.amPm = dateTimeTransformations.getAmPm(value);
+
+        super.setValue(value);
     }
 
     @Override
@@ -343,7 +389,7 @@ public class WebDateField<V extends Comparable<V>>
 
         if (resolution.ordinal() < Resolution.DAY.ordinal()) {
             component.addComponent(timeField);
-            component.addStyleName("c-datefield-withtime");
+            component.addStyleName(DATEFIELD_WITH_TIME_STYLENAME);
         } else {
             component.removeStyleName("c-datefield-withtime");
         }
@@ -369,9 +415,11 @@ public class WebDateField<V extends Comparable<V>>
             if (value == null) {
                 dateField.setValue(null);
                 timeField.setValue(null);
+                amPmField.setValue(AmPm.AM);
             } else {
                 dateField.setValue(value.toLocalDate());
                 timeField.setValue(value.toLocalTime());
+                amPmField.setValue(amPm);
             }
         } finally {
             updatingInstance = false;
@@ -388,6 +436,14 @@ public class WebDateField<V extends Comparable<V>>
         LocalTime timeValue = timeField.getValue() != null
                 ? timeField.getValue()
                 : LocalTime.MIDNIGHT;
+
+        if (use12hMode()) {
+            if (timeValue.getHour() <= 12) {
+                timeValue = dateTimeTransformations.transformFrom12hTime(timeValue, this.amPm);
+            } else {
+                this.amPm = dateTimeTransformations.getAmPm(timeValue);
+            }
+        }
 
         LocalDateTime localDateTime = LocalDateTime.of(dateValue, timeValue);
 
@@ -416,7 +472,14 @@ public class WebDateField<V extends Comparable<V>>
         if (dateTimeTransformations.isDateTypeSupportsTimeZones(date.getClass())) {
             zonedDateTime = zonedDateTime.withZoneSameInstant(zoneId != null ? zoneId : ZoneId.systemDefault());
         }
-        return zonedDateTime.toLocalDateTime();
+
+        LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
+        if (use12hMode()) {
+            int hour = dateTimeTransformations.transformTo12hTime(localDateTime.toLocalTime())
+                    .getHour();
+            return localDateTime.withHour(hour);
+        }
+        return localDateTime;
     }
 
     protected Object convertFromLocalDateTime(LocalDateTime localDateTime, ZoneId fromZoneId, Class javaType) {
@@ -694,5 +757,35 @@ public class WebDateField<V extends Comparable<V>>
             dateField.setComponentError(userError);
             timeField.setComponentError(userError);
         }
+    }
+
+    @Override
+    public void setTimeMode(TimeMode timeMode) {
+        checkNotNullArgument("Time mode cannot be null");
+
+        TimeMode oldMode = this.timeMode;
+
+        this.timeMode = timeMode;
+
+        if (oldMode != timeMode) {
+            if (use12hMode()) {
+                component.addComponent(amPmField);
+            } else {
+                component.removeComponent(amPmField);
+            }
+
+            if (getValue() != null) {
+                setValueToPresentation(convertToPresentation(getValue()));
+            }
+        }
+    }
+
+    @Override
+    public TimeMode getTimeMode() {
+        return timeMode;
+    }
+
+    protected boolean use12hMode() {
+        return timeMode == TimeMode.H_12;
     }
 }

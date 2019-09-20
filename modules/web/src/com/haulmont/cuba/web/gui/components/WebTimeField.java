@@ -307,15 +307,7 @@ public class WebTimeField<V>
     public void setValue(V value) {
         this.amPm = dateTimeTransformations.getAmPm(value);
 
-        setValueToPresentation(convertToPresentation(value));
-
-        V oldValue = internalValue;
-        this.internalValue = value;
-
-        if (!fieldValueEquals(value, oldValue)) {
-            ValueChangeEvent<V> event = new ValueChangeEvent<>(this, oldValue, value, false);
-            publish(ValueChangeEvent.class, event);
-        }
+        super.setValue(value);
     }
 
     @Override

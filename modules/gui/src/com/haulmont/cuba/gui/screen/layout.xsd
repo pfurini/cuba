@@ -1842,6 +1842,7 @@
                 <xs:attribute name="resolution" type="dateFieldResolution"/>
                 <xs:attribute name="dateFormat" type="xs:string"/>
                 <xs:attribute name="datatype" type="dateTimeDatatypeEnum"/>
+                <xs:attribute name="timeMode" type="timeModeEnum"/>
 
                 <xs:attributeGroup ref="hasBuffered"/>
                 <xs:attributeGroup ref="hasTabIndex"/>
