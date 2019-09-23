@@ -37,10 +37,10 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
 
     protected int tabIndex;
 
-    protected boolean autofill = false;
+    protected boolean autofill;
 
-    protected Date dateRangeStart;
-    protected Date dateRangeEnd;
+    protected Date rangeStart;
+    protected Date rangeEnd;
 
     public CubaDateFieldWidget() {
         // handle shortcuts
@@ -86,19 +86,19 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
     }
 
     public void setDateRangeStart(String rangeStart) {
-        this.dateRangeStart = parseRangeString(rangeStart);
+        this.rangeStart = parseRangeString(rangeStart);
     }
 
     public Date getDateRangeStart() {
-        return dateRangeStart;
+        return rangeStart;
     }
 
     public void setDateRangeEnd(String rangeEnd) {
-        this.dateRangeEnd = parseRangeString(rangeEnd);
+        this.rangeEnd = parseRangeString(rangeEnd);
     }
 
     public Date getDateRangeEnd() {
-        return dateRangeEnd;
+        return rangeEnd;
     }
 
     protected void updateTabIndex(int tabIndex) {
