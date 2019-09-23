@@ -25,5 +25,5 @@ public class CubaDateFieldState extends LocalDateFieldState {
     public String dateMask = "";
     public boolean captionManagedByLayout = true;
 
-    public boolean autofill = false;
+    public boolean autofill;
 }

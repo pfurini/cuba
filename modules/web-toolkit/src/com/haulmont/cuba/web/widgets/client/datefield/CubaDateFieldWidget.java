@@ -33,6 +33,7 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
     protected static final String EMPTY_FIELD_CLASS = "c-datefield-empty";
 
     protected static final String RANGE_DATE_FORMAT = "yyyy-MM-dd";
+    protected static final String EMPTY_MASK = "__";
 
     protected int tabIndex;
 
@@ -139,7 +140,11 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
                 if (newText != null
                         && !newText.equals(valueBeforeEdit)) {
                     if (isAutofill()) {
-                        newText = fillValue(newText);
+                        String filledValue = fillValue(newText);
+                        if (!newText.equals(filledValue)) {
+                            newText = filledValue;
+                            setText(newText);
+                        }
                     }
 
                     if (validateText(newText)) {
@@ -189,20 +194,24 @@ public class CubaDateFieldWidget extends VPopupCalendar implements ShortcutActio
     }
 
     protected String fillValue(String value) {
-        if (!value.startsWith("__") && value.endsWith("__")) {
+        if (!value.startsWith(EMPTY_MASK) && value.endsWith(EMPTY_MASK)) {
             Date date = new Date();
             String dateString = getDateTimeService().formatDate(date, getFormatString());
 
             StringBuilder stringBuilder = new StringBuilder(value);
-            int index = stringBuilder.indexOf("__");
+            int index = stringBuilder.indexOf(EMPTY_MASK);
             while (index != -1) {
                 stringBuilder.replace(index, index + 2, dateString.substring(index, index + 2));
-                index = stringBuilder.indexOf("__");
+                index = stringBuilder.indexOf(EMPTY_MASK);
             }
             String filledValue = stringBuilder.toString();
-            value = adjustStringValue(filledValue);
+            try {
+                filledValue = adjustStringValue(filledValue);
+            } catch (IllegalArgumentException e) {
+                return value;
+            }
 
-            setText(value);
+            return filledValue;
         }
         return value;
     }
