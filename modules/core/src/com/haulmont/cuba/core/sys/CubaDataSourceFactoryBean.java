@@ -30,10 +30,10 @@ import java.util.*;
 
 public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     protected static final String DATASOURCE_PROVIDER_PROPERTY_NAME = "cuba.dataSourceProvider";
-    protected static final String HOST = "dataSource.cuba_host";
-    protected static final String PORT = "dataSource.cuba_port";
-    protected static final String DB_NAME = "dataSource.cuba_dbName";
-    protected static final String CONNECTION_PARAMS = "dataSource.cuba_connectionParams";
+    protected static final String HOST = "hostname";
+    protected static final String PORT = "port";
+    protected static final String DB_NAME = "dbName";
+    protected static final String CONNECTION_PARAMS = "connectionParams";
     protected static final String JDBC_URL = "jdbcUrl";
     protected static final String CUBA = "cuba";
     protected static final String MS_SQL_2005 = "2005";
@@ -66,7 +66,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
         } else if (dataSourceProvider == null || "application".equals(dataSourceProvider)) {
             return getApplicationDataSource();
         }
-        throw new RuntimeException("DataSource provider type is unsupported! Available: 'jndi', 'application'");
+        throw new RuntimeException(String.format("DataSource provider '%s' is unsupported! Available: 'jndi', 'application'", dataSourceProvider));
     }
 
     protected String getDataSourceProvider() {
@@ -88,49 +88,66 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     }
 
     protected Properties getHikariConfigProperties() {
-        Properties hikariConfigProperties = new Properties();
-        String[] propertiesNames = AppContext.getPropertyNames();
         String filterParam = ".dataSource.";
         if (!Stores.isMain(storeName)) {
             filterParam = ".dataSource_" + storeName + ".";
         }
-        String hikariConfigDSPrefix;
         String cubaConfigDSPrefix = CUBA + filterParam;
-        String hikariPropertyName;
 
+        Map<String, String> cubaDSProperties = getAllDSProperties(cubaConfigDSPrefix);
+        Properties hikariConfigProperties = getHikariConfigProperties(cubaDSProperties);
+
+        if (hikariConfigProperties.getProperty(JDBC_URL) == null) {
+            hikariConfigProperties.setProperty(JDBC_URL, getJdbcUrlFromParts(cubaConfigDSPrefix));
+        }
+        return hikariConfigProperties;
+    }
+
+    protected Map<String, String> getAllDSProperties(String DSPrefix) {
+        Map<String, String> allDSProperties = new HashMap<>();
+        String[] propertiesNames = AppContext.getPropertyNames();
         for (String cubaPropertyName : propertiesNames) {
-            if (!cubaPropertyName.contains(filterParam)) {
+            if (!cubaPropertyName.startsWith(DSPrefix)) {
                 continue;
             }
             String value = AppContext.getProperty(cubaPropertyName);
             if (value == null) {
                 continue;
             }
+            allDSProperties.put(cubaPropertyName.replace(DSPrefix, ""), value);
+        }
+        return allDSProperties;
+    }
 
-            hikariPropertyName = cubaPropertyName.replace(cubaConfigDSPrefix, "");
-            hikariConfigDSPrefix = "dataSource.";
-            if (isHikariConfigField(hikariPropertyName)) {
+    protected Properties getHikariConfigProperties(Map<String, String> properties) {
+        Properties hikariConfigProperties = new Properties();
+        List<String> cubaDSDefaultParams = new ArrayList<>(Arrays.asList(HOST, PORT, DB_NAME, CONNECTION_PARAMS));
+        for (String propertyName : properties.keySet()) {
+            if (cubaDSDefaultParams.contains(propertyName)) {
+                continue;
+            }
+            String hikariConfigDSPrefix = "dataSource.";
+            if (isHikariConfigField(propertyName)) {
                 hikariConfigDSPrefix = "";
             }
-            hikariConfigProperties.put(cubaPropertyName.replace(cubaConfigDSPrefix, hikariConfigDSPrefix), value);
-        }
-        if (hikariConfigProperties.getProperty(JDBC_URL) == null) {
-            hikariConfigProperties.setProperty(JDBC_URL, getJdbcUrlFromParts(hikariConfigProperties));
+            hikariConfigProperties.put(hikariConfigDSPrefix.concat(propertyName),
+                    properties.get(propertyName));
         }
         return hikariConfigProperties;
     }
 
-    protected String getJdbcUrlFromParts(Properties properties) {
+    protected String getJdbcUrlFromParts(String dataSourcePrefix) {
         String urlPrefix = getUrlPrefix();
-        String host = properties.getProperty(HOST);
-        String port = properties.getProperty(PORT);
-        String dbName = properties.getProperty(DB_NAME);
-        if(host == null || port == null || dbName == null) {
-            return null;
+        String host = AppContext.getProperty(dataSourcePrefix + HOST);
+        String port = AppContext.getProperty(dataSourcePrefix + PORT);
+        String dbName = AppContext.getProperty(dataSourcePrefix + DB_NAME);
+        if (host == null || port == null || dbName == null) {
+            throw new RuntimeException(String.format("jdbcUrl parameter is not specified! Can't form jdbcUrl from parts: " +
+                    "provided hostname: %s, port: %s, dbName: %s.", host, port, dbName));
         }
         String jdbcUrl = urlPrefix + host + ":" + port + "/" + dbName;
-        if (properties.get(CONNECTION_PARAMS) != null) {
-            jdbcUrl = jdbcUrl + properties.get(CONNECTION_PARAMS);
+        if (AppContext.getProperty(dataSourcePrefix + CONNECTION_PARAMS) != null) {
+            jdbcUrl = jdbcUrl + AppContext.getProperty(dataSourcePrefix + CONNECTION_PARAMS);
         }
         return jdbcUrl;
     }
