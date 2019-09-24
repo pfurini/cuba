@@ -22,8 +22,7 @@ package com.haulmont.cuba.core.sys;
 @Deprecated
 public class CubaJndiDataSourceFactoryBean extends CubaDataSourceFactoryBean {
     @Override
-    public Object getObject() {
-        dataSourceProvider = "jndi";
-        return super.getObject();
+    protected String getDataSourceProvider() {
+        return "jndi";
     }
 }

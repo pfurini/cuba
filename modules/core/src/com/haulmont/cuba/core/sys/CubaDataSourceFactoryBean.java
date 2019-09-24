@@ -16,6 +16,7 @@
 
 package com.haulmont.cuba.core.sys;
 
+import com.haulmont.cuba.core.global.Stores;
 import com.haulmont.cuba.core.sys.jdbc.ProxyDataSource;
 import com.haulmont.cuba.core.sys.persistence.DbmsType;
 import com.zaxxer.hikari.HikariConfig;
@@ -36,7 +37,6 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     protected static final String JDBC_URL = "jdbcUrl";
     protected static final String CUBA = "cuba";
     protected static final String MS_SQL_2005 = "2005";
-    public static final String MAIN = "_MAIN_";
     public static final String POSTGRES_DBMS = "postgres";
     public static final String MSSQL_DBMS = "mssql";
     public static final String ORACLE_DBMS = "oracle";
@@ -60,7 +60,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
 
     @Override
     public Object getObject() {
-        dataSourceProvider = AppContext.getProperty(getDSProviderPropertyName());
+        dataSourceProvider = getDataSourceProvider();
         if ("jndi".equals(dataSourceProvider)) {
             return super.getObject();
         } else if (dataSourceProvider == null || "application".equals(dataSourceProvider)) {
@@ -69,9 +69,13 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
         throw new RuntimeException("DataSource provider type is unsupported! Available: 'jndi', 'application'");
     }
 
+    protected String getDataSourceProvider() {
+        return AppContext.getProperty(getDSProviderPropertyName());
+    }
+
     protected DataSource getApplicationDataSource() {
         if (storeName == null) {
-            storeName = MAIN;
+            storeName = Stores.MAIN;
         }
         Properties hikariConfigProperties = getHikariConfigProperties();
         HikariConfig config = new HikariConfig(hikariConfigProperties);
@@ -87,7 +91,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
         Properties hikariConfigProperties = new Properties();
         String[] propertiesNames = AppContext.getPropertyNames();
         String filterParam = ".dataSource.";
-        if (!MAIN.equals(storeName)) {
+        if (!Stores.isMain(storeName)) {
             filterParam = ".dataSource_" + storeName + ".";
         }
         String hikariConfigDSPrefix;
@@ -151,7 +155,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
             case HSQL_DBMS:
                 return "jdbc:hsqldb:hsql://";
             default:
-                throw new RuntimeException("dbmsType is unsupported!");
+                throw new RuntimeException(String.format("dbmsType '%s' is unsupported!", dbmsType));
         }
     }
 
