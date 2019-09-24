@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.security.role;
+package com.haulmont.cuba.security.group;
 
-public enum RolesStorageMode {
+import com.haulmont.cuba.core.entity.Entity;
 
-    /**
-     * Only roles from a database (sec$Role) will be used.
-     */
-    DATABASE,
+public class EntityConstraintContext<E extends Entity<?>> {
+    protected E entity;
 
-    /**
-     * Only roles defined in the source code will be used.
-     */
-    SOURCE_CODE,
+    public EntityConstraintContext(E entity) {
+        this.entity = entity;
+    }
 
-    /**
-     * Mixed mode, both sources will be used. If there are roles with equal names in the database and in
-     * the source code, role from database will be used.
-     */
-    MIXED
+    public E getEntity() {
+        return entity;
+    }
 }

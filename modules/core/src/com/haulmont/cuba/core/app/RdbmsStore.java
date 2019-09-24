@@ -34,6 +34,7 @@ import com.haulmont.cuba.security.entity.ConstraintOperationType;
 import com.haulmont.cuba.security.entity.EntityAttrAccess;
 import com.haulmont.cuba.security.entity.EntityOp;
 import com.haulmont.cuba.security.entity.PermissionType;
+import com.haulmont.cuba.security.group.SetOfEntityConstraints;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -380,6 +381,7 @@ public class RdbmsStore implements DataStore {
         List<Entity> persisted = new ArrayList<>();
         List<BaseGenericIdEntity> identityEntitiesToStoreDynamicAttributes = new ArrayList<>();
         List<CategoryAttributeValue> attributeValuesToRemove = new ArrayList<>();
+        SetOfEntityConstraints constraints = userSessionSource.getUserSession().getConstraints();
 
         try (Transaction tx = getSaveTransaction(storeName, context.isJoinTransaction())) {
             EntityManager em = persistence.getEntityManager(storeName);
@@ -496,7 +498,7 @@ public class RdbmsStore implements DataStore {
                 }
             }
 
-            if (!context.isDiscardCommitted() && isAuthorizationRequired(context) && userSessionSource.getUserSession().hasConstraints()) {
+            if (!context.isDiscardCommitted() && isAuthorizationRequired(context) && !constraints.isEmpty()) {
                 security.calculateFilteredData(saved);
             }
 
@@ -531,7 +533,7 @@ public class RdbmsStore implements DataStore {
             }
         }
 
-        if (!context.isDiscardCommitted() && isAuthorizationRequired(context) && userSessionSource.getUserSession().hasConstraints()) {
+        if (!context.isDiscardCommitted() && isAuthorizationRequired(context) && !constraints.isEmpty()) {
             security.applyConstraints(saved);
         }
 

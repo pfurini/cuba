@@ -19,6 +19,9 @@ package com.haulmont.cuba.security.global;
 import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.cuba.core.sys.UserInvocationContext;
 import com.haulmont.cuba.security.entity.*;
+import com.haulmont.cuba.security.group.BasicSetOfEntityConstraints;
+import com.haulmont.cuba.security.group.GroupDef;
+import com.haulmont.cuba.security.group.SetOfEntityConstraints;
 import com.haulmont.cuba.security.role.BasicUserRoleDef;
 import com.haulmont.cuba.security.role.Permissions;
 import com.haulmont.cuba.security.role.PermissionsUtils;
@@ -58,8 +61,7 @@ public class UserSession implements Serializable {
     protected boolean system;
 
     protected RoleDef effectiveRole;
-//    protected Map<String, Integer>[] permissions;
-    protected Map<String, List<ConstraintData>> constraints;
+    protected SetOfEntityConstraints setOfEntityConstraints;
 
     protected Map<String, Serializable> attributes;
 
@@ -94,7 +96,8 @@ public class UserSession implements Serializable {
         effectiveRole = new BasicUserRoleDef();
         roleTypes.add(effectiveRole.getRoleType());
 
-        constraints = new HashMap<>();
+        setOfEntityConstraints = new BasicSetOfEntityConstraints();
+
         attributes = new ConcurrentHashMap<>();
         localAttributes = new ConcurrentHashMap<>();
     }
@@ -120,7 +123,7 @@ public class UserSession implements Serializable {
         locale = src.locale;
         timeZone = src.timeZone;
         effectiveRole = src.effectiveRole;
-        constraints = src.constraints;
+        setOfEntityConstraints = src.setOfEntityConstraints;
         attributes = src.attributes;
         roleTypes = src.roleTypes;
         localAttributes = src.localAttributes;
@@ -415,57 +418,36 @@ public class UserSession implements Serializable {
         return v == null || v >= value;
     }
 
-    /**
-     * INTERNAL
-     */
-    public void addConstraint(Constraint constraint) {
-        String entityName = constraint.getEntityName();
-        List<ConstraintData> list = constraints.computeIfAbsent(entityName, k -> new ArrayList<>());
-        list.add(new ConstraintData(constraint));
-    }
-
-    /**
-     * INTERNAL
-     */
-    public void removeConstraint(Constraint constraintToRemove) {
-        String entityName = constraintToRemove.getEntityName();
-        List<ConstraintData> constraintDataList = this.constraints.get(entityName);
-        if (constraintDataList != null && !constraintDataList.isEmpty()) {
-            for (ConstraintData constraintData : new ArrayList<>(constraintDataList)) {
-                if (constraintToRemove.getId().equals(constraintData.getId()))
-                    constraintDataList.remove(constraintData);
-            }
-        }
-    }
-
-    /**
-     * INTERNAL
-     */
-    public List<ConstraintData> getConstraints(String entityName) {
-        return Collections.unmodifiableList(constraints.getOrDefault(entityName, Collections.emptyList()));
-    }
-
-    /**
-     * INTERNAL
-     */
-    public boolean hasConstraints(String entityName) {
-        return constraints.containsKey(entityName);
-    }
-
-    /**
-     * INTERNAL
-     */
-    public boolean hasConstraints() {
-        return !constraints.isEmpty();
-    }
-
-    /**
-     * INTERNAL
-     */
-    public List<ConstraintData> getConstraints(String entityName, Predicate<ConstraintData> predicate) {
-        List<ConstraintData> list = constraints.getOrDefault(entityName, Collections.emptyList());
-        return Collections.unmodifiableList(list.stream().filter(predicate).collect(Collectors.toList()));
-    }
+//    /**
+//     * INTERNAL
+//     */
+//    public void addConstraint(Constraint constraint) {
+//        String entityName = constraint.getEntityName();
+//        List<ConstraintData> list = constraints.computeIfAbsent(entityName, k -> new ArrayList<>());
+//        list.add(new ConstraintData(constraint));
+//    }
+//
+//    /**
+//     * INTERNAL
+//     */
+//    public List<ConstraintData> getConstraints(String entityName) {
+//        return Collections.unmodifiableList(constraints.getOrDefault(entityName, Collections.emptyList()));
+//    }
+//
+//    /**
+//     * INTERNAL
+//     */
+//    public boolean hasConstraints() {
+//        return !constraints.isEmpty();
+//    }
+//
+//    /**
+//     * INTERNAL
+//     */
+//    public List<ConstraintData> getConstraints(String entityName, Predicate<ConstraintData> predicate) {
+//        List<ConstraintData> list = constraints.getOrDefault(entityName, Collections.emptyList());
+//        return Collections.unmodifiableList(list.stream().filter(predicate).collect(Collectors.toList()));
+//    }
 
     /**
      * Get user session attribute. Attribute is a named serializable object bound to session.
@@ -587,6 +569,14 @@ public class UserSession implements Serializable {
 
     public void applyEffectiveRole(RoleDef effectiveRole) {
         this.effectiveRole = effectiveRole;
+    }
+
+    public SetOfEntityConstraints getConstraints() {
+        return setOfEntityConstraints;
+    }
+
+    public void setSetOfEntityConstraints(SetOfEntityConstraints constraints) {
+        this.setOfEntityConstraints = constraints;
     }
 
     @Override

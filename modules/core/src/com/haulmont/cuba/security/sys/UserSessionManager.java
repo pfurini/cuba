@@ -26,11 +26,14 @@ import com.haulmont.cuba.core.TypedQuery;
 import com.haulmont.cuba.core.global.*;
 import com.haulmont.cuba.core.sys.DefaultPermissionValuesConfig;
 import com.haulmont.cuba.security.app.UserSessionsAPI;
+import com.haulmont.cuba.security.app.group.GroupsRepository;
 import com.haulmont.cuba.security.app.role.RoleDefBuilder;
 import com.haulmont.cuba.security.app.role.RolesRepository;
 import com.haulmont.cuba.security.entity.*;
 import com.haulmont.cuba.security.global.NoUserSessionException;
 import com.haulmont.cuba.security.global.UserSession;
+import com.haulmont.cuba.security.group.GroupDef;
+import com.haulmont.cuba.security.listener.UserEntityListener;
 import com.haulmont.cuba.security.role.PermissionsUtils;
 import com.haulmont.cuba.security.role.RoleDef;
 import org.slf4j.Logger;
@@ -80,6 +83,9 @@ public class UserSessionManager {
 
     @Inject
     protected RolesRepository rolesRepository;
+
+    @Inject
+    protected GroupsRepository groupsRepository;
 
     /**
      * Create a new session and fill it with security data. Must be called inside a transaction.
@@ -136,7 +142,7 @@ public class UserSessionManager {
         compilePermissions(session, roles);
         if (user.getGroup() == null)
             throw new IllegalStateException("User is not in a Group");
-        compileConstraints(session, user.getGroup());
+        compileConstraints(session, user.getGroup(), user.getGroupNames());
         compileSessionAttributes(session, user.getGroup());
         return session;
     }
@@ -179,7 +185,17 @@ public class UserSessionManager {
         return null;
     }
 
-    protected void compileConstraints(UserSession session, Group group) {
+    protected void compileConstraints(UserSession session, Group group, String groupName) {
+        GroupDef groupDefinition;
+        if (group != null) {
+             groupDefinition = groupsRepository.getGroupDefinition(group);
+        } else {
+            groupDefinition = groupsRepository.getGroupDefinition(groupName);
+        }
+
+        session.setSetOfEntityConstraints(groupDefinition.entityConstraints());
+
+        //TODO: change loading
         EntityManager em = persistence.getEntityManager();
         TypedQuery<Constraint> q = em.createQuery("select c from sec$GroupHierarchy h join h.parent.constraints c " +
                 "where h.group.id = ?1", Constraint.class);

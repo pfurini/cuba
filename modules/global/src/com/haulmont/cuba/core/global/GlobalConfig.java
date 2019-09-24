@@ -27,8 +27,8 @@ import com.haulmont.cuba.core.config.defaults.DefaultInt;
 import com.haulmont.cuba.core.config.defaults.DefaultString;
 import com.haulmont.cuba.core.config.type.*;
 import com.haulmont.cuba.core.sys.AvailableLocalesFactory;
-import com.haulmont.cuba.security.role.RolesStorageMode;
-import com.haulmont.cuba.security.role.RolesStorageModeFactory;
+import com.haulmont.cuba.security.role.SecurityStorageMode;
+import com.haulmont.cuba.security.role.SecurityStorageModeFactory;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 import java.util.List;
@@ -253,6 +253,11 @@ public interface GlobalConfig extends Config {
      */
     @Property("cuba.rolesStorageMode")
     @Default("MIXED")
-    @Factory(factory = RolesStorageModeFactory.class)
-    RolesStorageMode getRolesStorageMode();
+    @Factory(factory = SecurityStorageModeFactory.class)
+    SecurityStorageMode getRolesStorageMode();
+
+    @Property("cuba.groupsStorageMode")
+    @Default("MIXED")
+    @Factory(factory = SecurityStorageModeFactory.class)
+    SecurityStorageMode getGroupsStorageMode();
 }

@@ -14,18 +14,32 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.security.role;
+package com.haulmont.cuba.security.app.group.annotation;
 
-import com.haulmont.cuba.core.config.type.TypeFactory;
+import org.springframework.core.annotation.AliasFor;
 
-public class RolesStorageModeFactory extends TypeFactory {
-    @Override
-    public Object build(String string) {
-        for (RolesStorageMode mode : RolesStorageMode.values()) {
-            if (mode.name().equalsIgnoreCase(string)) {
-                return mode;
-            }
-        }
-        return null;
-    }
+import java.lang.annotation.*;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@Repeatable(CustomConstraintContainer.class)
+public @interface CustomConstraint {
+
+    @AliasFor("code")
+    String value() default "";
+
+    @AliasFor("value")
+    String code() default "";
+
+    String join() default "";
+
+    String where() default "";
+
 }
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@interface CustomConstraintContainer {
+    CustomConstraint[] value();
+}
+

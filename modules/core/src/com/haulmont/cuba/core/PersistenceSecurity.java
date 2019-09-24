@@ -17,6 +17,7 @@
 
 package com.haulmont.cuba.core;
 
+import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.Security;
 import com.haulmont.cuba.core.global.View;

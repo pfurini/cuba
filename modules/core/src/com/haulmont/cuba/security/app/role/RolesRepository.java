@@ -24,7 +24,7 @@ import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.security.role.Permissions;
 import com.haulmont.cuba.security.role.PermissionsUtils;
 import com.haulmont.cuba.security.role.RoleDef;
-import com.haulmont.cuba.security.role.RolesStorageMode;
+import com.haulmont.cuba.security.role.SecurityStorageMode;
 import com.haulmont.cuba.security.entity.*;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 /**
  * Bean contains information about all predefined roles.
- * Also has a set of methods needed to support different modes of working with roles (see {@link RolesStorageMode})
+ * Also has a set of methods needed to support different modes of working with roles (see {@link SecurityStorageMode})
  */
 @Component(RolesRepository.NAME)
 public class RolesRepository {
@@ -229,7 +229,7 @@ public class RolesRepository {
     }
 
     protected int getMode() {
-        RolesStorageMode valueFromConfig = config.getRolesStorageMode();
+        SecurityStorageMode valueFromConfig = config.getRolesStorageMode();
         if (valueFromConfig != null) {
             switch (valueFromConfig) {
                 case DATABASE:
