@@ -122,16 +122,15 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     protected Properties getHikariConfigProperties(Map<String, String> properties) {
         Properties hikariConfigProperties = new Properties();
         List<String> cubaDSDefaultParams = new ArrayList<>(Arrays.asList(HOST, PORT, DB_NAME, CONNECTION_PARAMS));
-        for (String propertyName : properties.keySet()) {
-            if (cubaDSDefaultParams.contains(propertyName)) {
+        for (Map.Entry<String, String> property : properties.entrySet()) {
+            if (cubaDSDefaultParams.contains(property.getKey())) {
                 continue;
             }
             String hikariConfigDSPrefix = "dataSource.";
-            if (isHikariConfigField(propertyName)) {
+            if (isHikariConfigField(property.getKey())) {
                 hikariConfigDSPrefix = "";
             }
-            hikariConfigProperties.put(hikariConfigDSPrefix.concat(propertyName),
-                    properties.get(propertyName));
+            hikariConfigProperties.put(hikariConfigDSPrefix.concat(property.getKey()), property.getValue());
         }
         return hikariConfigProperties;
     }
