@@ -39,7 +39,7 @@ public class CubaTimeFieldWrapper extends CustomField<LocalTime> {
 
     protected LocalTime internalValue;
 
-    protected TimeMode timeMode;
+    protected TimeMode timeMode = TimeMode.H_24;
 
     public CubaTimeFieldWrapper() {
         init();
@@ -219,7 +219,7 @@ public class CubaTimeFieldWrapper extends CustomField<LocalTime> {
     }
 
     protected static AmPmLocalTime convertTo12hFormat(LocalTime time) {
-        int hour = time.getHour() == 12
+        int hour = time.getHour() == 0 || time.getHour() == 12
                 ? 12 : time.getHour() % 12;
         AmPm amPm = time.getHour() < 12
                 ? AmPm.AM : AmPm.PM;
