@@ -21,7 +21,7 @@ import com.haulmont.cuba.core.sys.jdbc.ProxyDataSource;
 import com.haulmont.cuba.core.sys.persistence.DbmsType;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.lang.NonNull;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -186,16 +186,16 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     }
 
     @Override
+    @NonNull
     protected Object lookupWithFallback() throws NamingException {
+        Object object = new HikariDataSource();
         if ("jndi".equals(getDataSourceProvider())) {
-            Object object = super.lookupWithFallback();
+            object = super.lookupWithFallback();
             if (object instanceof DataSource) {
                 return new ProxyDataSource((DataSource) object);
-            } else {
-                return object;
             }
         }
-        return null;
+        return object;
     }
 
     protected String getDSProviderPropertyName() {
