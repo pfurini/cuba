@@ -187,12 +187,15 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
 
     @Override
     protected Object lookupWithFallback() throws NamingException {
-        Object object = super.lookupWithFallback();
-        if (object instanceof DataSource) {
-            return new ProxyDataSource((DataSource) object);
-        } else {
-            return object;
+        if ("jndi".equals(getDataSourceProvider())) {
+            Object object = super.lookupWithFallback();
+            if (object instanceof DataSource) {
+                return new ProxyDataSource((DataSource) object);
+            } else {
+                return object;
+            }
         }
+        return null;
     }
 
     protected String getDSProviderPropertyName() {
