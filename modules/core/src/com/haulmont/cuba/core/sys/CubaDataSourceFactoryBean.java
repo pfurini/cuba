@@ -21,6 +21,7 @@ import com.haulmont.cuba.core.sys.jdbc.ProxyDataSource;
 import com.haulmont.cuba.core.sys.persistence.DbmsType;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 import javax.naming.NamingException;
@@ -35,16 +36,18 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     protected static final String DB_NAME = "dbName";
     protected static final String CONNECTION_PARAMS = "connectionParams";
     protected static final String JDBC_URL = "jdbcUrl";
-    protected static final String CUBA = "cuba";
     protected static final String MS_SQL_2005 = "2005";
-    public static final String POSTGRES_DBMS = "postgres";
-    public static final String MSSQL_DBMS = "mssql";
-    public static final String ORACLE_DBMS = "oracle";
-    public static final String MYSQL_DBMS = "mysql";
-    public static final String HSQL_DBMS = "hsql";
+    protected static final String POSTGRES_DBMS = "postgres";
+    protected static final String MSSQL_DBMS = "mssql";
+    protected static final String ORACLE_DBMS = "oracle";
+    protected static final String MYSQL_DBMS = "mysql";
+    protected static final String HSQL_DBMS = "hsql";
+    static final List<String> cubaDSDefaultParams = Arrays.asList(HOST, PORT, DB_NAME, CONNECTION_PARAMS);
+
     protected String dataSourceProvider;
 
     private String storeName;
+
     public String getStoreName() {
         return storeName;
     }
@@ -88,11 +91,10 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     }
 
     protected Properties getHikariConfigProperties() {
-        String filterParam = ".dataSource.";
+        String cubaConfigDSPrefix = "cuba.dataSource.";
         if (!Stores.isMain(storeName)) {
-            filterParam = ".dataSource_" + storeName + ".";
+            cubaConfigDSPrefix = "cuba.dataSource_" + storeName + ".";
         }
-        String cubaConfigDSPrefix = CUBA + filterParam;
 
         Map<String, String> cubaDSProperties = getAllDSProperties(cubaConfigDSPrefix);
         Properties hikariConfigProperties = getHikariConfigProperties(cubaDSProperties);
@@ -103,25 +105,24 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
         return hikariConfigProperties;
     }
 
-    protected Map<String, String> getAllDSProperties(String DSPrefix) {
+    protected Map<String, String> getAllDSProperties(String dsPrefix) {
         Map<String, String> allDSProperties = new HashMap<>();
         String[] propertiesNames = AppContext.getPropertyNames();
         for (String cubaPropertyName : propertiesNames) {
-            if (!cubaPropertyName.startsWith(DSPrefix)) {
+            if (!cubaPropertyName.startsWith(dsPrefix)) {
                 continue;
             }
             String value = AppContext.getProperty(cubaPropertyName);
             if (value == null) {
                 continue;
             }
-            allDSProperties.put(cubaPropertyName.replace(DSPrefix, ""), value);
+            allDSProperties.put(cubaPropertyName.replace(dsPrefix, ""), value);
         }
         return allDSProperties;
     }
 
     protected Properties getHikariConfigProperties(Map<String, String> properties) {
         Properties hikariConfigProperties = new Properties();
-        List<String> cubaDSDefaultParams = new ArrayList<>(Arrays.asList(HOST, PORT, DB_NAME, CONNECTION_PARAMS));
         for (Map.Entry<String, String> property : properties.entrySet()) {
             if (cubaDSDefaultParams.contains(property.getKey())) {
                 continue;
@@ -140,14 +141,24 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
         String host = AppContext.getProperty(dataSourcePrefix + HOST);
         String port = AppContext.getProperty(dataSourcePrefix + PORT);
         String dbName = AppContext.getProperty(dataSourcePrefix + DB_NAME);
+        String connectionParams = AppContext.getProperty(dataSourcePrefix + CONNECTION_PARAMS);
         if (host == null || port == null || dbName == null) {
             throw new RuntimeException(String.format("jdbcUrl parameter is not specified! Can't form jdbcUrl from parts: " +
                     "provided hostname: %s, port: %s, dbName: %s.", host, port, dbName));
         }
+
         String jdbcUrl = urlPrefix + host + ":" + port + "/" + dbName;
-        if (AppContext.getProperty(dataSourcePrefix + CONNECTION_PARAMS) != null) {
-            jdbcUrl = jdbcUrl + AppContext.getProperty(dataSourcePrefix + CONNECTION_PARAMS);
+        if (MSSQL_DBMS.equals(DbmsType.getType(storeName)) && !MS_SQL_2005.equals(DbmsType.getVersion(storeName))) {
+            jdbcUrl = urlPrefix + host + ":" + port + ";databaseName=" + dbName;
         }
+
+        if (StringUtils.isBlank(connectionParams) && MYSQL_DBMS.equals(DbmsType.getType(storeName))) {
+            connectionParams = "?useSSL=false&allowMultiQueries=true&serverTimezone=UTC";
+        }
+        if (!StringUtils.isBlank(connectionParams)) {
+            jdbcUrl = jdbcUrl.concat(connectionParams);
+        }
+
         return jdbcUrl;
     }
 
@@ -160,7 +171,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
             case POSTGRES_DBMS:
                 return "jdbc:postgresql://";
             case MSSQL_DBMS:
-                if (MS_SQL_2005.equals(AppContext.getProperty(DbmsType.getVersion(storeName)))) {
+                if (MS_SQL_2005.equals(DbmsType.getVersion(storeName))) {
                     return "jdbc:jtds:sqlserver://";
                 }
                 return "jdbc:sqlserver://";
