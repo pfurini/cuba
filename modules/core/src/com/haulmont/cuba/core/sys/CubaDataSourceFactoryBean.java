@@ -16,6 +16,7 @@
 
 package com.haulmont.cuba.core.sys;
 
+import com.google.common.collect.ImmutableList;
 import com.haulmont.cuba.core.global.Stores;
 import com.haulmont.cuba.core.sys.jdbc.ProxyDataSource;
 import com.haulmont.cuba.core.sys.persistence.DbmsType;
@@ -42,7 +43,7 @@ public class CubaDataSourceFactoryBean extends CubaJndiObjectFactoryBean {
     protected static final String ORACLE_DBMS = "oracle";
     protected static final String MYSQL_DBMS = "mysql";
     protected static final String HSQL_DBMS = "hsql";
-    static final List<String> cubaDSDefaultParams = Arrays.asList(HOST, PORT, DB_NAME, CONNECTION_PARAMS);
+    protected static final ImmutableList<String> cubaDSDefaultParams = ImmutableList.of(HOST, PORT, DB_NAME, CONNECTION_PARAMS);
 
     protected String dataSourceProvider;
 
