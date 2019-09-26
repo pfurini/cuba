@@ -87,6 +87,81 @@ $cuba-menubar-lineheight: $cuba-menubar-height - 2px !default;
     }
   }
 
+  .c-sidemenu-layout {
+    display: flex;
+  }
+
+  .c-sidemenu-panel {
+    width: 250px;
+    transition: width 0.3s;
+
+    .c-sidemenu-item-header {
+      border: 0;
+    }
+  }
+
+  .c-sidemenu-panel.sidemenu-collapsed {
+    width: 60px;
+
+    .c-sidemenu {
+      width: 100%;
+    }
+
+    .c-sidemenu-title,
+    .c-sidemenu-item-caption,
+    .c-userindicator {
+      display: none;
+    }
+
+    .user-info-box {
+      padding: 0;
+
+      & > .v-spacing {
+        display: none;
+      }
+    }
+
+    .user-buttons > .v-spacing {
+      width: 5px;
+    }
+
+    .c-app-icon {
+      height: 30px;
+    }
+
+    .c-sidemenu-item-header {
+      padding: 0;
+      text-align: center;
+    }
+
+    .c-sidemenu-item-wrap > .v-icon {
+      margin: 0;
+    }
+
+    .sidemenu-expand {
+      width: 30px;
+      padding: 0;
+      text-align: center;
+    }
+  }
+
+  .sidemenu-expand {
+    margin-left: $v-unit-size / 2;
+  }
+
+  .c-app-workarea {
+    flex-grow: 1;
+    flex-shrink: 0;
+  }
+
+  .c-main-tabsheet {
+    & > .v-tabsheet-content,
+    & > .v-tabsheet-content > .v-tabsheet-tabsheetpanel,
+    & > .v-tabsheet-content > .v-tabsheet-tabsheetpanel > .v-scrollable {
+      width: 100% !important;
+    }
+  }
+
   .v-tabsheet.c-main-tabsheet.framed.padded-tabbar > .v-tabsheet-tabcontainer {
     background-color: $cuba-maintabsheet-tabcontainer-background-color;
     padding-top: $cuba-maintabsheet-top-padding;

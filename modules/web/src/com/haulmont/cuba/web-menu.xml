@@ -17,7 +17,7 @@
 
 <menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
 
-    <menu id="administration">
+    <menu id="administration" icon="GEAR">
         <item id="sec$User.browse"/>
         <item id="sec$Group.browse"/>
         <item id="sec$Role.browse"/>
@@ -39,7 +39,7 @@
         <item id="performanceStatistics"/>
     </menu>
 
-    <menu id="help">
+    <menu id="help" icon="QUESTION">
         <item id="aboutWindow" openType="DIALOG"/>
         <item id="printDomain"
               class="com.haulmont.cuba.web.app.domain.DomainProvider"/>

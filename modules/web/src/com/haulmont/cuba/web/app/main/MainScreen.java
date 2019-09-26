@@ -23,26 +23,22 @@ import com.haulmont.cuba.core.global.Messages;
 import com.haulmont.cuba.gui.Route;
 import com.haulmont.cuba.gui.ScreenTools;
 import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.Image;
-import com.haulmont.cuba.gui.components.ThemeResource;
-import com.haulmont.cuba.gui.components.Window;
+import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.dev.LayoutAnalyzerContextMenuProvider;
 import com.haulmont.cuba.gui.components.mainwindow.*;
 import com.haulmont.cuba.gui.events.UserRemovedEvent;
 import com.haulmont.cuba.gui.events.UserSubstitutionsChangedEvent;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.Subscribe;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import com.haulmont.cuba.gui.icons.CubaIcon;
+import com.haulmont.cuba.gui.screen.*;
 import com.haulmont.cuba.web.AppUI;
 import com.haulmont.cuba.web.WebConfig;
+import com.vaadin.server.AbstractClientConnector;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * Base class for a controller of application Main screen.
@@ -53,6 +49,14 @@ import javax.annotation.Nullable;
 public class MainScreen extends Screen implements Window.HasWorkArea, Window.HasUserIndicator {
 
     protected static final String APP_LOGO_IMAGE = "application.logoImage";
+
+    @Inject
+    protected Button menuExpandBtn;
+
+    @Inject
+    protected VBoxLayout sideMenuPanel;
+
+    protected boolean menuCollapsed = false;
 
     public MainScreen() {
         addInitListener(this::initComponents);
@@ -148,6 +152,29 @@ public class MainScreen extends Screen implements Window.HasWorkArea, Window.Has
                 .getScreens();
         getBeanLocator().get(ScreenTools.class)
                 .openDefaultScreen(screens);
+    }
+
+    @Subscribe("menuExpandBtn")
+    protected void onMenuExpandBtnClick(Button.ClickEvent event) {
+        if (!menuCollapsed) {
+            menuCollapsed = true;
+
+            menuExpandBtn.setCaption(null);
+            menuExpandBtn.setDescription("Expand menu");
+            menuExpandBtn.setIconFromSet(CubaIcon.ANGLE_DOUBLE_RIGHT);
+
+            sideMenuPanel.addStyleName("sidemenu-collapsed");
+        } else {
+            menuCollapsed = false;
+
+            menuExpandBtn.setCaption("Collapse");
+            menuExpandBtn.setDescription("Collapse menu");
+            menuExpandBtn.setIconFromSet(CubaIcon.ANGLE_DOUBLE_LEFT);
+
+            sideMenuPanel.removeStyleName("sidemenu-collapsed");
+        }
+        getWorkArea().withUnwrapped(com.vaadin.ui.CssLayout.class,
+                AbstractClientConnector::markAsDirtyRecursive);
     }
 
     @Nullable
