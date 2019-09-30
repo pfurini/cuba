@@ -47,8 +47,8 @@ public class CubaTimeFieldWrapper extends CustomField<LocalTime> {
         initAmPmField();
         initLayout();
 
-        timeField.addValueChangeListener(createTimeFieldValueChangeListener());
-        amPmField.addValueChangeListener(createAmPmValueChangeListener());
+        timeField.addValueChangeListener(this::componentValueChanged);
+        amPmField.addValueChangeListener(this::amPmFieldValueChanged);
     }
 
     @Override
@@ -143,14 +143,6 @@ public class CubaTimeFieldWrapper extends CustomField<LocalTime> {
 
     protected void initLayout() {
         container.addComponent(timeField);
-    }
-
-    protected HasValue.ValueChangeListener<LocalTime> createTimeFieldValueChangeListener() {
-        return this::componentValueChanged;
-    }
-
-    protected HasValue.ValueChangeListener<AmPm> createAmPmValueChangeListener() {
-        return this::amPmFieldValueChanged;
     }
 
     protected void componentValueChanged(HasValue.ValueChangeEvent<LocalTime> event) {
