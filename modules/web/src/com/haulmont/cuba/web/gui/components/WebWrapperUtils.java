@@ -16,7 +16,6 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.core.global.DateTimeTransformations;
 import com.haulmont.cuba.gui.components.AggregationInfo;
 import com.haulmont.cuba.gui.components.CaptionMode;
 import com.haulmont.cuba.gui.components.Component;
@@ -38,7 +37,6 @@ import com.haulmont.cuba.gui.components.TimeField;
 import com.haulmont.cuba.web.gui.components.JavaScriptComponent.DependencyType;
 import com.haulmont.cuba.web.widgets.client.popupview.PopupPosition;
 import com.haulmont.cuba.web.widgets.client.resizabletextarea.ResizeDirection;
-import com.haulmont.cuba.web.widgets.client.timefield.AmPm;
 import com.haulmont.cuba.web.widgets.client.timefield.TimeMode;
 import com.haulmont.cuba.web.widgets.client.timefield.TimeResolution;
 import com.haulmont.cuba.web.widgets.data.AggregationContainer;
@@ -746,26 +744,6 @@ public final class WebWrapperUtils {
         for (TimeField.TimeMode mode : TimeField.TimeMode.values()) {
             if (mode.name().equals(timeMode.name())) {
                 return mode;
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    public static AmPm toVaadinAmPm(DateTimeTransformations.AmPm wAmPm) {
-        for (AmPm amPm : AmPm.values()) {
-            if (amPm.name().equals(wAmPm.name())) {
-                return amPm;
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    public static DateTimeTransformations.AmPm fromVaadinAmPm(AmPm vAmPm) {
-        for (DateTimeTransformations.AmPm amPm : DateTimeTransformations.AmPm.values()) {
-            if (amPm.name().equals(vAmPm.name())) {
-                return amPm;
             }
         }
         return null;

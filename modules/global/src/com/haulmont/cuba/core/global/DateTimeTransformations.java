@@ -157,8 +157,4 @@ public class DateTimeTransformations {
     private static RuntimeException newUnsupportedTypeException(Class javaType) {
         throw new IllegalArgumentException(String.format("Unsupported date type %s", javaType));
     }
-
-    public enum AmPm {
-        AM, PM
-    }
 }
