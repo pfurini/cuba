@@ -106,8 +106,8 @@ public class WebDateField<V extends Comparable<V>>
 
         setWidthAuto();
 
-        dateField.addValueChangeListener(createDateValueChangeListener());
-        timeField.addValueChangeListener(createTimeValueChangeListener());
+        dateField.addValueChangeListener(this::componentValueChanged);
+        timeField.addValueChangeListener(this::componentValueChanged);
     }
 
     protected CubaCssActionsLayout createComponent() {
@@ -161,18 +161,8 @@ public class WebDateField<V extends Comparable<V>>
         }
     }
 
-    protected HasValue.ValueChangeListener<LocalDate> createDateValueChangeListener() {
-        return event ->
-                componentValueChanged(event.isUserOriginated());
-    }
-
-    protected HasValue.ValueChangeListener<LocalTime> createTimeValueChangeListener() {
-        return event ->
-                componentValueChanged(event.isUserOriginated());
-    }
-
-    protected void componentValueChanged(boolean isUserOriginated) {
-        if (isUserOriginated) {
+    protected void componentValueChanged(HasValue.ValueChangeEvent<?> e) {
+        if (e.isUserOriginated()) {
             V value;
 
             try {
@@ -196,7 +186,7 @@ public class WebDateField<V extends Comparable<V>>
             internalValue = value;
 
             if (!fieldValueEquals(value, oldValue)) {
-                ValueChangeEvent<V> event = new ValueChangeEvent<>(this, oldValue, value, isUserOriginated);
+                ValueChangeEvent<V> event = new ValueChangeEvent<>(this, oldValue, value, true);
                 publish(ValueChangeEvent.class, event);
             }
         }

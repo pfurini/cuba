@@ -50,7 +50,7 @@ public class WebTimeField<V> extends WebV8AbstractField<CubaTimeFieldWrapper, Lo
 
     public WebTimeField() {
         component = createComponent();
-        component.addValueChangeListener(createTimeValueChangeListener());
+        component.addValueChangeListener(this::componentValueChanged);
     }
 
     @Inject
@@ -174,13 +174,8 @@ public class WebTimeField<V> extends WebV8AbstractField<CubaTimeFieldWrapper, Lo
         return new CubaTimeFieldWrapper();
     }
 
-    protected HasValue.ValueChangeListener<LocalTime> createTimeValueChangeListener() {
-        return event ->
-                componentValueChanged(event.isUserOriginated());
-    }
-
-    protected void componentValueChanged(boolean isUserOriginated) {
-        if (isUserOriginated) {
+    protected void componentValueChanged(HasValue.ValueChangeEvent<LocalTime> e) {
+        if (e.isUserOriginated()) {
             V value;
 
             try {
